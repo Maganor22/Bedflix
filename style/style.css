@@ -1,0 +1,780 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+/* .btn-danger {
+    background-color :#c4000a!important;
+} */
+
+hr {
+    color: white;
+    background-color: white;
+    height: 1px;
+    border: 0;
+}
+
+/* Pour les navigateurs basés sur WebKit (Google Chrome, Safari) */
+body::-webkit-scrollbar {
+    display: none;
+    scrollbar-width: none;
+    -moz-appearance: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* pour Internet Explorer */
+}
+
+.modal::-webkit-scrollbar {
+    display: none;
+    scrollbar-width: none;
+    -moz-appearance: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    /* pour Internet Explorer */
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+.dark-bg {
+    background-color: #141414;
+}
+
+h1,
+.section-film,
+.section-serie {
+    font-family: 'Bebas Neue', cursive;
+}
+
+#filmAnchor:hover,
+#serieAnchor:hover {
+    text-shadow: rgb(255, 255, 255) 0.0625rem 0.0625rem 0.625rem;
+    font-weight: bold;
+}
+
+#filmAnchor,
+#serieAnchor {
+    font-size: 1.5625rem;
+    color: red;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#serieAnchor {
+    margin-left: 2.1875rem;
+}
+
+.dropdownsTop {
+    margin-left: 0.625rem;
+}
+
+#player {
+    top: 0vh;
+    width: 100vw;
+    height: 115vh;
+    z-index: 0;
+    position: absolute;
+}
+
+.filmTitle {
+    width: 6.25rem;
+    text-align: center;
+    color: red;
+    margin: 0.625rem 0 0 47.5%;
+}
+
+.serieTitle {
+    margin-left: 47%;
+    width: 7.5rem;
+}
+
+.filmContainer,
+.serieContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 1.25rem 0;
+    border: 0.125rem solid black;
+    padding: 1% 0;
+}
+
+.backgroundModal {
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.seasonsSelect {
+    margin-top: 1.25rem;
+    width: 9.375rem;
+    margin-right: 1.25rem;
+}
+
+.episodesSelect {
+    margin-top: 1.25rem;
+    width: 9.375rem;
+}
+
+.allImgs {
+    margin: 0.9375rem 0.9375rem !important;
+    width: 15%;
+    height: 15%;
+    opacity: 0.7;
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+    border-radius: 0.625rem;
+}
+
+/* FAVORIS */
+.imgFav {
+    width: 18.75rem;
+    height: 26.8125rem;
+}
+
+.imgFavLink {
+    width: fit-content;
+}
+
+.imgFavLink:hover {
+    width: fit-content;
+}
+/* FIN FAVORIS */
+
+#image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.w-5 {
+    width: 0.625rem;
+}
+
+.w-10 {
+    width: 1.25rem;
+}
+
+nav {
+    background-color: rgba(0, 0, 0, 0.815);
+}
+
+.nav-link {
+    transition: transform 200ms;
+}
+
+.nav-link:hover {
+    color: red;
+    transform: scale(1.2);
+    text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+}
+
+/* .background_index {
+    background: url("../imgs/backjumanji.png") no-repeat;
+    background-size: 100%;
+    height: 66vw;
+} */
+
+.background_index {
+    position: relative;
+    height: 66vw;
+    overflow: hidden;
+}
+
+.background_image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+.background_serie {
+    background: url("../imgs/Rectangle 4 (1).png") no-repeat;
+    background-size: 100%;
+    height: 54vw;
+}
+
+.background_film {
+    background: url("../imgs/Background_film.png") no-repeat;
+    background-size: 100%;
+    height: 54vw;
+}
+
+
+.background_research {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    top: 4.5rem;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.synopsisModal,
+.dureeFilm {
+    font-size: 1.5625rem;
+    margin-top: 1.25rem;
+    color: white;
+    margin-bottom: 0;
+}
+
+.logo {
+    transition: transform 300ms;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+#cloche {
+    transition: transform 200ms;
+}
+
+#cloche:hover {
+    transform: scale(1.2);
+}
+
+.avatar {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.625rem;
+}
+
+#connect,
+#deconnect,
+#userParams {
+    color: white;
+    text-decoration: none;
+}
+
+
+
+#connect:hover,
+#deconnect:hover,
+#userParams:hover {
+    color: white;
+    text-shadow: 1px 1px 1px red;
+}
+
+#hiMe {
+    color: white;
+    text-shadow: 1px 1px 1px red;
+}
+
+
+.bigger:hover {
+    transform: scale(1.5);
+    transition: 200ms all;
+}
+
+/* h1 {
+    top: 10%;
+    left: 10%;
+} */
+
+h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    top: 17%;
+    left: 10%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+h3 {
+    top: 30%;
+    left: 7%;
+}
+
+.filmGender,
+h4 {
+    top: 55%;
+    left: 8%;
+}
+
+.serieGender,
+h5 {
+    top: 100%;
+    left: 10%;
+    z-index: 1;
+}
+
+#B_logo_serie {
+    top: 25%;
+    left: 12%;
+}
+
+#B_logo {
+    top: 8%;
+    left: 7%;
+}
+
+#desc {
+    top: 35%;
+    left: 7%;
+}
+
+.bgcar {
+    top: 86%;
+    height: 50%;
+}
+
+.bgcar2 {
+    top: 92%;
+    height: 65%;
+}
+
+.hide-title {
+    display: none;
+}
+
+/* CAROUSEL */
+
+.carousel-inner {
+    height: 30rem;
+}
+
+.firstCarousel,
+.secondCarousel {
+    display: flex;
+    justify-content: center;
+}
+
+.secondCarousel {
+    display: none;
+}
+
+#myCarousel {
+    position: absolute;
+    top: 75%;
+    z-index: 999;
+    width: 90%;
+}
+
+#myCarousel2 {
+    position: absolute;
+    top: 130%;
+    z-index: 999;
+    width: 90%;
+}
+
+.carousel-item {
+    left: 4%;
+}
+
+.carouselImgs {
+    width: 15vw;
+    height: 22vw;
+    margin: 1.875rem 0.9375rem;
+    opacity: 0.7;
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+    border-radius: 0.625rem;
+}
+
+.carousel-control-prev {
+    margin-left: -8%;
+    width: fit-content;
+    height: fit-content;
+    left: 7%;
+    top: 50%;
+}
+
+.carousel-control-prev:hover {
+    transform: scale(1.2);
+}
+
+.carousel-control-next {
+    margin-right: -8%;
+    width: fit-content;
+    height: fit-content;
+    right: 7%;
+    top: 50%;
+}
+
+.carousel-control-next:hover {
+    transform: scale(1.2);
+}
+
+.btnFav {
+    background: transparent;
+    border: none;
+    position: absolute;
+    bottom: 7%;
+}
+
+/* FIN CAROUSEL */
+.stars-note {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 0;
+}
+
+/* DROPDOWN */
+.dropdown {
+    left: 20rem;
+    top: 8.5rem;
+}
+
+.dropdown-menu {
+    min-width: 6.25rem;
+}
+
+.dropdown-menu.columns-2 {
+    min-width: 18.75rem;
+}
+
+.dropdown-menu.columns-3 {
+    min-width: 31.25rem;
+}
+
+.dropdown-menu li a {
+    padding: 0.125rem 0.9375rem;
+    font-weight: 150;
+    font-size: 0.8125rem;
+    text-decoration: none;
+}
+
+.multi-column-dropdown {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+.multi-column-dropdown li a {
+    display: block;
+    clear: both;
+    line-height: 1.428571429;
+    color: #333;
+    white-space: normal;
+}
+
+.multi-column-dropdown li a:hover {
+    text-decoration: none;
+    color: #262626;
+    background-color: #999;
+}
+
+@media (max-width: 767px) {
+    .dropdown-menu.multi-column {
+        min-width: 15rem !important;
+        overflow-x: hidden;
+    }
+}
+
+/* FIN DROPDOWN */
+
+.background_serie>p:nth-of-type(1) {
+    top: 10%;
+    left: 10%;
+}
+
+.background_serie>p:nth-of-type(2) {
+    top: 25%;
+    left: 15%;
+}
+
+.background_serie>p:nth-of-type(3) {
+    top: 90%;
+    left: 10%;
+}
+
+.background_serie>p:nth-of-type(4) {
+    top: 120%;
+    left: 10%;
+    z-index: 3;
+}
+
+.background_film>p:nth-of-type(1) {
+    top: 10%;
+    left: 10%;
+}
+
+.background_film>p:nth-of-type(2) {
+    top: 25%;
+    left: 15%;
+}
+
+.background_film>p:nth-of-type(3) {
+    top: 90%;
+    left: 10%;
+}
+
+.background_film>p:nth-of-type(4) {
+    top: 120%;
+    left: 10%;
+    z-index: 3;
+}
+
+.pop-up {
+    color: white;
+    position: fixed;
+    background-color: #212529;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+    z-index: 1000;
+}
+
+.waitCursor {
+    cursor: wait;
+}
+
+footer>* {
+    display: flex;
+    justify-content: center;
+}
+
+/* MODAL */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+#indexTrailer {
+    display: none;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.content {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding: 3.125rem 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* activer les barres de défilement si nécessaire */
+    background-color: rgba(0, 0, 0, 0.9);
+    /* transparence */
+    animation: fadeIn 0.5s ease-in-out;
+    z-index: 2000;
+}
+
+/* .modal-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+   */
+
+.fadeOut {
+    animation: fadeOut 0.5s ease-in-out;
+}
+
+/* Contenu modal */
+.modal-content {
+    background-color: rgb(33, 37, 41);
+    margin: auto;
+    /* centrer le contenu */
+    padding: 1.25rem;
+    border: 0.0625rem solid #888;
+    width: 80%;
+    /* largeur maximum */
+}
+
+.close-btn {
+    color: #aaa;
+    font-size: 1.75rem;
+    font-weight: bold;
+}
+
+.dropdown-container {
+    display: flex;
+    align-items: center;
+}
+
+.imgSvod {
+    width: 3.75rem;
+    height: 3.75rem;
+    margin-right: 0.9375rem;
+    border-radius: 0.625rem;
+    transition: transform 200ms;
+}
+
+.imgSvod:hover {
+    transform: scale(1.1);
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+}
+
+
+#player {
+    top: 0vh;
+    width: 100vw;
+    height: 115vh;
+    z-index: 0;
+    position: absolute;
+}
+
+#lecteur-container {
+    position: fixed;
+    top: -3vw;
+    left: 0;
+    width: 100%;
+    /* autres styles pour votre conteneur de lecteur */
+}
+
+.background_index {
+    position: relative;
+    height: 66vw;
+    overflow: hidden;
+}
+
+.background_image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+
+#B_logo {
+    margin-top: 5%;
+    margin-left: 7%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.625rem;
+}
+
+#desc {
+    margin-top: 0%;
+    margin-left: 10%;
+}
+
+.indexType {
+    margin-top: 7%;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.indexTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-top: 2%;
+    margin-left: 10%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.indexLookType {
+    margin-top: 3%;
+    margin-left: 10%;
+}
+
+.indexType,
+.indexTitle,
+.indexLookType,
+.indexSynopsis,
+.filmGender {
+    width: fit-content;
+}
+
+
+.filmGender,
+.favTitle {
+    margin-top: 0%;
+    margin-left: 5%;
+}
+
+#tooltip {
+    position: absolute;
+    background-color: black;
+    padding: 10px;
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+    border-radius: 10px;
+    width: fit-content;
+    height: auto;
+    z-index: 9999;
+    opacity: 0;
+    display: none;
+}
+
+#comment-link {
+    display: block;
+    width: fit-content;
+    text-decoration: none;
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    color: white;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url("../imgs/backjumanji.png") no-repeat;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+}
+
+form div>p {
+    margin: 0;
+}
+
+form div>input {
+    margin-bottom: 1rem;
+}
+
+.input_research {
+    margin: 0px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.inscriptionDiv,
+.connexionDiv,
+.mdpDiv {
+    z-index: 1;
+    padding: 4rem;
+    background-color: black;
+    border-radius: 10px;
+    box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
+}
+
+.redbtn {
+    background: #e50914 !important;
+    color: white;
+}
+
+.alert {
+    position: absolute !important;
+}
