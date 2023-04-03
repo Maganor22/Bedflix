@@ -184,20 +184,20 @@ function addFav($id_user, $id_media, $db)
 
     $id_media = $id_media_row['id'];
 
-    $sql = "SELECT id_films FROM favoris WHERE id_films = :id_media";
+    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media";
     $req = $db->prepare($sql);
     $result = $req->execute(array('id_media' => $id_media));
     $id_media_row2 = $req->fetch(PDO::FETCH_ASSOC);
 
     if (!$id_media_row2) {
-        $sql = "INSERT INTO favoris (id, id_films) VALUES (:id_user, :id_media)";
+        $sql = "INSERT INTO favoris_film (id, id_films) VALUES (:id_user, :id_media)";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
             'id_user' => $id_user,
             'id_media' => $id_media
         ));
     } else {
-        $sql = "DELETE FROM favoris WHERE id = :id_user AND id_films = :id_media";
+        $sql = "DELETE FROM favoris_film WHERE id = :id_user AND id_films = :id_media";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
             'id_user' => $id_user,
@@ -265,7 +265,7 @@ function getAvatar($id_user, $db)
 
 function getFavorisByUserId($id_user, $db)
 {
-    $sql = "SELECT * FROM favoris WHERE id = :id_user";
+    $sql = "SELECT * FROM favoris_film WHERE id = :id_user";
     $req = $db->prepare($sql);
     $result = $req->execute(array('id_user' => $id_user));
     $favoris = $req->fetchAll(PDO::FETCH_ASSOC);

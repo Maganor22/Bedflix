@@ -44,8 +44,9 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
         </header>
 
         <main>
-            <div>
+            <div class="favList">
                 <section class="section-film">
+                    <h1 class="text-center favListTitle">Favoris</h1>
                     <div class="filmContainer">
                         <?php foreach ($favoris as $favori) {
                             $id_film = $favori['id_films'];
@@ -66,7 +67,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             <div id="image-container"></div>
         </main>
 
-        <script type="module" src="./scripts/script.js"></script>
+        <script src="./scripts/modalFavoris.js"></script>
     </body>
 
     </html>

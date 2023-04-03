@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-
-/* .btn-danger {
-    background-color :#c4000a!important;
-} */
-
 hr {
     color: white;
     background-color: white;
@@ -124,9 +119,26 @@ h1,
 }
 
 /* FAVORIS */
+
+.favListTitle {
+    color: red;
+}
+
+.favList {
+    margin-top: 7rem;
+}
+
 .imgFav {
     width: 18.75rem;
     height: 26.8125rem;
+    opacity: 0.6;
+    transform: scale(1);
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.imgFav:hover {
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 .imgFavLink {
@@ -136,6 +148,7 @@ h1,
 .imgFavLink:hover {
     width: fit-content;
 }
+
 /* FIN FAVORIS */
 
 #image-container {

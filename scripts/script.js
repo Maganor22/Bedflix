@@ -624,10 +624,7 @@ function createDomImg(src, count, link, type, trailer, title, background, synops
             modal.style.display = "block";
             modalBg.style.backgroundImage = `url(${background})`;
             modalBg.style.backgroundSize = "cover";
-            //modalContent.style.backgroundImage = `url(${background})`;
             modalContent.style.backgroundSize = "cover";
-            //modalBackground.setAttribute("src", background);
-            //modalBackground.style.backgroundImage = `url(${background})`;
 
 
             validateBtn.classList.remove("btn-danger");

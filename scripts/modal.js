@@ -218,7 +218,7 @@ export function modalCreation(type, title, year, trailer, backgroundModal, linkY
     genreFilm.textContent = `Genres : ${genresFormat}`;
     synopsisModal.appendChild(genreFilm);
 
-    validateBtn.style.display = "none";
+    //validateBtn.style.display = "none";
 }
 
 export function createEditAdminModal(mediaInfo) {
@@ -962,11 +962,30 @@ function deleteUserModal() {
     inputPswd.style.marginBottom = "1rem";
     deleteForm.appendChild(inputPswd);
 
+
+    const pDeleteBtn = document.createElement("small");
+    pDeleteBtn.textContent = "Attention la suppresion de votre compte est irréverssible !";
+    pDeleteBtn.style.color = "orange";
+    deleteForm.appendChild(pDeleteBtn);
+
     const deleteUserBtn = document.createElement("button");
     deleteUserBtn.textContent = "Supprimer mon compte";
     deleteUserBtn.classList.add("btn", "btn-danger", "w-100");
     deleteUserBtn.setAttribute("type", "submit");
+    deleteUserBtn.disabled = "true";
     deleteForm.appendChild(deleteUserBtn);
+
+    let timeLeft = 10;
+    const countdown = setInterval(() => {
+        timeLeft--;
+        if (timeLeft === 0) {
+            clearInterval(countdown);
+            deleteUserBtn.disabled = false; // activer le bouton à la fin du compte à rebours
+        } else {
+            deleteUserBtn.textContent = `Supprimer mon compte (${timeLeft})`;
+        }
+    }, 1000);
+
 
     const closeBtn = document.createElement("button");
     closeBtn.textContent = "X";
