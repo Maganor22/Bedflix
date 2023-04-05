@@ -34,14 +34,8 @@
                     <li class="nav-item">
                         <a class="nav-link text-light fs-4 fw-bold ms-5 me-5 resetIndex" aria-current="page" href="./index.php">Accueil</a>
                     </li>
-                    <!--                         <li class="nav-item">
-                            <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex" href="./series.html">Séries</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex" href="./films.html">Films</a>
-                        </li> -->
                     <li class="nav-item">
-                        <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex researchLink" href="#">Recherche</a>
+                        <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex researchLink" href="./researchpage.php">Recherche</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex favLink" href="./favoris.php">Favoris</a>
@@ -54,7 +48,7 @@
                         <input style="border: none;" placeholder="Titre film/serie" class="text-white bg-transparent input_research w-75 h-100">
                     </div>
                 </form>
-                <a href="#"><img src="./imgs/Vector.png" alt="img_cloche" class="m-2" id="cloche"></a>
+                <!-- <a href="#"><img src="./imgs/Vector.png" alt="img_cloche" class="m-2" id="cloche"></a> -->
                 <!-- <a href="#"><img src="./imgs/avatar.png" alt="img_avatar" class="m-2" id="avatar2"></a> -->
 
                 <a href="#" id="avatar-container">

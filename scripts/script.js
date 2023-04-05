@@ -579,7 +579,6 @@ function createDomImg(src, count, link, type, trailer, title, background, synops
                     background_research.src = background;
                 }
             } else {
-                //await new Promise(resolve => setTimeout(resolve, 1000));
                 setTimeout(() => {
                     if (isMouseOver) {
                         background_research.style.opacity = "1";

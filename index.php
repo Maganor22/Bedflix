@@ -55,7 +55,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                 <div class="background_image"></div>
 
                 <img src="./imgs/b logo.png" alt="img_logo_B" class="content" id="B_logo">
-                <h1 class="text-white indexType content">SÉRIE</h1>
+                <h1 class="text-white indexType content">FILM CHARGEMENT</h1>
                 <h2 class="text-white indexTitle content">Jumanji</h2>
                 <h3 class="text-white indexLookType content">Regardez la première saison !</h3>
                 <p class="text-white w-75 fs-5 indexSynopsis content" id="desc">Le destin de quatre
