@@ -786,7 +786,7 @@ if (document.location.pathname === "/researchpage.php" || document.location.path
                             for (let i = 0; i < mySerie.seasons_details.length; i++) {
                                 saisonsList.push(mySerie.seasons_details[i].episodes)
                             }
-                            insererSerie(nameSerie, yearSerie, poster, background, id, imdb, trailer, synopsis, genres, saisonsList)
+                            insererSerie(nameSerie, yearSerie, poster, background, id, imdb, trailer, synopsis, genres, saisonsList);
 
                             countSeries++;
                         }
@@ -1159,7 +1159,6 @@ export function createFavButton(id) {
         addFav(id);
     });
 }
-
 
 
 //Split function:

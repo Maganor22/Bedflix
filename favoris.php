@@ -24,8 +24,6 @@ function convertChars($thisChaine)
 
 
 
-
-
 if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
 ?>
@@ -80,7 +78,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                         <div class="modal-header">
                                             <h2 class="modal-title text-white" id="favoriteModal"><?= $movie['titre'] . ' - ' . $movie['annee'] ?></h2>
                                             <div class="float-right">
-                                                <button type="button" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
+                                                <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
                                                     <i class="fas fa-star" style="color: gold;"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
@@ -94,8 +92,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                             <p class="genreFilm">Genres : <?= $genres ?></p>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                <!-- FOOTER DU MODAL -->
                                         </div>
                                     </div>
                                 </div>
@@ -109,6 +106,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
         </main>
 
+        <!-- <script type="module" src="./scripts/script.js"></script> -->
         <script src="./scripts/modalFavoris.js"></script>
     </body>
 

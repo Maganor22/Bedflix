@@ -15,7 +15,7 @@ class Mail {
         $mail->SMTPSecure = 'tls';
         $mail->Port = 587;
 
-        // Informations envoyeur/réceptionneur
+        // Informations envoyeur/réceptionneur 
         $mail->Username = 'bedflix21@gmail.com';
         $mail->Password = 'sbwavugttiomorrz';
         $mail->From = 'bedflix21@gmail.com';

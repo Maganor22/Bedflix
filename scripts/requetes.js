@@ -3,7 +3,7 @@ import { createAdminButton } from './script.js';
 import { actorsInBdd } from './createPlatforms.js'
 
 export function selectFilm(id) {
-    fetch(`../Bedflix/PHP/requetes.php?requete=selectFilm&id_du_media=${id}`)
+    fetch(`../Bedflix/fonctions/requetes.php?requete=selectFilm&id_du_media=${id}`)
         .then(response => response.json())
         .then(data => {
             // Utilisez les données JSON ici
@@ -15,7 +15,7 @@ export function selectFilm(id) {
 }
 
 export function selectGenre(genre) {
-    fetch(`../Bedflix/PHP/requetes.php?requete=selectGenre&genres=${genre}`)
+    fetch(`../Bedflix/fonctions/requetes.php?requete=selectGenre&genres=${genre}`)
         .then(response => response.json())
         .then(data => {
             // Utilisez les données JSON ici
@@ -30,7 +30,7 @@ export function selectGenre(genre) {
 export function insererFilm(mediaTitleOriginal, mediaTitleFr, mediaType, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaDuree, mediaGenre) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=insertFilm", true);
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertFilm", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -58,46 +58,11 @@ export function insererFilm(mediaTitleOriginal, mediaTitleFr, mediaType, mediaAn
         "&genre=" + mediaGenre);
 }
 
-/* export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaGenre, mediaSaisons) {
-    console.log(mediaSaisons)
-    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=insertSerie", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Définir la fonction de rappel pour traiter la réponse
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                // Si la requête a réussi, afficher le message de succès
-                //let response = JSON.parse(xhr.responseText);
-                //alert(response.message);
-
-            } else {
-                // Si la requête a échoué, afficher le message d'erreur
-                alert("Erreur: " + xhr.status);
-            }
-        }
-    };
-
-    // Envoyer les données au serveur
-    xhr.send("titre=" + mediaTitle +
-        "&annee=" + mediaAnnee +
-        "&poster=" + mediaPoster +
-        "&affiche=" + mediaBackdrop +
-        "&id_du_media=" + mediaId +
-        "&imdb=" + mediaImdb +
-        "&ba=" + mediaBa +
-        "&synopsis=" + mediaSynopsis +
-        "&genre=" + mediaGenre +
-        "&saisons=" + mediaSaisons);
-} */
-
 export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaGenre, mediaSaisons) {
-
+    console.log(mediaGenre, mediaSaisons)
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=insertSerie", true);
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertSerie", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -120,9 +85,53 @@ export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop,
         "&ba=" + mediaBa +
         "&synopsis=" + mediaSynopsis +
         "&genre=" + mediaGenre +
-        "&nombre_saisons=" + mediaSaisons.length +
-        "&nombre_episodes_par_saison=" + JSON.stringify(mediaSaisons));
+        "&nombre_saisons=" + JSON.stringify(mediaSaisons));
+        //"&nombre_episodes_par_saison=" + JSON.stringify(mediaEpisodes));
 }
+
+/* export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaGenre, mediaSaisons) {
+    console.log(mediaGenre, mediaSaisons)
+    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertSerie", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Définir la fonction de rappel pour traiter la réponse
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (!xhr.status === 200) {
+                // Si la requête a échoué, afficher le message d'erreur
+                alert("Erreur: " + xhr.status);
+            }
+        }
+    };
+
+    // Envoyer les données au serveur
+    let formData = new FormData();
+    formData.append('titre', mediaTitle);
+    formData.append('annee', mediaAnnee);
+    formData.append('poster', mediaPoster);
+    formData.append('affiche', mediaBackdrop);
+    formData.append('id_du_media', mediaId);
+    formData.append('imdb', mediaImdb);
+    formData.append('ba', mediaBa);
+    formData.append('synopsis', mediaSynopsis);
+    formData.append('genre', mediaGenre);
+    formData.append('nombre_saisons', mediaSaisons.length);
+
+    for (let i = 0; i < mediaSaisons.length; i++) {
+        let saison = mediaSaisons[i];
+        formData.append('saison' + (i + 1), saison);
+
+        for (let j = 0; j < saison.episodes.length; j++) {
+            let episode = saison.episodes[j];
+            formData.append('saison' + (i + 1) + '_episode' + (j + 1), episode);
+        }
+    }
+
+    xhr.send(formData);
+} */
+
 
 export function updateFilm() {
     let mediaTitleOriginal = document.querySelector(".mediaTitleOriginal").value;
@@ -138,7 +147,7 @@ export function updateFilm() {
 
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=updateFilm", true);
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=updateFilm", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -169,7 +178,7 @@ export function updateFilm() {
 export function updateAvatar(photo_profil) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=updateAvatar", true);
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=updateAvatar", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -190,7 +199,7 @@ export function getAvatarFromUser() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            fetch(`../Bedflix/PHP/requetes.php?requete=getAvatar`)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=getAvatar`)
                 .then(response => response.json())
                 .then(data => {
                     // Utilisez les données JSON ici
@@ -214,7 +223,7 @@ export function selectUserById(id, myMedia, type) {
         if (this.readyState == 4 && this.status == 200) {
             let infoUser = JSON.parse(this.responseText);
             let pseudo = infoUser.pseudo;
-            fetch(`../Bedflix/PHP/requetes.php?requete=selectUserById`)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=selectUserById`)
                 .then(response => response.json())
                 .then(data => {
                     // Utilisez les données JSON ici
@@ -237,7 +246,7 @@ export function selectUserParams() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            fetch(`../Bedflix/PHP/requetes.php?requete=selectUserById`)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=selectUserById`)
                 .then(response => response.json())
                 .then(data => {
                     // Utilisez les données JSON ici
@@ -258,7 +267,7 @@ export function selectProfilPictures(userPicture) {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            fetch(`../Bedflix/PHP/requetes.php?requete=selectProfilPictures`)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=selectProfilPictures`)
                 .then(response => response.json())
                 .then(data => {
                     // Utilisez les données JSON ici
@@ -275,7 +284,6 @@ export function selectProfilPictures(userPicture) {
 
 
 export function addFav(id_media) {
-
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -283,7 +291,7 @@ export function addFav(id_media) {
             let id_user = info_user.id;
             console.log(id_user);
             console.log(id_media)
-            fetch(`../Bedflix/PHP/requetes.php?requete=addFav&id_user=${id_user}&id_media=${id_media}`)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=addFav&id_user=${id_user}&id_media=${id_media}`)
                 .then(response => response.text())
                 .then(data => {
                     // Utilisez les données JSON ici
@@ -302,7 +310,7 @@ export function addFav(id_media) {
 export function insertActorBase(nom, alias, id_films, age, dNaissance, poster, biographie) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/PHP/requetes.php?requete=insertActorBase", true);
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertActorBase", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -327,7 +335,7 @@ export function insertActorBase(nom, alias, id_films, age, dNaissance, poster, b
 
 export function selectActorsByIdFilm(id, type, title, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent) {
     //console.log(id)
-    fetch(`../Bedflix/PHP/requetes.php?requete=selectActorsByIdFilm&id_films=${id}`)
+    fetch(`../Bedflix/fonctions/requetes.php?requete=selectActorsByIdFilm&id_films=${id}`)
         .then(response => response.json())
         .then(data => {
             // Utilisez les données JSON ici

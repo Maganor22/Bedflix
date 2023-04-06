@@ -1,73 +1,26 @@
-
-function favBtn(film) {
-    console.log(film)
-    //myStarFav.style.color === "gold" ? myStarFav.style.color = "white" : myStarFav.style.color = "gold";
-    const link = document.getElementById(`linkFav${film}`);
+function favBtn(id_media) {
+    //Selectionne le link de l'image du film et le supprime
+    const link = document.getElementById(`linkFav${id_media}`);
     link.remove();
+
+    //Selectionne le bouton de fermeture du modal et simule un clique pour la fermer
+    let closeButton = document.querySelector('[data-bs-dismiss="modal"]');
+    closeButton.click();
+
+    //Envoie de la requete PHP pour supprimer le film des favoris de l'utilisateur
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            let info_user = JSON.parse(this.responseText);
+            let id_user = info_user.id;
+            console.log(id_media)
+            fetch(`../Bedflix/fonctions/requetes.php?requete=delFav&id_user=${id_user}&id_media=${id_media}`)
+                .then(response => response.json())
+                .catch(error => {
+                    console.error(`Une erreur s'est produite:`, error);
+                });
+        }
+    };
+    xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+    xhttp.send();
 }
-
-/* linkYtbBtn.setAttribute("data-link", `https://www.youtube.com/results?search_query=${title}+trailer+fr+`);
-
-//Empeche le background de remonter tout en haut de la page
-const elements = document.querySelectorAll('a[href="#"], button[type="submit"]');
-elements.forEach(element => {
-element.addEventListener('click', event => {
-event.preventDefault();
-modal.style.display = "block";
-});
-});
-
-modal.style.display = "block";
-modalBg.style.backgroundImage = `url(${background})`;
-modalBg.style.backgroundSize = "cover";
-modalContent.style.backgroundSize = "cover";
-
-
-validateBtn.classList.remove("btn-danger");
-validateBtn.classList.add("btn-primary");
-validateBtn.textContent = "Streaming";
-
-
-//Fonction de création de note
-createStars(note, modalContent, id, type, title, comment);
-
-//Fonction de création des commentaires
-createComments(id, type, title, comment, modalContent);
-
-//Fonction de création des acteurs
-createActors(id, type, title, modalContent, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent);
-
-//Fonction de création des plateformes 
-createPlatformLinks(platformLink, modalContent);
-
-//Fonction de création des liens de streaming
-createSvod(platformSvod, modalContent);
-
-//Fonction de création de la recherche google
-createGoogleSearch(platformLink, platformSvod, title, type, year, modalContent);
-
-//Fonction de création du modal
-modalCreation(type, title, year, trailer, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, link, imdb, synopsisModal, synopsis, duree, background, api_key, genres);
-
-//Fonction de création du bouton d'édition du média
-createAdminEditButton(id, myMedia, type);
-
-//Fonction de création du bouton favoris
-createFavButton(id);
-
-
-
-
-
-/*         setInterval(() => {
- 
-if (screen.width < 480) {
-    console.log("test")
-    background_research.style.width = window.innerWidth;
-    background_research.style.height = window.innerHeight;
-    background_research.style.objectFit = "cover";
-}
-console.log(window.innerWidth)
-console.log(background_research)
-}, 1000);
-} */
