@@ -143,7 +143,7 @@ function selectGenre($genres, $db)
     return $json;
 }
 
-function insertFilm($titre, $titre_fr, $type, $annee, $poster, $affiche, $id_du_media, $imdb, $ba, $synopsis, $duree, $genre, $db)
+function insertFilm($titre, $titre_fr, $type, $annee, $poster, $affiche, $id_du_media, $imdb, $ba, $synopsis, $duree, $note, $nbNote, $genre, $db)
 {
     $sql = "SELECT * FROM films WHERE id_du_media = :id_du_media";
     $req = $db->prepare($sql);
@@ -151,7 +151,7 @@ function insertFilm($titre, $titre_fr, $type, $annee, $poster, $affiche, $id_du_
     $film = $req->fetch(PDO::FETCH_ASSOC);
 
     if (!$film) {
-        $sql = "INSERT INTO films (titre, titre_fr, type, annee, poster, affiche, id_du_media, imdb, ba, synopsis, duree, genre) VALUES (:titre, :titre_fr, :type, :annee, :poster, :affiche, :id_du_media, :imdb, :ba, :synopsis, :duree, :genre)";
+        $sql = "INSERT INTO films (titre, titre_fr, type, annee, poster, affiche, id_du_media, imdb, ba, synopsis, duree, note, nbNote, genre) VALUES (:titre, :titre_fr, :type, :annee, :poster, :affiche, :id_du_media, :imdb, :ba, :synopsis, :duree, :note, :nbNote, :genre)";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
             'titre' => $titre,
@@ -165,6 +165,8 @@ function insertFilm($titre, $titre_fr, $type, $annee, $poster, $affiche, $id_du_
             'ba' => $ba,
             'synopsis' => $synopsis,
             'duree' => $duree,
+            'note' => $note,
+            'nbNote' => $nbNote,
             'genre' => $genre
         ));
     }
@@ -199,6 +201,25 @@ function getMoviesById($id_media, $db)
     return $movie;
 }
 
+function setComments($id_media, $commentaires, $db)
+{
+    $sql = "UPDATE `films` SET `commentaires` = :commentaires WHERE `id_du_media` = :id_media";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'commentaires' => json_encode($commentaires),
+        'id_media' => $id_media
+    ));
+    return $result;
+}
+
+function getComments($id_media, $db)
+{
+    $sql = "SELECT commentaires FROM films WHERE `id_du_media` = :id_media";
+    $req = $db->prepare($sql);  
+    $result = $req->execute(array('id_media' => $id_media));
+    $commentaires = $req->fetch(PDO::FETCH_ASSOC);
+    return $commentaires;
+}
 
 
 /* FIN FILMS */
@@ -266,7 +287,7 @@ function insertSerie($titre, $annee, $poster, $affiche, $id_du_media, $imdb, $ba
             'synopsis' => $synopsis,
             'genre' => $genre
         ));
-        
+
         $id_series = $db->lastInsertId();
 
         // Insérer les saisons et les épisodes
@@ -281,7 +302,7 @@ function insertSerie($titre, $annee, $poster, $affiche, $id_du_media, $imdb, $ba
                 'id_series' => $id_series
             ));
 
-           /*  // Insérer les épisodes
+            /*  // Insérer les épisodes
             for ($i = 1; $i <= $nombre_episodes_par_saison; $i++) {
                 $nom_episode = "Saison " . $id_saison . " Episode " . $i;
                 $numero_episode = $i;

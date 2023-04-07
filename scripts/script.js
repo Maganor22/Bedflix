@@ -735,9 +735,9 @@ if (document.location.pathname === "/researchpage.php" || document.location.path
 
                             //INSERER LES FILMS DANS LA BDD
                             if (myFilm.other_title != null && myFilm.other_title != "" && myFilm.other_title.language == "fr") {
-                                insererFilm(myFilm.title, myFilm.other_title.title, type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, genres)
+                                insererFilm(myFilm.title, myFilm.other_title.title, type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, myFilm.notes.mean, myFilm.notes.total, genres)
                             } else {
-                                insererFilm(myFilm.title, "", type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, genres)
+                                insererFilm(myFilm.title, "", type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, myFilm.notes.mean, myFilm.notes.total, genres)
                             }
 
                             countFilms++;
@@ -829,9 +829,9 @@ if (document.location.pathname === "/researchpage.php" || document.location.path
                     createDomImg(myFilm.poster, films, urlStream, type, trailer, nameFilm, background, synopsis, yearFilm, imdb, platformLink, platformSvod, duree, note, id, comment, myFilm, genres);
 
                     if (myFilm.other_title != null && myFilm.other_title != "" && myFilm.other_title.language == "fr") {
-                        insererFilm(myFilm.title, myFilm.other_title.title, type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, genres)
+                        insererFilm(myFilm.title, myFilm.other_title.title, type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, myFilm.notes.mean, myFilm.notes.total, genres)
                     } else {
-                        insererFilm(myFilm.title, "", type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, genres)
+                        insererFilm(myFilm.title, "", type, yearFilm, myFilm.poster, background, id, imdb, trailer, synopsis, duree, myFilm.notes.mean, myFilm.notes.total, genres)
                     }
                 }
             }

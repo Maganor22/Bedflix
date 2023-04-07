@@ -27,7 +27,7 @@ export function selectGenre(genre) {
 }
 
 
-export function insererFilm(mediaTitleOriginal, mediaTitleFr, mediaType, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaDuree, mediaGenre) {
+export function insererFilm(mediaTitleOriginal, mediaTitleFr, mediaType, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaDuree, mediaNote, mediaNbNote, mediaGenre) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertFilm", true);
@@ -55,11 +55,13 @@ export function insererFilm(mediaTitleOriginal, mediaTitleFr, mediaType, mediaAn
         "&ba=" + mediaBa +
         "&synopsis=" + mediaSynopsis +
         "&duree=" + mediaDuree +
+        "&note=" + mediaNote +
+        "&nbNote=" + mediaNbNote +
         "&genre=" + mediaGenre);
 }
 
 export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaGenre, mediaSaisons) {
-    console.log(mediaGenre, mediaSaisons)
+    //console.log(mediaGenre, mediaSaisons)
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertSerie", true);
@@ -346,4 +348,25 @@ export function selectActorsByIdFilm(id, type, title, backgroundModal, linkYtbBt
             actorsInBdd(error, id, type, title, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent);
             //console.error(`Une erreur s'est produite:`, error);
         });
+}
+
+
+export function setComments(id_media) {
+    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=getComments", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Définir la fonction de rappel pour traiter la réponse
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (!xhr.status === 200) {
+                // Si la requête a échoué, afficher le message d'erreur
+                alert("Erreur: " + xhr.status);
+            }
+        }
+    };
+    // Envoyer les données au serveur
+
+    xhr.send("id_media=" + id_media);
 }

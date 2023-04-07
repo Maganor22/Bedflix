@@ -65,18 +65,25 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                         <?php foreach ($favoris as $favori) {
                             $id_film = $favori['id_films'];
                             $movie = getMoviesById($id_film, $db);
+                            if ($movie['titre_fr'] != "" ) {
+                                $titre = $movie['titre_fr'];
+                            }else{
+                                $titre = $movie['titre'];
+                            }
                             $duree = convertToHHMM($movie['duree']);
                             $genres = convertChars($movie['genre']);
+                            $commentaires = json_decode($movie['commentaires']);
+                            print_r($commentaires);
                         ?>
                             <a href="#" class="imgFavLink" id="linkFav<?= $id_film ?>" data-bs-toggle="modal" data-bs-target="#<?= $id_film ?>" onmouseenter="$('.favBg').attr('style', 'background-image: url(\'<?= $movie['affiche'] ?>\')');">
-                                <img src="<?= $movie['poster'] ?>" alt="<?= $movie['titre'] ?>" class="allImgs imgFav">
+                                <img src="<?= $movie['poster'] ?>" alt="<?= $titre ?>" class="allImgs imgFav">
                             </a>
 
                             <div class="modal fade" id="<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h2 class="modal-title text-white" id="favoriteModal"><?= $movie['titre'] . ' - ' . $movie['annee'] ?></h2>
+                                            <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
                                             <div class="float-right">
                                                 <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
                                                     <i class="fas fa-star" style="color: gold;"></i>
@@ -90,6 +97,28 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                             <p class="synopsisModal"><?= $movie['synopsis'] ?></p>
                                             <p class="dureeFilm">Durée du film : <?= $duree ?></p>
                                             <p class="genreFilm">Genres : <?= $genres ?></p>
+                                            <p class="noteFilm">Note : <?= $movie['note'] ?> / 5 (<?= $movie['nbNote'] ?>)</p>
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#comments<?= $id_film ?>">Commentaires</a>
+                                           
+                                        </div>
+                                        <div class="modal-footer">
+                                                <!-- FOOTER DU MODAL -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal commentsModal fade" id="comments<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteCommentsModal" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h2 class="modal-title text-white" id="favoriteCommentsModal">Commentaires de <?= $titre . ' - ' . $movie['annee'] ?></h2>
+                                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
+                                        </div>
+                                        <div class="modal-body">
+                                        <?php foreach ($commentaires as $commentaire) {?>
+                                            <p class="commentsFilms text-white">(<?= $commentaire ?>)</p>
+                                        <?php } ?>
                                         </div>
                                         <div class="modal-footer">
                                                 <!-- FOOTER DU MODAL -->
@@ -105,6 +134,9 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
 
         </main>
+
+
+    
 
         <!-- <script type="module" src="./scripts/script.js"></script> -->
         <script src="./scripts/modalFavoris.js"></script>

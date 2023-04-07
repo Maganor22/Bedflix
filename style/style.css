@@ -246,7 +246,8 @@ nav {
 
 .synopsisModal,
 .dureeFilm,
-.genreFilm {
+.genreFilm,
+.noteFilm {
     font-size: 1.5625rem;
     margin-top: 1.25rem;
     color: white;

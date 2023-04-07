@@ -30,7 +30,7 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'insertFilm':
-            $dataInsertFilm = insertFilm($_POST['titre'], $_POST['titre_fr'], $_POST['type'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['duree'], $_POST['genre'], $db);
+            $dataInsertFilm = insertFilm($_POST['titre'], $_POST['titre_fr'], $_POST['type'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['duree'], $_POST['note'], $_POST['nbNote'], $_POST['genre'], $db);
             echo json_encode($dataInsertFilm);
             break;
 
@@ -72,6 +72,16 @@ if (isset($_GET['requete'])) {
         case 'selectActorsByIdFilm':
             $dataActorsByIdFilm = selectActorsByIdFilm($_GET['id_films'], $db);
             echo json_encode($dataActorsByIdFilm);
+            break;
+
+        case 'setComments':
+            $dataSetComments = setComments($_POST['id_media'], $_POST['commentaires'], $db);
+            echo json_encode($dataSetComments);
+            break;
+
+        case 'getComments':
+            $dataGetComments = getComments($_POST['id_media'], $db);
+            echo json_encode($dataGetComments);
             break;
 
         default:

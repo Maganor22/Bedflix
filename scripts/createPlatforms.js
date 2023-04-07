@@ -1,6 +1,6 @@
 import { modalCreation } from "./modal.js";
 import { createAdminEditButton, createFavButton } from "./script.js";
-import { insertActorBase, selectActorsByIdFilm } from "./requetes.js";
+import { insertActorBase, selectActorsByIdFilm, setComments } from "./requetes.js";
 
 let api_key = "2d216cf10e57";
 
@@ -293,7 +293,7 @@ async function createCommentsModal(id, type, title) {
         commentsList.style.listStyleType = "none";
         commentsList.style.padding = "0";
         commentsList.style.margin = "0";
-
+        let commentaireList = [];
         for (let comment of comments.comments) {
             let commentItem = document.createElement("li");
             commentItem.style.marginBottom = "1rem";
@@ -344,9 +344,12 @@ async function createCommentsModal(id, type, title) {
             commentContainer.appendChild(commentContent);
 
             commentsList.appendChild(commentItem);
-        }
 
+            /* ENVOYER LA REQUETE D'INSERTION */
+            commentaireList.push(comment.text)
+        }
         commentsModalContent.appendChild(commentsList);
+        setComments(commentaireList, id)
     } catch (err) {
         console.error(err);
         let error = document.createElement("p");
