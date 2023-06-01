@@ -1,1 +1,1 @@
-Reinitialized existing Git repository in C:/wamp64/www/Bedflix/.git/
+Reinitialized existing Git repository in C:/xampp/htdocs/Bedflix/.git/

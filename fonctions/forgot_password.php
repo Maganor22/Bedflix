@@ -33,7 +33,7 @@ if (isset($email) && !empty($email)) {
         <p style="color:white">Vous avez demandé à changer votre mot de passe, cliquez sur le bouton ci-dessous pour le changer.</p></br>
         <p style="color:white">Si vous n\'avez pas demandé à changer votre mot de passe, ignorez ce mail.</p></br>
         <div style="display:inline-block; background-color:#0077cc; color:white; padding:10px 20px; border-radius:4px;">
-        <a href="http://localhost/Bedflix/change_password_view.php?recuperation=' . $uniqId . '" style="color:white; text-decoration:none;">Changer mon mot de passe</a>
+        <a href="http://51.210.104.251/Bedflix/change_password_view.php?recuperation=' . $uniqId . '" style="color:white; text-decoration:none;">Changer mon mot de passe</a>
         </div>';
 
 

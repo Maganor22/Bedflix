@@ -2,10 +2,6 @@
 #        Script MySQL.
 #------------------------------------------------------------
 
-#------------------------------------------------------------
-# Table: films
-#------------------------------------------------------------
-
 CREATE TABLE films(
         id          Int  Auto_increment  NOT NULL ,
         titre       Varchar (50) NOT NULL ,
@@ -19,8 +15,24 @@ CREATE TABLE films(
         ba          Text NOT NULL ,
         synopsis    Text NOT NULL ,
         duree       Int NOT NULL ,
+        note        Decimal (10,2) NOT NULL ,
+        nbNote      Int NOT NULL ,
         genre       Text NOT NULL
         ,CONSTRAINT films_PK PRIMARY KEY (id)
+)ENGINE=InnoDB;
+
+
+CREATE TABLE commentaires(
+        id       Int  Auto_increment  NOT NULL ,
+        user     Varchar(100) NOT NULL ,
+        picture  Text NOT NULL ,
+        note     Decimal (10,2) DEFAULT NULL ,
+        date     Date NOT NULL ,
+        commentaire     Longtext NOT NULL ,
+        id_films Int NOT NULL
+        ,CONSTRAINT commentaires_PK PRIMARY KEY (id)
+
+        ,CONSTRAINT commentaires_films_FK FOREIGN KEY (id_films) REFERENCES films(id)
 )ENGINE=InnoDB;
 
 
@@ -29,15 +41,16 @@ CREATE TABLE films(
 #------------------------------------------------------------
 
 CREATE TABLE utilisateurs(
-        id           Int  Auto_increment  NOT NULL ,
-        role         Varchar (10) NOT NULL ,
-        nom          Varchar (50) NOT NULL ,
-        prenom       Varchar (50) NOT NULL ,
-        email        Varchar (50) NOT NULL ,
-        pseudo       Varchar (50) NOT NULL ,
-        mdp          Varchar (64) NOT NULL ,
-        photo_profil Text NOT NULL ,
-        actif        Bool NOT NULL
+        id               Int  Auto_increment  NOT NULL ,
+        role             Varchar (10) NOT NULL ,
+        nom              Varchar (50) NOT NULL ,
+        prenom           Varchar (50) NOT NULL ,
+        email            Varchar (50) NOT NULL ,
+        pseudo           Varchar (50) NOT NULL ,
+        mdp              Varchar (64) NOT NULL ,
+        photo_profil     Varchar (100) NOT NULL ,
+        actif            Bool NOT NULL ,
+        date_inscription Datetime NOT NULL
         ,CONSTRAINT utilisateurs_PK PRIMARY KEY (id)
 )ENGINE=InnoDB;
 
@@ -63,30 +76,16 @@ CREATE TABLE series(
 
 
 #------------------------------------------------------------
-# Table: saisons_et_episodes
-#------------------------------------------------------------
-
-CREATE TABLE saisons_et_episodes(
-        id             Int  Auto_increment  NOT NULL ,
-        saison         Int NOT NULL ,
-        nombre_episode Int NOT NULL ,
-        id_series      Int
-        ,CONSTRAINT saisons_et_episodes_PK PRIMARY KEY (id)
-
-        ,CONSTRAINT saisons_et_episodes_series_FK FOREIGN KEY (id_series) REFERENCES series(id)
-)ENGINE=InnoDB;
-
-
-#------------------------------------------------------------
 # Table: acteurs
 #------------------------------------------------------------
 
 CREATE TABLE acteurs(
-        id     Int  Auto_increment  NOT NULL ,
-        nom    Varchar (50) NOT NULL ,
-        age    Int NOT NULL ,
-        date   Varchar (10) NOT NULL ,
-        poster Text NOT NULL
+        id         Int  Auto_increment  NOT NULL ,
+        nom        Varchar (50) NOT NULL ,
+        age        Int NOT NULL ,
+        date       Varchar (10) NOT NULL ,
+        poster     Text NOT NULL ,
+        biographie Text NOT NULL
         ,CONSTRAINT acteurs_PK PRIMARY KEY (id)
 )ENGINE=InnoDB;
 
@@ -133,16 +132,42 @@ CREATE TABLE mdp_oublie(
 
 
 #------------------------------------------------------------
-# Table: favoris
+# Table: episodes
 #------------------------------------------------------------
 
-CREATE TABLE favoris(
+CREATE TABLE episodes(
+        id             Int  Auto_increment  NOT NULL ,
+        nom            Varchar (200) NOT NULL ,
+        numero_episode Int NOT NULL
+        ,CONSTRAINT episodes_PK PRIMARY KEY (id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: saisons
+#------------------------------------------------------------
+
+CREATE TABLE saisons(
+        id        Int NOT NULL ,
+        id_series Int NOT NULL
+        ,CONSTRAINT saisons_PK PRIMARY KEY (id,id_series)
+
+        ,CONSTRAINT saisons_episodes_FK FOREIGN KEY (id) REFERENCES episodes(id)
+        ,CONSTRAINT saisons_series0_FK FOREIGN KEY (id_series) REFERENCES series(id)
+)ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: favoris_film
+#------------------------------------------------------------
+
+CREATE TABLE favoris_film(
         id       Int NOT NULL ,
         id_films Int NOT NULL
-        ,CONSTRAINT favoris_PK PRIMARY KEY (id,id_films)
+        ,CONSTRAINT favoris_film_PK PRIMARY KEY (id,id_films)
 
-        ,CONSTRAINT favoris_utilisateurs_FK FOREIGN KEY (id) REFERENCES utilisateurs(id)
-        ,CONSTRAINT favoris_films0_FK FOREIGN KEY (id_films) REFERENCES films(id)
+        ,CONSTRAINT favoris_film_utilisateurs_FK FOREIGN KEY (id) REFERENCES utilisateurs(id)
+        ,CONSTRAINT favoris_film_films0_FK FOREIGN KEY (id_films) REFERENCES films(id)
 )ENGINE=InnoDB;
 
 
@@ -173,6 +198,7 @@ CREATE TABLE joue_serie(
         ,CONSTRAINT joue_serie_acteurs_FK FOREIGN KEY (id) REFERENCES acteurs(id)
         ,CONSTRAINT joue_serie_series0_FK FOREIGN KEY (id_series) REFERENCES series(id)
 )ENGINE=InnoDB;
+
 
 
 #------------------------------------------------------------
@@ -207,10 +233,20 @@ INSERT INTO `photo_profil`(`nom`, `url`, `categorie`) VALUES
 
 ALTER TABLE utilisateurs ALTER COLUMN photo_profil SET DEFAULT 'avatar.png';
 ALTER TABLE utilisateurs ALTER COLUMN actif SET DEFAULT 0;
-ALTER TABLE films ALTER COLUMN commentaires TYPE JSON;
 ALTER TABLE favoris_film DROP FOREIGN KEY favoris_film_utilisateurs_FK;
 ALTER TABLE favoris_film ADD CONSTRAINT favoris_film_utilisateurs_FK_new FOREIGN KEY (id) REFERENCES utilisateurs (id) ON DELETE CASCADE;
-ALTER TABLE films MODIFY COLUMN commentaires JSON;
+
+ALTER TABLE commentaires
+DROP FOREIGN KEY commentaires_films_FK;
+ALTER TABLE commentaires
+ADD CONSTRAINT commentaires_films_FK 
+FOREIGN KEY (id_films) REFERENCES films(id) ON DELETE CASCADE;
+
+
+
+ALTER TABLE films AUTO_INCREMENT = 0;
+
+
 
 
 

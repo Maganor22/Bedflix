@@ -26,8 +26,18 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             displayError("Le prénom ne doit contenir que des lettres et doit comporter au moins deux caractères.");
         }
     }
-
-
+    if (isset($_GET["failed"])) {
+        $failed = $_GET["failed"];
+        if ($failed == 1) {
+            displayError("Les mots de passe ne correspondent pas.");
+        } else if ($failed == 2) {
+            displayError("Le pseudo existe déja.");
+        } else if ($failed == 3) {
+            displayError("L'email existe déja.");
+        } else if ($failed == 4) {
+            displayError("Veuillez remplir tous les champs.");
+        }
+    }
 
 ?>
     <!DOCTYPE html>
@@ -61,56 +71,56 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             <div class="row justify-content-center">
                 <div class="inscriptionDiv">
                     <div class="logoInscription d-flex justify-content-center">
-                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-50 mb-5">
+                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-50 mb-3">
                     </div>
                     <h2 class="text-white">Inscription</h2>
                     <p class="error text-warning">* champs obligatoires</p>
-                    <form action="../Bedflix/fonctions/inscription.php" method="POST" class="d-flex flex-column flex-md-row mb-3" id="inscriptionForm">
-                        <div class="col-md-6 me-2">
-                            <div class="form-group">
-                                <label for="nickname" class="text-white fw-bold">Pseudo* :<?php if (!empty($error) && $error == "2") { ?>
-                                    <small class="text-danger">incorrect</small>
-                                <?php } ?></label>
-                                <input type="text" name="nickname" placeholder="Pseudonyme" class="form-control">
-
-
-                            </div>
-                            <div class="form-group">
-                                <label for="name" class="text-white fw-bold">Nom* :<?php if (!empty($error) && $error == "3") { ?>
-                                    <small class="text-danger">incorrect</small>
-                                <?php } ?></label>
-                                <input type="text" name="name" placeholder="Dupont" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="firstname" class="text-white fw-bold">Prénom* :<?php if (!empty($error) && $error == "4") { ?>
-                                    <small class="text-danger">incorrect</small>
-                                <?php } ?></label>
-                                <input type="text" name="firstname" placeholder="Olivier" class="form-control">
-                            </div>
-                            <div class="button-group">
+                    <form action="../Bedflix/fonctions/inscription.php" method="POST" class="mb-2" id="inscriptionForm">
+                        <div class="d-flex flex-column flex-md-row divInsc">
+                            <div class="col-md-6 ">
+                                <div class="form-group">
+                                    <label for="nickname" class="text-white fw-bold">Pseudo* :<?php if (!empty($error) && $error == "2") { ?>
+                                        <small class="text-danger">incorrect</small>
+                                    <?php } ?></label>
+                                    <input type="text" name="nickname" placeholder="Pseudonyme" class="form-control" width="90">
+                                </div>
+                                <div class="form-group">
+                                    <label for="name" class="text-white fw-bold">Nom* :<?php if (!empty($error) && $error == "3") { ?>
+                                        <small class="text-danger">incorrect</small>
+                                    <?php } ?></label>
+                                    <input type="text" name="name" placeholder="Dupont" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="firstname" class="text-white fw-bold">Prénom* :<?php if (!empty($error) && $error == "4") { ?>
+                                        <small class="text-danger">incorrect</small>
+                                    <?php } ?></label>
+                                    <input type="text" name="firstname" placeholder="Olivier" class="form-control">
+                                </div>
+                                <!--                             <div class="button-group">
                                 <button class="btn w-100 mt-2 redbtn">Effacer</button>
+                            </div> -->
+                            </div>
+                            <div class="col-md-6 ">
+                                <div class="form-group">
+                                    <label for="email" class="text-white fw-bold">Email* :<?php if (!empty($error) && $error == "1") { ?>
+                                        <small class="text-danger">incorrect</small>
+                                    <?php } ?></label>
+                                    <input type="email" name="email" placeholder="olivier.dupont@mail.com" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="text-white fw-bold">Mot de passe* :<?php if (!empty($error) && $error == "5") { ?>
+                                        <small class="text-danger">incorrect</small>
+                                    <?php } ?></label>
+                                    <input type="password" name="password" placeholder="********" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="text-white fw-bold">Confirmation* :</label>
+                                    <input type="password" name="passwordConfirmation" placeholder="********" class="form-control">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6 ms-2">
-                            <div class="form-group">
-                                <label for="email" class="text-white fw-bold">Email* :<?php if (!empty($error) && $error == "1") { ?>
-                                    <small class="text-danger">incorrect</small>
-                                <?php } ?></label>
-                                <input type="email" name="email" placeholder="olivier.dupont@mail.com" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="text-white fw-bold">Mot de passe* :<?php if (!empty($error) && $error == "5") { ?>
-                                    <small class="text-danger">incorrect</small>
-                                <?php } ?></label>
-                                <input type="password" name="password" placeholder="********" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="text-white fw-bold">Confirmation* :</label>
-                                <input type="password" name="passwordConfirmation" placeholder="********" class="form-control">
-                            </div>
-                            <div class="button-group">
-                                <button type="submit" class="btn btn-warning w-100 mt-2">Valider</button>
-                            </div>
+                        <div class="button-group">
+                            <button type="submit" class="btn btn-warning w-100">Valider</button>
                         </div>
                     </form>
                     <span class="text-white">Déjà inscrit ? <a href="./connexion-view.php">Se connecter</a></span>
@@ -122,13 +132,13 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             const form = document.querySelector('form');
             const passwordInput = document.querySelectorAll('input[type="password"]');
             const pseudo = document.querySelector("input[name='nickname']");
-            const delFormBtn = document.querySelector(".redbtn");
+            //const delFormBtn = document.querySelector(".redbtn");
 
-            //EFFACER LE FORMULAIRE
-            delFormBtn.addEventListener('click', (event) => {
-                event.preventDefault();
-                form.reset();
-            });
+            /*             //EFFACER LE FORMULAIRE
+                        delFormBtn.addEventListener('click', (event) => {
+                            event.preventDefault();
+                            form.reset();
+                        }); */
 
             const regexPassword = /^(?=.*[A-Z])(?=.*[\W])(?=.*[a-z]).{8,}$/;
 

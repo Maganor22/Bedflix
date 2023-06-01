@@ -74,7 +74,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
     <body class="bg-dark">
         <div class="center">
             <div class="background"></div>
-            <div class="row justify-content-center">
+            <div class="row justify-content-center logs">
                 <div class="connexionDiv">
                     <?php if (!empty($success) && $success == "1") {
                         echo "<style>.alert { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
@@ -82,7 +82,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
                         echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
                     } ?>
                     <div class="logoConnexion d-flex justify-content-center">
-                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5">
+                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5 logoConnexion">
                     </div>
                     <h2 class="text-white">Connexion</h2>
                     <form action="../Bedflix/fonctions/connexion.php" method="POST" class="d-flex flex-column flex-md-row" id="connexionForm">

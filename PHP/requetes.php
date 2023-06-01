@@ -30,7 +30,7 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'insertFilm':
-            $dataInsertFilm = insertFilm($_POST['titre'], $_POST['titre_fr'], $_POST['type'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['duree'], $_POST['genre'], $db);
+            $dataInsertFilm = insertFilm($_POST['titre'], $_POST['titre_fr'], $_POST['type'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['duree'], $_POST['note'], $_POST['nbNote'], $_POST['genre'], $db);
             echo json_encode($dataInsertFilm);
             break;
 

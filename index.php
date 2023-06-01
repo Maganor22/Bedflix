@@ -1,3 +1,10 @@
+<!-- Rectifications / bugs : 
+    index.php clic sur dropdown genre fais stop la ba et l'écran passe en fondu
+    Pareil pour le bouton lire la suite
+-->
+    
+
+
 <?php
 session_start();
 require_once "./bdd/dbconnect.php";
@@ -53,83 +60,86 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             </div>
             <div class="background_index">
                 <div class="background_image"></div>
+                <div class="d-flex justify-content-start ms-1">
+                    <p class="ms-2 indexFilmTitle"></p>
+                </div>
+                <div id="progress-bar-container">
+                    <p class="pbTextVolume text-white me-1">Volume</p>
+                    <div id="progress-bar" class="me-2"></div>
+                </div>
+
 
                 <img src="./imgs/b logo.png" alt="img_logo_B" class="content" id="B_logo">
-                <h1 class="text-white indexType content">FILM CHARGEMENT</h1>
-                <h2 class="text-white indexTitle content">Jumanji</h2>
-                <h3 class="text-white indexLookType content">Regardez la première saison !</h3>
-                <p class="text-white w-75 fs-5 indexSynopsis content" id="desc">Le destin de quatre
-                    lycéens en
-                    retenue bascule
-                    lorsqu’ils sont aspirés dans le monde de Jumanji. Après avoir découvert une vieille console contenant un
-                    jeu
-                    vidéo dont ils n’avaient jamais entendu parler, les quatre jeunes se retrouvent mystérieusement
-                    propulsés au
-                    cœur de la jungle de Jumanji, dans le corps de leurs avatars. Ils vont rapidement découvrir que l’on ne
-                    joue
-                    pas à Jumanji, c’est le jeu qui joue avec vous… Pour revenir dans le monde réel, il va leur falloir
-                    affronter les pires dangers et triompher de l’ultime aventure. Sinon, ils resteront à jamais prisonniers
-                    de
-                    Jumanji…</p>
-            </div>
-            <div class="dropdown position-absolute z-3 content">
-                <button class="btn border border-1 dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Genres
-                </button>
-                <ul class="dropdown-menu multi-column columns-3 bg-dark text-white">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <ul class="multi-column-dropdown">
-                                <li><a href="#" class="text-white genre-button" data-genre="Action">Action</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Animation">Animation</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Aventure">Aventure</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Comedie">Comédie</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Crime">Crime</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Documentaire">Documentaire</a>
-                                </li>
-                            </ul>
+                <h1 class="text-white indexType content"></h1>
+                <h2 class="text-white indexTitle content">CHARGEMENT EN COURS</h2>
+                <h3 class="text-white indexLookType content"></h3>
+                <p class="text-white fs-5 indexSynopsis content" id="desc"></p>
+                <button class="content expandButton btn btn-secondary">Lire la suite</button>
+
+
+
+                <div class="firstCarousel content">
+                    <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <!-- <div id="myCarousel" class="carousel slide" data-bs-ride="carousel"> -->
+                        <div class="d-flex d-gender">
+                            <h4 class="text-white fs-2 filmGender content">Films par genre :</h4>
+                            <div class="dropdown ms-3 z-3 content">
+                                <button class="btn border border-1 dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Genres
+                                </button>
+                                <ul class="dropdown-menu multi-column columns-3 bg-dark text-white">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <li><a href="#" class="text-white genre-button" data-genre="Action">Action</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Animation">Animation</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Aventure">Aventure</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Comedie">Comédie</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Crime">Crime</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Documentaire">Documentaire</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <li><a href="#" class="text-white genre-button" data-genre="Drame">Drame</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Familial">Familial</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Fantastique">Fantastique</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Guerre">Guerre</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Histoire">Histoire</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Horreur">Horreur</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <li><a href="#" class="text-white genre-button" data-genre="Musique">Musique</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Mystere">Mystère</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Romance">Romance</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Science-Fiction">Science-Finction</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Thriller">Thriller</a></li>
+                                                <li><a href="#" class="text-white genre-button" data-genre="Western">Western</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </div>
                         </div>
-                        <div class="col-sm-4">
-                            <ul class="multi-column-dropdown">
-                                <li><a href="#" class="text-white genre-button" data-genre="Drame">Drame</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Familial">Familial</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Fantastique">Fantastique</a>
-                                </li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Guerre">Guerre</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Histoire">Histoire</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Horreur">Horreur</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-sm-4">
-                            <ul class="multi-column-dropdown">
-                                <li><a href="#" class="text-white genre-button" data-genre="Musique">Musique</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Mystere">Mystère</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Romance">Romance</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Science-Fiction">Science-Finction</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Thriller">Thriller</a></li>
-                                <li><a href="#" class="text-white genre-button" data-genre="Western">Western</a></li>
-                            </ul>
-                        </div>
+
+                        <button class="carousel-control-prev previous" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <div class="carousel-inner"></div>
+                        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
                     </div>
-                </ul>
-            </div>
-            <div class="firstCarousel content">
-                <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <!-- <div id="myCarousel" class="carousel slide" data-bs-ride="carousel"> -->
-                    <h4 class="text-white fs-2 filmGender content">Films du moment</h4>
-                    <button class="carousel-control-prev previous" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <div class="carousel-inner"></div>
-                    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
             </div>
 
-            <div class="secondCarousel content">
+
+
+            <!-- <div class="secondCarousel content">
                 <div id="myCarousel2" class="carousel slide">
                     <h4 class="text-white fs-2 favTitle content">Ajoutés aux favoris :</h4>
                     <button class="carousel-control-prev previous prevCar2" type="button" data-bs-target="#myCarousel2" data-bs-slide="prev">
@@ -142,7 +152,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
-            </div>
+            </div> -->
 
             <img src="./imgs/carrousels background.png" alt="gradient_background" class="w-100 position-absolute start-0 bgcar content">
             <!-- <h5 class="position-absolute text-white fs-2 serieGender">Séries du moment</h5> -->

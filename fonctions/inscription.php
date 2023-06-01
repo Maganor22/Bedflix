@@ -14,7 +14,7 @@ if (!empty($_POST["nickname"]) && !empty($_POST["name"]) && !empty($_POST["first
         header("Location: ../inscription-view.php?error=1");
         exit();
     }
-    if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,}$/u", $_POST["nickname"])) {
+    if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ]{2,}$/u", $_POST["nickname"])) {
         header("Location: ../inscription-view.php?error=2");
         exit();
     }
@@ -88,7 +88,7 @@ if (!empty($_POST["nickname"]) && !empty($_POST["name"]) && !empty($_POST["first
                     <p style="color:white">Pour confirmer votre inscription à <span style="font-weight:bold; font-size: 14px;">Bedflix</span>, veuillez <span style="font-weight:bold; font-size: 14px;">confirmer votre adresse email</span> grâce au bouton ci-dessous.</p></br>
                     <p style="color:white">Vous pourrez ainsi vous connecter à votre compte avec votre pseudo : <span style="color:lightblue; font-weight:bold; font-size:14px;">' . $nickname . '</span> ou avec votre <span style="font-weight:bold; font-size:14px;">email</span>.</p>
                     <div style="display:inline-block; background-color:#0077cc; color:white; padding:10px 20px; border-radius:4px;">
-                    <a href="http://localhost/Bedflix/mail/confirmation_mail.php?verif=' . $uniqId . '" style="color:white; text-decoration:none;">Vérifiez mon email</a>
+                    <a href="http://51.210.104.251/Bedflix/mail/confirmation_mail.php?verif=' . $uniqId . '" style="color:white; text-decoration:none;">Vérifiez mon email</a>
                     </div>';
 
                     /* <a href="http://localhost/Bedflix/mail/confirmation_mail.php?verif=' . $uniqId . '">Vérifiez mon email</a></div>'; */

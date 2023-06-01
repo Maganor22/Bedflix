@@ -201,7 +201,57 @@ function getMoviesById($id_media, $db)
     return $movie;
 }
 
-function setComments($id_media, $commentaires, $db)
+/* function setComments($id_media, $commentaires, $db)
+{
+    $commentaires_json = json_encode($commentaires);
+    $sql = "UPDATE `films` SET `commentaires` = :commentaires WHERE `id_du_media` = :id_media";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'commentaires' => json_encode($commentaires_json),
+        'id_media' => $id_media
+    ));
+    return $result;
+} */
+function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
+{
+
+    $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array('id_films' => $id_films));
+    $id_films = $req->fetch(PDO::FETCH_ASSOC);
+
+
+
+    $sql = "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
+            VALUES (:user, :picture, :note, :date, :commentaire, :id_films)";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'user' => $user,
+        'picture' => $picture,
+        'note' => $note,
+        'date' => $date,
+        'commentaire' => $commentaire,
+        'id_films' => $id_films['id']
+    ));
+    return $result;
+}
+
+
+function getComments($id_media, $db)
+{
+    $sql = "SELECT commentaires FROM films WHERE `id_du_media` = :id_media";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array('id_media' => $id_media));
+    $commentaires_json = $req->fetch(PDO::FETCH_COLUMN);
+    $commentaires = json_decode($commentaires_json, true);
+    if (!is_array($commentaires)) {
+        $commentaires = array();
+    }
+    return $commentaires;
+}
+
+
+/* function setComments($id_media, $commentaires, $db)
 {
     $sql = "UPDATE `films` SET `commentaires` = :commentaires WHERE `id_du_media` = :id_media";
     $req = $db->prepare($sql);
@@ -219,8 +269,7 @@ function getComments($id_media, $db)
     $result = $req->execute(array('id_media' => $id_media));
     $commentaires = $req->fetch(PDO::FETCH_ASSOC);
     return $commentaires;
-}
-
+} */
 
 /* FIN FILMS */
 
@@ -391,6 +440,15 @@ function getFavorisByUserId($id_user, $db)
     $result = $req->execute(array('id_user' => $id_user));
     $favoris = $req->fetchAll(PDO::FETCH_ASSOC);
     return $favoris;
+}
+
+function getCommentairesByFilmId($id_film, $db)
+{
+    $sql = "SELECT * FROM commentaires WHERE id_films = :id_film";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array('id_film' => $id_film));
+    $commentaires = $req->fetchAll(PDO::FETCH_ASSOC);
+    return $commentaires;
 }
 
 /* FIN FAVORIS */

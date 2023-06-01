@@ -76,7 +76,7 @@ export function createPlatformLinks(platformLink, modalContent) {
 export function createSvod(platformSvod, modalContent) {
     let deleteSvod = document.querySelectorAll(".svodElements")
     for (let i = 0; i < deleteSvod.length; i++) {
-        deleteSvod[i].remove();
+        deleteSvod[i].remove();F
     }
     if (platformSvod.length > 0) {
         let titleSvod = document.createElement("h2");
@@ -182,15 +182,15 @@ export function createStars(note, modalContent) {
         //if (note.mean == 1 || note.mean == 2 || note.mean == 3 || note.mean == 4 || note.mean == 5) {
         if ([1, 2, 3, 4, 5].includes(note.mean)) {
             if (note.total > 1) {
-                starsTitle.innerHTML = "Note : " + note.mean.toFixed(0) + " / 5 (" + note.total + " votes)";
+                starsTitle.innerHTML = `<strong>Note</strong> : ` + note.mean.toFixed(0) + " / 5 (" + note.total + " votes)";
             } else {
-                starsTitle.innerHTML = "Note : " + note.mean.toFixed(0) + " / 5 (" + note.total + " vote)";
+                starsTitle.innerHTML = `<strong>Note</strong> : ` + note.mean.toFixed(0) + " / 5 (" + note.total + " vote)";
             }
         } else {
             if (note.total > 1) {
-                starsTitle.innerHTML = "Note : " + note.mean.toFixed(2) + " / 5 (" + note.total + " votes)";
+                starsTitle.innerHTML = `<strong>Note</strong> : ` + note.mean.toFixed(2) + " / 5 (" + note.total + " votes)";
             } else {
-                starsTitle.innerHTML = "Note : " + note.mean.toFixed(2) + " / 5 (" + note.total + " vote)";
+                starsTitle.innerHTML = `<strong>Note</strong> : ` + note.mean.toFixed(2) + " / 5 (" + note.total + " vote)";
             }
         }
 
@@ -288,6 +288,7 @@ async function createCommentsModal(id, type, title) {
     try {
         const response = await fetch(`https://api.betaseries.com/comments/comments?key=${api_key}&id=${id}&type=${type}&order=desc&replies=0&nbpp=50`);
         const comments = await response.json();
+        console.log(comments);
         document.body.style.cursor = "auto";
         let commentsList = document.createElement("ul");
         commentsList.style.listStyleType = "none";
@@ -316,8 +317,6 @@ async function createCommentsModal(id, type, title) {
             commentAvatar.style.borderRadius = "20%";
             commentAvatar.style.marginRight = "0.5rem";
             commentContainer.appendChild(commentAvatar);
-
-
 
 
             // Définir la date de naissance de l'acteur
@@ -465,7 +464,9 @@ async function createActorsModal(id, type, title, backgroundModal, linkYtbBtn, v
             actorContainer.style.border = "1px solid white";
             actorContainer.style.borderRadius = "0.8rem";
             actorContainer.style.padding = "0.7rem";
-            actorContainer.style.width = "fit-content";
+            if (screen.width > 768) {
+                actorContainer.style.width = "fit-content";
+            }
             actorItem.appendChild(actorContainer);
 
             const actorLink = document.createElement("a");
@@ -513,9 +514,9 @@ async function createActorsModal(id, type, title, backgroundModal, linkYtbBtn, v
                 if (type == "movies") {
                     createActorModal(actor, bdd, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent);
                     fetch(`https://api.betaseries.com/persons/person?id=${actor.info.id}&key=${api_key}`)
-                    .then(response => response.json())
-                    .then(actorInfo => createActorModal(actorInfo, bdd, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent))
-                    .catch(error => console.error(error));
+                        .then(response => response.json())
+                        .then(actorInfo => createActorModal(actorInfo, bdd, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent))
+                        .catch(error => console.error(error));
                 } else {
                     console.log("serie")
                 }
@@ -588,7 +589,9 @@ async function createActorsModal(id, type, title, backgroundModal, linkYtbBtn, v
                     actorContainer.style.border = "1px solid white";
                     actorContainer.style.borderRadius = "0.8rem";
                     actorContainer.style.padding = "0.7rem";
-                    actorContainer.style.width = "fit-content";
+                    if (screen.width > 768) {
+                        actorContainer.style.width = "fit-content";
+                    }
                     actorItem.appendChild(actorContainer);
 
                     const actorLink = document.createElement("a");
@@ -690,6 +693,11 @@ function createActorModal(actor, bdd, backgroundModal, linkYtbBtn, videoFrame, m
     actorModalContent.style.backgroundColor = "#333333";
     actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
     actorModalContent.style.padding = "2rem";
+    if (screen.width > 768) {
+        actorModalContent.style.width = "50%";
+    } else {
+        actorModalContent.style.width = "80%";
+    }
 
     const actorTitle = document.createElement("h4");
 
@@ -706,7 +714,9 @@ function createActorModal(actor, bdd, backgroundModal, linkYtbBtn, videoFrame, m
     actorContainer.style.border = "1px solid white";
     actorContainer.style.borderRadius = "0.8rem";
     actorContainer.style.padding = "0.5rem";
-    actorContainer.style.width = "fit-content";
+    if (screen.width > 768) {
+        actorContainer.style.width = "fit-content";
+    }
     actorModalContent.appendChild(actorContainer);
 
     const actorImg = document.createElement("img");
@@ -717,8 +727,13 @@ function createActorModal(actor, bdd, backgroundModal, linkYtbBtn, videoFrame, m
         actorImg.src = actor.person.poster;
         actorImg.alt = `Photo de ${actor.person.name}`;
     }
-    actorImg.width = 400;
-    actorImg.height = 550;
+    if (screen.width < 768) {
+        actorImg.style.width = "100%";
+        actorImg.style.height = "100%";
+    } else {
+        actorImg.width = 400;
+        actorImg.height = 550;
+    }
     actorImg.style.borderRadius = "5%";
     actorContainer.appendChild(actorImg);
 

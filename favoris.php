@@ -60,20 +60,26 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             </div>
             <div class="favList">
                 <section class="section-film">
-                    <h1 class="text-center favListTitle">Favoris</h1>
+                    <h1 class="text-center favListTitle">𝔽𝕒𝕧𝕠𝕣𝕚𝕤</h1>
                     <div class="filmContainer">
                         <?php foreach ($favoris as $favori) {
                             $id_film = $favori['id_films'];
                             $movie = getMoviesById($id_film, $db);
-                            if ($movie['titre_fr'] != "" ) {
+                            if ($movie['titre_fr'] != "") {
                                 $titre = $movie['titre_fr'];
-                            }else{
+                            } else {
                                 $titre = $movie['titre'];
                             }
                             $duree = convertToHHMM($movie['duree']);
                             $genres = convertChars($movie['genre']);
-                            $commentaires = json_decode($movie['commentaires']);
-                            print_r($commentaires);
+                            /* $commentaires = json_decode($movie['commentaires']); */
+
+                            // Récupération des commentaires
+                            $commentaires = getCommentairesByFilmId($id_film, $db);
+
+                            /*                             $commentaires_json = $movie['commentaires'];
+                            $commentaires = json_decode($commentaires_json, true); */
+                            //print_r($commentaires);
                         ?>
                             <a href="#" class="imgFavLink" id="linkFav<?= $id_film ?>" data-bs-toggle="modal" data-bs-target="#<?= $id_film ?>" onmouseenter="$('.favBg').attr('style', 'background-image: url(\'<?= $movie['affiche'] ?>\')');">
                                 <img src="<?= $movie['poster'] ?>" alt="<?= $titre ?>" class="allImgs imgFav">
@@ -95,14 +101,14 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                             <iframe allow="autoplay; encrypted-media" allowfullscreen height="500" width="100%" id="video" src="https://www.youtube.com/embed/<?= $movie['ba'] ?>"></iframe>
 
                                             <p class="synopsisModal"><?= $movie['synopsis'] ?></p>
-                                            <p class="dureeFilm">Durée du film : <?= $duree ?></p>
+                                            <p class="dureeFilm"><strong>Durée du film</strong> : <?= $duree ?></p>
                                             <p class="genreFilm">Genres : <?= $genres ?></p>
                                             <p class="noteFilm">Note : <?= $movie['note'] ?> / 5 (<?= $movie['nbNote'] ?>)</p>
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#comments<?= $id_film ?>">Commentaires</a>
-                                           
+
                                         </div>
                                         <div class="modal-footer">
-                                                <!-- FOOTER DU MODAL -->
+                                            <!-- FOOTER DU MODAL -->
                                         </div>
                                     </div>
                                 </div>
@@ -116,16 +122,44 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
                                         </div>
                                         <div class="modal-body">
-                                        <?php foreach ($commentaires as $commentaire) {?>
-                                            <p class="commentsFilms text-white">(<?= $commentaire ?>)</p>
-                                        <?php } ?>
+                                            <?php
+                                            // Vérification de la validité de la chaîne JSON
+                                            if (json_last_error() !== JSON_ERROR_NONE) {
+                                                echo 'Erreur : la chaîne JSON stockée dans la base de données est invalide.';
+                                            } else {
+                                                // Affichage des commentaires
+                                                if ($commentaires) { ?>
+                                                    <ul class="commentaires">
+                                                        <?php
+                                                        foreach ($commentaires as $commentaire) {
+                                                        ?>
+                                                            <li>
+                                                                <div class="commentaireBorder">
+                                                                    <img class="logoUserCommentaire" src="<?= $commentaire['picture'] ?>" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                    <p class="commentaireAuteur"><?= $commentaire['user'], " / ", $commentaire['date'] ?></p>
+                                                                    <p class="commentaireTexte"><?= $commentaire['commentaire'] ?></p>
+                                                                </div>
+                                                            </li>
+
+                                                        <?php
+
+                                                        } ?>
+                                                    </ul>
+                                                <?php
+                                                } else { ?>
+                                                    <p class="commentaireTexte">Aucun commentaire pour ce film.</p>
+                                            <?php
+                                                }
+                                            }
+                                            ?>
                                         </div>
                                         <div class="modal-footer">
-                                                <!-- FOOTER DU MODAL -->
+                                            <!-- FOOTER DU MODAL -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                         <?php } ?>
                     </div>
 
@@ -136,10 +170,11 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
         </main>
 
 
-    
+
 
         <!-- <script type="module" src="./scripts/script.js"></script> -->
         <script src="./scripts/modalFavoris.js"></script>
+        <script type="module" src="./scripts/script.js"></script>
     </body>
 
     </html>

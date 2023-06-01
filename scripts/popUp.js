@@ -1,5 +1,7 @@
+
 // Fonction à exécuter lorsque la souris survole l'élément
 function afficherPopUp(img, title, year) {
+    if (screen.width < 768) return; // ne pas afficher le pop-up sur les petits écrans (smartphones, tablettes, etc.
     // Création de l'élément de pop-up
     const popUp = document.createElement('div');
     popUp.classList.add('pop-up');

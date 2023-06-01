@@ -45,7 +45,7 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'insertSerie':
-            $dataInsertSerie = insertSerie($_POST['titre'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['genre'], $_POST['nombre_saisons'], $db);//$_POST['nombre_episodes_par_saison'], $db);
+            $dataInsertSerie = insertSerie($_POST['titre'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['genre'], $_POST['nombre_saisons'], $db); //$_POST['nombre_episodes_par_saison'], $db);
             echo json_encode($dataInsertSerie);
             break;
 
@@ -75,7 +75,8 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'setComments':
-            $dataSetComments = setComments($_POST['id_media'], $_POST['commentaires'], $db);
+            $dataSetComments = setComments($_POST['user'], $_POST['picture'], $_POST['note'], $_POST['date'], $_POST['commentaire'], $_POST['id_films'], $db);
+            //$dataSetComments = setComments($_POST['user'], $_POST['photo'], $_POST['note'], $_POST['commentaire'], $_POST['id_media'], $db);
             echo json_encode($dataSetComments);
             break;
 

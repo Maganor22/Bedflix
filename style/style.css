@@ -1,12 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-hr {
-    color: white;
-    background-color: white;
-    height: 1px;
-    border: 0;
-}
-
 /* Pour les navigateurs basés sur WebKit (Google Chrome, Safari) */
 body::-webkit-scrollbar {
     display: none;
@@ -34,6 +27,54 @@ html {
     background-color: #141414;
 }
 
+.red {
+    color: red;
+    font-size: 2rem;
+    height: auto;
+    width: fit-content;
+}
+
+.indexFilmTitle {
+    position: fixed;
+    /* top: 6%; */
+    bottom: 0;
+    font-size: 1.5rem;
+    color: white;
+}
+
+#progress-bar-container {
+    display: flex;
+    align-items: baseline;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+}
+
+#progress-bar {
+    border-radius: 20px;
+    /* Ajoute des coins arrondis */
+    overflow: hidden;
+    background-color: #007bff;
+    height: 10px;
+    max-width: 100px;
+    min-width: 10px;
+}
+
+.dureeFilmIndex {
+    font-size: 1.25rem !important;
+}
+
+hr {
+    color: white;
+    background-color: white;
+    height: 1px;
+    border: 0;
+}
+
+.divInsc {
+    width: 95%;
+    gap: 5%;
+}
 h1,
 .section-film,
 .section-serie {
@@ -112,7 +153,7 @@ h1,
 .allImgs {
     margin: 0.9375rem 0.9375rem !important;
     width: 15%;
-    height: 15%;
+    /* height: 15%; */
     opacity: 0.7;
     box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
     border-radius: 0.625rem;
@@ -124,22 +165,20 @@ h1,
     background-repeat: no-repeat;
     background-size: cover;
     position: fixed;
-    /*top: 0;
-    left: 0; */
+    top: 5rem;
+        /*left: 0; */
     object-fit: cover;
     opacity: 0.8;
     background-size: 100%;
     width: 100%;
     height: 100vh;
     z-index: -1;
-    top: 5rem;
-
 }
-
 
 
 .favListTitle {
     color: red;
+    /* text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem; */
 }
 
 .favList {
@@ -237,7 +276,7 @@ nav {
     width: 100%;
     height: 100vh;
     z-index: -1;
-    top: 4.5rem;
+    top: 4.8rem;
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0;
@@ -248,8 +287,9 @@ nav {
 .dureeFilm,
 .genreFilm,
 .noteFilm {
-    font-size: 1.5625rem;
-    margin-top: 1.25rem;
+    /* font-size: 1.5625rem; */
+        font-size: 1.25rem;
+        margin-top: 1rem;
     color: white;
     margin-bottom: 0;
 }
@@ -350,8 +390,8 @@ h5 {
 }
 
 .bgcar {
-    top: 86%;
-    height: 50%;
+    top: 81%;
+        height: 55%;
 }
 
 .bgcar2 {
@@ -364,9 +404,14 @@ h5 {
 }
 
 /* CAROUSEL */
+ .d-gender {
+     max-width: 36%;
+     position: relative;
+     left: 3%;
+ }
 
 .carousel-inner {
-    height: 30rem;
+    height: auto;
 }
 
 .firstCarousel,
@@ -381,7 +426,7 @@ h5 {
 
 #myCarousel {
     position: absolute;
-    top: 75%;
+    top: 47%;
     z-index: 999;
     width: 90%;
 }
@@ -446,8 +491,7 @@ h5 {
 
 /* DROPDOWN */
 .dropdown {
-    left: 20rem;
-    top: 8.5rem;
+    margin-left: 1rem;
 }
 
 .dropdown-menu {
@@ -596,6 +640,9 @@ footer>* {
     }
 }
 
+.modal-backdrop {
+    display: none;
+}
 #indexTrailer {
     display: none;
     animation: fadeIn 0.5s ease-in-out;
@@ -723,7 +770,8 @@ footer>* {
 }
 
 .indexType {
-    margin-top: 7%;
+    margin-top: 5%;
+        margin-left: 80%;
     display: inline-block;
     vertical-align: middle;
 }
@@ -731,16 +779,19 @@ footer>* {
 .indexTitle {
     font-size: 2.5rem;
     font-weight: bold;
-    margin-top: 2%;
+    margin-top: -3.5%;
     margin-left: 10%;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .indexLookType {
-    margin-top: 3%;
+    margin-top: 1%;
     margin-left: 10%;
 }
 
+.indexSynopsis {
+    width: 85% !important;
+}
 .indexType,
 .indexTitle,
 .indexLookType,
@@ -788,7 +839,7 @@ footer>* {
 .background {
     position: absolute;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     background: url("../imgs/backjumanji.png") no-repeat;
     background-size: cover;
     background-position: center;
@@ -817,17 +868,52 @@ form div>input {
 .connexionDiv,
 .mdpDiv {
     z-index: 1;
-    padding: 4rem;
+    padding: 3rem;
     background-color: black;
     border-radius: 10px;
     box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
 }
 
-.redbtn {
+/* .redbtn {
     background: #e50914 !important;
     color: white;
-}
+} */
 
 .alert {
     position: absolute !important;
+}
+/* Commentaires Favoris */
+
+.commentaireAuteur,
+.commentaireTexte {
+    color: white !important;
+}
+
+.commentaireAuteur {
+    font-weight: bold !important;
+}
+
+.commentaireBorder {
+    border: 1px solid white !important;
+    border-radius: 0.8rem;
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+}
+
+.commentaires {
+    padding-left: 0;
+}
+
+.logoUserCommentaire {
+    width: 3rem;
+    border-radius: 0.8rem;
+}
+
+/* Fin Commentaires Favoris */
+
+.expandButton {
+    display: none;
+    position: relative;
+    left: 10%;
+    margin-bottom: 1rem;
 }

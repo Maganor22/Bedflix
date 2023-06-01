@@ -88,7 +88,7 @@ export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop,
         "&synopsis=" + mediaSynopsis +
         "&genre=" + mediaGenre +
         "&nombre_saisons=" + JSON.stringify(mediaSaisons));
-        //"&nombre_episodes_par_saison=" + JSON.stringify(mediaEpisodes));
+    //"&nombre_episodes_par_saison=" + JSON.stringify(mediaEpisodes));
 }
 
 /* export function insererSerie(mediaTitle, mediaAnnee, mediaPoster, mediaBackdrop, mediaId, mediaImdb, mediaBa, mediaSynopsis, mediaGenre, mediaSaisons) {
@@ -351,7 +351,50 @@ export function selectActorsByIdFilm(id, type, title, backgroundModal, linkYtbBt
 }
 
 
-export function setComments(id_media) {
+/* export function setComments(commentaires, id_media) {
+    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=setComments", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Définir la fonction de rappel pour traiter la réponse
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (!xhr.status === 200) {
+                // Si la requête a échoué, afficher le message d'erreur
+                alert("Erreur: " + xhr.status);
+            }
+        }
+    };
+    // Envoyer les données au serveur
+
+    xhr.send("id_media=" + id_media +
+        "&commentaires=" + commentaires);
+} */
+export function setComments(user, picture, note, date, commentaire, id_films) {
+    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=setComments", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    // Définir la fonction de rappel pour traiter la réponse
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (!xhr.status === 200) {
+                // Si la requête a échoué, afficher le message d'erreur
+                alert("Erreur: " + xhr.status);
+            }
+        }
+    };
+    xhr.send("user=" + user +
+        "&picture=" + picture +
+        "&note=" + note +
+        "&date=" + date +
+        "&commentaire=" + commentaire +
+        "&id_films=" + id_films);
+}
+
+export function getComments(id_media) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=getComments", true);
