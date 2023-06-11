@@ -1,5 +1,5 @@
 import { addFromBdd, createModalUserParams, createAvatarModal } from './modal.js';
-import { createAdminButton, getFav } from "./script.js";
+import { createAdminButton, getFav, getFilmVu } from "./script.js";
 import { actorsInBdd } from "./createPlatforms.js";
 
 export function selectFilm(id) {
@@ -409,6 +409,63 @@ export function checkFav(id_media) {
   xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
   xhttp.send();
 }
+
+
+/* FILMS VU */
+
+export function addFilmVu(id_media) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      //console.log(id_user);
+      //console.log(id_media);
+      fetch(
+        `../Bedflix/fonctions/requetes.php?requete=addFilmVu&id_user=${id_user}&id_media=${id_media}`
+      )
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          //console.log(data);
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.send();
+}
+
+export function checkFilmVu(id_media) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      //console.log(id_user);
+      //console.log(id_media);
+      fetch(
+        `../Bedflix/fonctions/requetes.php?requete=checkFilmVu&id_user=${id_user}&id_media=${id_media}`
+      )
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          getFilmVu(data, id_media);
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.send();
+}
+
+/* FIN FILMS VU */
+
+
 
 export function insertActorBase(nom, alias, id_films, age, dNaissance, poster, biographie) {
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest

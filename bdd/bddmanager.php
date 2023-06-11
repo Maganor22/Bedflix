@@ -564,7 +564,7 @@ function addFilmVu($id_user, $id_media, $db)
     $id_media = $id_media_row['id'];
 
     // Vérifie si l'entrée existe déjà dans la table des favoris
-    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media AND id = :id_user";
+    $sql = "SELECT id_films FROM films_vu WHERE id_films = :id_media AND id = :id_user";
     $req = $db->prepare($sql);
     $req->execute(array(
         'id_media' => $id_media,
@@ -574,7 +574,7 @@ function addFilmVu($id_user, $id_media, $db)
 
     if (!$id_media_row2) {
         // Ajoute le film aux favoris de l'utilisateur
-        $sql = "INSERT INTO favoris_film (id, id_films) VALUES (:id_user, :id_media)";
+        $sql = "INSERT INTO films_vu (id, id_films) VALUES (:id_user, :id_media)";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
             'id_user' => $id_user,
@@ -582,7 +582,7 @@ function addFilmVu($id_user, $id_media, $db)
         ));
     } else {
         // Supprime le film des favoris de l'utilisateur
-        $sql = "DELETE FROM favoris_film WHERE id = :id_user AND id_films = :id_media";
+        $sql = "DELETE FROM films_vu WHERE id = :id_user AND id_films = :id_media";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
             'id_user' => $id_user,
@@ -644,8 +644,8 @@ function checkFilmVu($id_user, $id_media, $db)
 
     $id_media = $id_media_row['id'];
 
-    // Vérifie si l'entrée existe déjà dans la table des favoris
-    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media AND id = :id_user";
+    // Vérifie si l'entrée existe déjà dans la table
+    $sql = "SELECT id_films FROM films_vu WHERE id_films = :id_media AND id = :id_user";
     $req = $db->prepare($sql);
     $req->execute(array(
         'id_media' => $id_media,
@@ -654,9 +654,9 @@ function checkFilmVu($id_user, $id_media, $db)
 
     // Vérifie si des résultats ont été retournés
     if ($req->rowCount() > 0) {
-        return true; // L'entrée existe déjà dans la table des favoris
+        return true; // L'entrée existe déjà dans la table
     } else {
-        return false; // L'entrée n'existe pas dans la table des favoris
+        return false; // L'entrée n'existe pas dans la table
     }
 }
 

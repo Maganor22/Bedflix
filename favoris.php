@@ -74,40 +74,30 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                             }
                             $duree = convertToHHMM($movie['duree']);
                             $genres = convertChars($movie['genre']);
-                            /* $commentaires = json_decode($movie['commentaires']); */
-
-                            // Récupération des commentaires
-
-                            //var_dump($commentaires);
-
-                            /*                             $commentaires_json = $movie['commentaires'];
-                            $commentaires = json_decode($commentaires_json, true); */
-                            //print_r($commentaires);
                         ?>
                             <a href="#" class="imgFavLink" id="linkFav<?= $id_film ?>" data-bs-toggle="modal" data-bs-target="#<?= $id_film ?>" onmouseenter="$('.favBg').attr('style', 'background-image: url(\'<?= $movie['affiche'] ?>\')');">
                                 <img src="<?= $movie['poster'] ?>" alt="<?= $titre ?>" class="allImgs imgFav">
                             </a>
 
-                            <div class="modal fade" id="<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
+                            <!-- <div class="modal fade" id="<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
-                                    <!-- <div class="modal-content modal-content-fav">
-                                        <div class="modal-header modal-header-fav">
-                                            <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
-                                            <div class="float-right divBtnsCommentsFav">
-                                                <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
-                                                    <i class="fas fa-star" style="color: gold;"></i>
-                                                </button>
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
-                                            </div>
-                                        </div> -->
                                     <div class="modal-content modal-content-fav">
                                         <div class="modal-header modal-header-fav">
                                             <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
-                                            <div class="float-right divBtnsCommentsFav">
+                                            <div class="float-right divBtnsCommentsFav"> -->
+                            <div class="modal fade" id="<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
+                                <div class="modal-dialog modal-xl">
+                                    <div class="modal-content modal-content-fav">
+                                        <div class="modal-header modal-header-fav" id="modalHeader<?= $id_film ?>">
+                                            <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
+                                            <div class="float-right divBtnsCommentsFav" id="divBtnsCommentsFav<?= $id_film ?>">
+                                                <button type="button" id="pSeeBtn<?= $id_film ?>" class="btn btn-secondary seeBtn me-2" onclick="seeBtn(<?= $îd_films ?>)">
+                                                    <i class="fa fa-eye" id="pEyeBtn<?= $id_film ?>" style="color: white;"></i>
+                                                </button>
                                                 <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
                                                     <i class="fas fa-star" style="color: gold;"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
+                                                <button type="button" class="btn btn-danger close-btn-fav" data-bs-dismiss="modal"> X </button>
                                             </div>
                                         </div>
 

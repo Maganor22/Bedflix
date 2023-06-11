@@ -7,6 +7,7 @@
         - Supprimer l'email de vérification et mdp oublié au bout de 10min
         - Quand on clique sur l'index pour réafficher l'index, il faut juste que ça réaffiche les infos mais que le clique soit pas pris en compte si par exemple on clique sur une image
         - Ne pas relancer le film si le meme film est déja lancé
+        - Ajouter bouton editer sur le modal favoris
 
     - AMELIORATIONS:
         - Option signaler un bug

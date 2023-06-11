@@ -133,10 +133,10 @@ CREATE TABLE mdp_oublie(
 
 
 #------------------------------------------------------------
-# Table: favoris
+# Table: favoris_film
 #------------------------------------------------------------
 
-CREATE TABLE favoris(
+CREATE TABLE favoris_film(
         id       Int NOT NULL ,
         id_films Int NOT NULL
         ,CONSTRAINT favoris_PK PRIMARY KEY (id,id_films)
@@ -144,6 +144,19 @@ CREATE TABLE favoris(
         ,CONSTRAINT favoris_utilisateurs_FK FOREIGN KEY (id) REFERENCES utilisateurs(id)
         ,CONSTRAINT favoris_films0_FK FOREIGN KEY (id_films) REFERENCES films(id)
 )ENGINE=InnoDB;
+
+
+#------------------------------------------------------------
+# Table: favoris_film
+#------------------------------------------------------------
+
+CREATE TABLE films_vu (
+    id       INT NOT NULL,
+    id_films INT NOT NULL,
+    CONSTRAINT films_vu_PK PRIMARY KEY (id, id_films),
+    CONSTRAINT films_vu_utilisateurs_FK FOREIGN KEY (id) REFERENCES utilisateurs(id),
+    CONSTRAINT films_vu_films_FK FOREIGN KEY (id_films) REFERENCES films(id)
+) ENGINE=InnoDB;
 
 
 #------------------------------------------------------------
@@ -209,6 +222,8 @@ ALTER TABLE utilisateurs ALTER COLUMN photo_profil SET DEFAULT 'avatar.png';
 ALTER TABLE utilisateurs ALTER COLUMN actif SET DEFAULT 0;
 ALTER TABLE favoris_film DROP FOREIGN KEY favoris_film_utilisateurs_FK;
 ALTER TABLE favoris_film ADD CONSTRAINT favoris_film_utilisateurs_FK_new FOREIGN KEY (id) REFERENCES utilisateurs (id) ON DELETE CASCADE;
+ALTER TABLE films_vu DROP FOREIGN KEY films_vu_utilisateurs_FK;
+ALTER TABLE films_vu ADD CONSTRAINT films_vu_utilisateurs_FK_new FOREIGN KEY (id) REFERENCES utilisateurs (id) ON DELETE CASCADE;
 ALTER TABLE email_verification ADD COLUMN date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
 
 

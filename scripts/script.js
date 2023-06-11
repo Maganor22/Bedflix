@@ -16,6 +16,8 @@ import {
   selectUserById,
   addFav,
   checkFav,
+  addFilmVu,
+  checkFilmVu,
   setComments,
 } from "./requetes.js";
 
@@ -446,15 +448,34 @@ if (screen.width < 768) {
 
   parentElement.insertBefore(avatar, nextButton);
 
-  setTimeout(function () {
-    var divBtnsCommentsFav = document.querySelector(".divBtnsCommentsFav");
-    var modalHeaderFav = document.querySelector(".modal-header-fav");
-    const parentElement2 = modalHeaderFav.parentNode;
+  /*   setTimeout(function () {
+  var divBtnsCommentsFav = document.querySelector(".divBtnsCommentsFav");
+  var modalHeaderFav = document.querySelector(".modal-header-fav");
+  const parentElement2 = modalHeaderFav.parentNode;
 
-    parentElement2.insertBefore(divBtnsCommentsFav, modalHeaderFav);
-    divBtnsCommentsFav.style.display = "flex";
-    divBtnsCommentsFav.style.justifyContent = "space-between";
-  }, 100);
+  parentElement2.insertBefore(divBtnsCommentsFav, modalHeaderFav);
+  divBtnsCommentsFav.style.display = "flex";
+  divBtnsCommentsFav.style.justifyContent = "space-between";
+}, 100); */
+
+
+
+  setTimeout(function () {
+    var modalHeadersFav = document.querySelectorAll(".modal-header-fav");
+
+    modalHeadersFav.forEach(function (modalHeaderFav) {
+      var idFilm = modalHeaderFav.getAttribute("id").replace("modalHeader", "");
+      var divBtnsCommentsFav = document.querySelector(
+        "#divBtnsCommentsFav" + idFilm
+      );
+      var parentElement = modalHeaderFav.parentNode;
+
+      parentElement.insertBefore(divBtnsCommentsFav, modalHeaderFav);
+
+      divBtnsCommentsFav.style.display = "flex";
+      divBtnsCommentsFav.style.justifyContent = "space-between";
+    });
+  }, 1000);
 }
 
 const modalHeader = document.createElement("div");
@@ -1907,11 +1928,14 @@ export function createSeeButton(id) {
     const myEyeBtn = document.getElementById(`myEyeBtn${id}`);
 
     mySeeBtn.addEventListener("click", function () {
-      myEyeBtn.style.color === "white"
-        ? (myEyeBtn.style.color = "green")
-        : (myEyeBtn.style.color = "white");
+      myEyeBtn.style.color === "greenyellow"
+        ? (myEyeBtn.style.color = "white")
+        : (myEyeBtn.style.color = "greenyellow");
+      addFilmVu(id);
+      console.log("addFilmVu");
     });
   }, 200);
+  checkFilmVu(id);
 }
 
 export function createFavButton(id) {
@@ -1972,6 +1996,17 @@ export function getFav(data, id) {
       myStarFav.style.color = "gold";
     } else if (data == "false") {
       myStarFav.style.color = "white";
+    }
+  }, 100);
+}
+
+export function getFilmVu(data, id) {
+  setTimeout(() => {
+    let myEyeBtn = document.getElementById(`myEyeBtn${id}`);
+    if (data == "true") {
+      myEyeBtn.style.color = "greenyellow";
+    } else if (data == "false") {
+      myEyeBtn.style.color = "white";
     }
   }, 100);
 }

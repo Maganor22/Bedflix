@@ -65,18 +65,18 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'addFilmVu':
-            $dataAddFav = addFav($_GET['id_user'], $_GET['id_media'], $db);
-            echo json_encode($dataAddFav);
+            $dataFilmVu = addFilmVu($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataFilmVu);
             break;
 
         case 'checkFilmVu':
-            $dataCheckFav = checkFav($_GET['id_user'], $_GET['id_media'], $db);
-            echo json_encode($dataCheckFav);
+            $dataCheckFilmVu = checkFilmVu($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataCheckFilmVu);
             break;
 
         case 'delFilmVu':
-            $dataDelFav = delFav($_GET['id_user'], $_GET['id_media'], $db);
-            echo json_encode($dataDelFav);
+            $dataDelFilmVu = delFilmVu($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataDelFilmVu);
             break;
 
         case 'getAvatar':
