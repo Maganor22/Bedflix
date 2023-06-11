@@ -32,7 +32,8 @@
 
   /*index.php*/
   .background_index {
-    height: 100vh !important;
+    min-height: 100vh !important;
+    height: auto !important;
     /* height: auto !important; */
     top: 7.5vh !important;
   }
@@ -118,6 +119,11 @@
     top: 98% !important;
   }
 
+  .boxResearch {
+    margin: 0.5rem 0 0.5rem 0;
+    width: 100%;
+  }
+
   /*Fin navbar*/
 
   /*inscription-view.php*/
@@ -148,7 +154,19 @@
   /* Favoris */
   .favBg {
     top: 4rem !important;
+    background-size: auto;
   }
+
+  .imgFav {
+    width: 9.375rem;
+    height: 13.40rem;
+  }
+
+  .favList {
+    margin-top: 5rem;
+  }
+
+  /*Fin Favoris */
 
   /* Recherche */
 
@@ -214,6 +232,29 @@
   /*     .orientation::after {
         content: "(orientation:portrait)";
     } */
+
+    /*Create Platform*/
+
+     .actor-item {
+      margin-right: 0!important;
+    }
+
+    /*.modal-content-actors {
+      padding: 1.2rem!important;
+      margin-bottom: 0;
+    } */
+
+    .actors-modal-title,
+    .modal-title-comment{
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .close-btn-button {
+      max-height: 2.4rem;
+    }
+
+    /*Fin Create Platform*/
 }
 
 @media only screen and (min-width: 320px) and (max-width: 1024px) and (orientation: landscape) {

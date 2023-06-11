@@ -209,6 +209,8 @@ ALTER TABLE utilisateurs ALTER COLUMN photo_profil SET DEFAULT 'avatar.png';
 ALTER TABLE utilisateurs ALTER COLUMN actif SET DEFAULT 0;
 ALTER TABLE favoris_film DROP FOREIGN KEY favoris_film_utilisateurs_FK;
 ALTER TABLE favoris_film ADD CONSTRAINT favoris_film_utilisateurs_FK_new FOREIGN KEY (id) REFERENCES utilisateurs (id) ON DELETE CASCADE;
+ALTER TABLE email_verification ADD COLUMN date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;
+
 
 
 

@@ -62,7 +62,7 @@ export function modalCreation(
     validateBtn.classList.remove("btn-danger");
     validateBtn.classList.add("btn-primary");
     validateBtn.style.display = "none";
-    async function checkStreamFilm() {
+    /* async function checkStreamFilm() {
       try {
         let url = `https://www.g2stream.com/api/status?imdb=${imdb}&type=movie`;
         const Response = await fetch(
@@ -84,8 +84,8 @@ export function modalCreation(
       } catch (error) {
         console.error(error);
       }
-    }
-    checkStreamFilm();
+    } 
+    checkStreamFilm();*/
   } else if (type == "serie" || type == "show") {
     modalTitle.textContent = `${title} - ${year}`;
     if (trailer == null) {
@@ -183,7 +183,7 @@ export function modalCreation(
       let episodenNum = parseInt(selectedEpisode.split(" ")[1]);
       episode = episodenNum;
       validateBtn.setAttribute("data-link", link);
-      checkStream();
+      //checkStream();
     });
 
     episodesSelect.addEventListener("change", function () {
@@ -192,11 +192,11 @@ export function modalCreation(
       episode = episodenNum;
       link = link.replace(/&epi=\d+/, `&epi=${episode}`);
       validateBtn.setAttribute("data-link", link);
-      checkStream();
+      //checkStream();
     });
 
     //Check si l'épisode existe ou peut être lu
-    async function checkStream() {
+    /* async function checkStream() {
       try {
         let url = `https://www.g2stream.com/api/status?imdb=${imdb}&sea=${saison}&epi=${episode}&type=tv`;
         const Response = await fetch(
@@ -219,7 +219,7 @@ export function modalCreation(
         console.error(error);
       }
     }
-    checkStream();
+    checkStream(); */
   }
   validateBtn.setAttribute("data-link", link);
   linkYtbBtn.setAttribute(
@@ -246,7 +246,7 @@ export function modalCreation(
     }
   }
 
-/*   console.log("GENRES", genres); */
+  /*   console.log("GENRES", genres); */
   const chaine = genres;
   const nouvelleChaine = chaine.join(",");
   const genresFormat = nouvelleChaine.replace(/,/g, " - ");
@@ -500,7 +500,12 @@ function displayPopUp(style, text, time) {
     divPopUp.style.top = "10vh";
     divPopUp.style.left = "50%";
     divPopUp.style.transform = "translateX(-50%)";
-    divPopUp.style.maxWidth = "20%";
+    if (screen.width < 768) {
+      divPopUp.style.maxWidth = "80%";
+      divPopUp.style.textAlign = "center";
+    } else {
+      divPopUp.style.maxWidth = "20%";
+    }
     divPopUp.style.width = "fit-content";
     divPopUp.style.height = "fit-content";
     style == "success"
@@ -537,6 +542,14 @@ function displayPopUp(style, text, time) {
 }
 
 export function createModalUserParams(userInfo) {
+  const modals = document.querySelectorAll(".modal");
+
+  // Parcours de toutes les modales
+  modals.forEach((modal) => {
+    // Ajoutez un gestionnaire d'événements de clic sur chaque modale
+    modal.style.display = "none";
+  });
+
   const userParamsModal = document.createElement("div");
   userParamsModal.classList.add("modal", "userParamsModal");
   userParamsModal.style.display = "block";
@@ -558,6 +571,14 @@ export function createModalUserParams(userInfo) {
   userParamsModalContent.style.backgroundColor = "#333333";
   userParamsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   userParamsModalContent.style.padding = "2rem";
+
+  const divBtns = document.createElement("div");
+  divBtns.classList.add("divBtns");
+  divBtns.style.display = "flex";
+  divBtns.style.justifyContent = "space-between";
+  divBtns.style.marginBottom = "1rem";
+  divBtns.style.display = "none";
+  userParamsModalContent.appendChild(divBtns);
 
   const modalTitle = document.createElement("h4");
   modalTitle.textContent = `Paramètres de votre compte`;
@@ -809,16 +830,6 @@ export function createModalUserParams(userInfo) {
   giveInfos.style.textDecoration = "none";
   userParamsModalContent.appendChild(giveInfos);
 
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "X";
-  closeBtn.classList.add("btn", "btn-danger");
-  closeBtn.style.width = "2.2rem";
-  closeBtn.style.float = "right";
-  closeBtn.addEventListener("click", function () {
-    userParamsModal.style.display = "none";
-  });
-  modalTitle.appendChild(closeBtn);
-
   const avatarUserBtn = document.createElement("img");
   avatarUserBtn.setAttribute(
     "src",
@@ -845,7 +856,25 @@ export function createModalUserParams(userInfo) {
       "transform 200ms ease-in-out, boxShadow 200ms ease-in-out, opacity 200ms ease-in-out";
     avatarUserBtn.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
   });
-  modalTitle.appendChild(avatarUserBtn);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    userParamsModal.style.display = "none";
+  });
+  modalTitle.appendChild(closeBtn);
+
+  if (screen.width < 768) {
+    divBtns.style.display = "flex";
+    divBtns.appendChild(avatarUserBtn);
+    divBtns.appendChild(closeBtn);
+  } else {
+    modalTitle.appendChild(closeBtn);
+    modalTitle.appendChild(avatarUserBtn);
+  }
 
   userParamsModal.appendChild(userParamsModalContent);
   document.body.appendChild(userParamsModal);
@@ -875,15 +904,32 @@ export function createAvatarModal(userPicture, data) {
   avatarModalContent.style.padding = "2rem";
   avatarModal.appendChild(avatarModalContent);
 
+  const divBtns = document.createElement("div");
+  divBtns.classList.add("divBtns");
+  divBtns.style.display = "flex";
+  divBtns.style.justifyContent = "space-between";
+  divBtns.style.marginBottom = "1rem";
+  divBtns.style.display = "none";
+  avatarModalContent.appendChild(divBtns);
+
   const modalTitle = document.createElement("h3");
   modalTitle.textContent = "Choisissez un avatar";
   modalTitle.style.color = "white";
   modalTitle.style.textShadow = "1px 1px 1px red";
-  modalTitle.style.marginBottom = "1rem";
+  //modalTitle.style.marginBottom = "1rem";
   modalTitle.style.borderBottom = "1px solid white";
   modalTitle.style.paddingBottom = "1rem";
 
   avatarModalContent.appendChild(modalTitle);
+
+  const myAvatar = document.createElement("img");
+  myAvatar.setAttribute("src", "../Bedflix/imgs/avatars/" + userPicture);
+  myAvatar.classList.add("userAvatar", "avatar", "me-3");
+  myAvatar.setAttribute("alt", userPicture);
+  myAvatar.style.width = "2.5rem";
+  myAvatar.style.height = "2.5rem";
+  myAvatar.style.float = "right";
+  modalTitle.appendChild(myAvatar);
 
   const closeBtn = document.createElement("button");
   closeBtn.textContent = "X";
@@ -894,15 +940,6 @@ export function createAvatarModal(userPicture, data) {
     avatarModal.style.display = "none";
   });
   modalTitle.appendChild(closeBtn);
-
-  const myAvatar = document.createElement("img");
-  myAvatar.setAttribute("src", "../Bedflix/imgs/avatars/" + userPicture);
-  myAvatar.classList.add("userAvatar", "avatar", "me-3");
-  myAvatar.setAttribute("alt", userPicture);
-  myAvatar.style.width = "2.5rem";
-  myAvatar.style.height = "2.5rem";
-  myAvatar.style.float = "right";
-  modalTitle.appendChild(myAvatar);
 
   // group images by categories using an object
   const categories = {};
@@ -925,6 +962,7 @@ export function createAvatarModal(userPicture, data) {
     categoryTitle.innerText = category;
     categoryTitle.style.color = "white";
     categoryTitle.style.textShadow = "1px 1px 1px red";
+    categoryTitle.style.marginBottom = "0";
     divCategory.appendChild(categoryTitle);
 
     const images = categories[category];
@@ -935,7 +973,7 @@ export function createAvatarModal(userPicture, data) {
       if (screen.width < 768) {
         divImg.style.marginBottom = "1rem";
       } else {
-        divImg.style.margin = "1rem";
+        divImg.style.margin = "1rem 0.5rem 0 0.5rem";
       }
       divImg.style.border = "1px solid white";
       divImg.style.borderRadius = "0.5rem";
@@ -992,6 +1030,29 @@ export function createAvatarModal(userPicture, data) {
       });
     }
   }
+
+  if (screen.width < 768) {
+    divBtns.style.display = "flex";
+    divBtns.appendChild(myAvatar);
+    divBtns.appendChild(closeBtn);
+  } else {
+    modalTitle.appendChild(closeBtn);
+    modalTitle.appendChild(myAvatar);
+  }
+
+  //Bouton pour remonter en haut de la modal
+  let scrollTopBtn = document.createElement("button");
+  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
+  scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
+
+  avatarModal.appendChild(scrollTopBtn);
+
+  scrollTopBtn.addEventListener("click", () => {
+    avatarModal.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
 
   document.body.appendChild(avatarModal);
 }

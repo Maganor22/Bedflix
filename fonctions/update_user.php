@@ -42,10 +42,14 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $_SESSION["error"] = "Erreur 4";
     exit($_SESSION['error']);
 }
-if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,}$/u", $pseudo) && !empty($pseudo)) {
+/* if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ]{3,}$/u", $pseudo) && !empty($pseudo)) {
     //$_SESSION["error"] = "Le pseudo doit contenir au moins 3 caractères et ne doit contenir que des lettres et des espaces.";
     $_SESSION["error"] = "Erreur 5";
     //header("Location: ../index.php?error=6");
+    exit($_SESSION['error']);
+} */
+if (!preg_match("/^[a-zA-Z0-9À-ÖØ-öø-ÿ]{3,}$/u", $pseudo) && !empty($pseudo)) {
+    $_SESSION["error"] = "Erreur 5";
     exit($_SESSION['error']);
 }
 if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ -]{2,}$/u", $nom) && !empty($nom)) {

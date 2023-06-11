@@ -7,11 +7,21 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
         $error = $_GET["error"];
     }
 
-    function displayError($errorMessage)
+    /*     function displayError($errorMessage)
     {
         echo "<style>.alert { top: 5%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
         echo "<div class='alert alert-danger' role='alert'>$errorMessage</div>";
         echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 10000);</script>";
+    } */
+
+    function displayError($alertMessage)
+    {
+        echo "<style>";
+        echo ".alert { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }";
+        echo "@media (max-width: 767px) { .alert { width: 90%; text-align: center; top: 1%} }";
+        echo "</style>";
+        echo "<div class='alert alert-danger' role='alert'>$alertMessage</div>";
+        echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 8000);</script>";
     }
 
     if (isset($_GET["error"])) {

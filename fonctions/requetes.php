@@ -54,6 +54,11 @@ if (isset($_GET['requete'])) {
             echo json_encode($dataAddFav);
             break;
 
+        case 'checkFav':
+            $dataCheckFav = checkFav($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataCheckFav);
+            break;
+
         case 'delFav':
             $dataDelFav = delFav($_GET['id_user'], $_GET['id_media'], $db);
             echo json_encode($dataDelFav);

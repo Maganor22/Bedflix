@@ -5,6 +5,7 @@ import {
   createStars,
   createComments,
   createActors,
+  getSimilarMovies,
 } from "./createPlatforms.js";
 import { modalCreation, createEditAdminModal } from "./modal.js";
 //import { createCarousel } from './createCarousel.js'
@@ -14,6 +15,7 @@ import {
   insererSerie,
   selectUserById,
   addFav,
+  checkFav,
   setComments,
 } from "./requetes.js";
 
@@ -36,10 +38,10 @@ let searchResultsDropdownSelectNews = JSON.parse(
 
 console.log("Films : ", searchResults);
 console.log("Series : ", searchResults2);
-console.log("Value du dropdown : ", searchResultsDropdown);
-console.log("Value du dropdownSelect : ", searchResultsDropdownSelectText);
-console.log("Films aléatoires : ", searchResultsDropdownSelect);
-console.log("Series aléatoires : ", searchResultsDropdownSelectNews);
+//console.log("Value du dropdown : ", searchResultsDropdown);
+//console.log("Value du dropdownSelect : ", searchResultsDropdownSelectText);
+//console.log("Films aléatoires : ", searchResultsDropdownSelect);
+//console.log("Series aléatoires : ", searchResultsDropdownSelectNews);
 
 //AFFICHE LES FILMS/SERIES SIMILAIRE
 //https://api.betaseries.com/movies/similars?key=${api_key}&id=${id}&details=true
@@ -69,8 +71,6 @@ console.log("Series aléatoires : ", searchResultsDropdownSelectNews);
 //AFFICHE LES RESULTATS DU FILM GRACE A SON ID
 //https://api.betaseries.com/movies/movie?key=3cd5a087f940&id=70502
 
-//TRIER LES FILMS PAR PLATEFORME ( Netflix, Amazon Prime Video, Disney+ etc...)
-
 let nameFilm;
 let yearFilm;
 let nameSerie;
@@ -99,6 +99,64 @@ let id;
 let comment;
 let boxResearch = document.querySelector(".boxResearch");
 
+/* Alerte */
+/* function displayAlert(alertClass, alertMessage) {
+  var style = document.createElement("style");
+  style.innerHTML = ".alert { position: sticky; top: 10%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; } @media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+  document.head.appendChild(style);
+  
+  var alertDiv = document.createElement("div");
+  alertDiv.classList.add("alert");
+  alertDiv.classList.add(alertClass);
+  alertDiv.setAttribute("role", "alert");
+  alertDiv.innerHTML = alertMessage;
+  document.body.appendChild(alertDiv);
+  
+  setTimeout(function() {
+    alertDiv.style.opacity = "0";
+    setTimeout(function() {
+      alertDiv.style.display = "none";
+    }, 500);
+  }, 5000);
+} */
+function displayAlert(alertClass, alertMessage) {
+  var style = document.createElement("style");
+  style.innerHTML =
+    ".alert { position: fixed; top: 10%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; } .alert.sticky { position: fixed !important; top: 10% !important; } @media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+  document.head.appendChild(style);
+
+  var alertDiv = document.createElement("div");
+  alertDiv.classList.add("alert");
+  alertDiv.classList.add(alertClass);
+  alertDiv.setAttribute("role", "alert");
+  alertDiv.innerHTML = alertMessage;
+  document.body.appendChild(alertDiv);
+
+  function adjustAlertPosition() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > 0) {
+      alertDiv.classList.add("sticky");
+    } else {
+      alertDiv.classList.remove("sticky");
+    }
+    requestAnimationFrame(adjustAlertPosition);
+  }
+
+  window.addEventListener("scroll", adjustAlertPosition);
+
+  setTimeout(function () {
+    window.removeEventListener("scroll", adjustAlertPosition);
+    alertDiv.style.opacity = "0";
+    setTimeout(function () {
+      alertDiv.style.display = "none";
+    }, 500);
+  }, 5000);
+
+  adjustAlertPosition(); // Démarrer la mise à jour continue de la position de l'alerte
+}
+
+/* Fin alerte */
+
 /* BOUTON AVATAR */
 
 const avatarContainer = document.getElementById("avatar-container");
@@ -110,7 +168,7 @@ let isMouseOverTooltip = false;
     event.preventDefault();
 }); */
 
-avatarContainer.addEventListener("mouseenter", function (event) {
+avatarContainer.addEventListener("mouseenter", function () {
   imgAvatar.style.transform = "scale(1.2)";
   imgAvatar.style.transition = "transform 200ms ease-in-out";
   tooltip.style.display = "block";
@@ -123,7 +181,7 @@ avatarContainer.addEventListener("mouseenter", function (event) {
   }, 100);
 });
 
-avatarContainer.addEventListener("mouseleave", function (event) {
+avatarContainer.addEventListener("mouseleave", function () {
   setTimeout(() => {
     if (!isMouseOverTooltip) {
       tooltip.style.transition = "opacity 200ms ease-in-out";
@@ -138,11 +196,11 @@ avatarContainer.addEventListener("mouseleave", function (event) {
   }, 100);
 });
 
-tooltip.addEventListener("mouseenter", function (event) {
+tooltip.addEventListener("mouseenter", function () {
   isMouseOverTooltip = true;
 });
 
-tooltip.addEventListener("mouseleave", function (event) {
+tooltip.addEventListener("mouseleave", function () {
   tooltip.style.transition = "opacity 200ms ease-in-out";
   tooltip.style.opacity = 0;
   setTimeout(() => {
@@ -300,7 +358,7 @@ filmTitle.setAttribute("alt", "film_title");
 
 const sectionFilm = document.createElement("section");
 sectionFilm.classList.add("section-film");
-//sectionFilm.setAttribute("id", "section-film");
+sectionFilm.setAttribute("id", "section-film");
 app.appendChild(sectionFilm);
 
 const dropdownSection = document.createElement("div");
@@ -358,7 +416,7 @@ serieTitle.setAttribute("alt", "serie_title");
 const sectionSerie = document.createElement("section");
 sectionSerie.appendChild(serieTitle);
 app.appendChild(sectionSerie);
-//sectionSerie.setAttribute("id", "section-serie");
+sectionSerie.setAttribute("id", "section-serie");
 sectionSerie.classList.add("section-serie");
 //sectionSerie.style.marginLeft = "-30px"
 
@@ -391,8 +449,29 @@ modalContent.classList.add("modal-content");
 modalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
 modal.appendChild(modalContent);
 
+const divBtns = document.createElement("div");
+divBtns.classList.add("divBtns");
+divBtns.style.display = "flex";
+divBtns.style.justifyContent = "space-between";
+//divBtns.style.marginBottom = "1rem";
+divBtns.style.float = "right";
+divBtns.style.gap = "1rem";
+
+if (screen.width < 768) {
+  modalContent.appendChild(divBtns);
+
+  const nextButton = document.querySelector(".boxResearch");
+  const avatar = document.getElementById("avatar-container");
+  const parentElement = nextButton.parentNode;
+
+  parentElement.insertBefore(avatar, nextButton);
+}
+
 const modalHeader = document.createElement("div");
 modalHeader.classList.add("modal-header");
+modalHeader.style.display = "flex";
+modalHeader.style.alignItems = "baseline";
+modalHeader.style.padding = "0 0 1rem 0";
 modalContent.appendChild(modalHeader);
 
 /* const modalBackground = document.createElement("img");
@@ -405,17 +484,14 @@ modalTitle.style.textAlign = "left"; // Aligner le titre à gauche
 modalTitle.textContent = "Titre de la modale";
 modalHeader.appendChild(modalTitle);
 
-const divBtns = document.createElement("div");
-divBtns.classList.add("divBtns");
-divBtns.style.display = "flex";
-divBtns.style.justifyContent = "space-between";
-divBtns.style.float = "right";
-divBtns.style.gap = "1rem";
-modalHeader.appendChild(divBtns);
+if (screen.width > 768) {
+  modalHeader.appendChild(divBtns);
+}
 
 const closeBtn = document.createElement("button");
 closeBtn.textContent = "X";
-closeBtn.classList.add("btn", "btn-danger");
+closeBtn.classList.add("btn", "btn-danger", "closeBtn");
+/* closeBtn.setAttribute("id", "closeBtn"); */
 
 closeBtn.addEventListener("click", function () {
   modal.classList.add("fadeOut");
@@ -663,7 +739,7 @@ function createDomImg(
         `https://www.youtube.com/results?search_query=${title}+trailer+fr+`
       );
 
-      //Empeche le background de remonter tout en haut de la page
+      /* //Empeche le background de remonter tout en haut de la page
       const elements = document.querySelectorAll(
         'a[href="#"], button[type="submit"]'
       );
@@ -671,6 +747,17 @@ function createDomImg(
         element.addEventListener("click", (event) => {
           event.preventDefault();
           modal.style.display = "block";
+        });
+      }); */
+      const elements = document.querySelectorAll(
+        'a[href="#"], button[type="submit"]'
+      );
+      elements.forEach((element) => {
+        element.addEventListener("click", (event) => {
+          if (!event.target.classList.contains("avatar")) {
+            event.preventDefault();
+            modal.style.display = "block";
+          }
         });
       });
 
@@ -747,11 +834,31 @@ function createDomImg(
         genres
       );
 
+      //api.betaseries.com/movies/similars?key=${api_key}&id=${id}&details=true
+      getSimilarMovies(
+        id,
+        title,
+        backgroundModal,
+        linkYtbBtn,
+        videoFrame,
+        modalTitle,
+        seasonsSelect,
+        episodesSelect,
+        validateBtn,
+        synopsisModal,
+        background,
+        modal,
+        modalContent
+      );
+
       //Fonction de création du bouton d'édition du média
       createAdminEditButton(id, myMedia, type);
 
       //Fonction de création du bouton favoris
       createFavButton(id);
+
+      createSeeButton(id);
+      console.log(id);
 
       /*         setInterval(() => {
             
@@ -1171,11 +1278,26 @@ if (
     }
     sectionFilm.style.marginTop = "6.25rem";
   }
+
+  //Bouton pour remonter en haut de la modal
+  let scrollTopBtn = document.createElement("button");
+  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
+  scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
+
+  modalContent.appendChild(scrollTopBtn);
+
+  scrollTopBtn.addEventListener("click", () => {
+    modal.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
 }
 
 /* if (document.location.pathname === "/favoris.php" || document.location.pathname === "/Bedflix/favoris.php") {
 
 } */
+let rechercheTrouvee = false;
 
 async function research() {
   if (!researchtxt) {
@@ -1297,7 +1419,15 @@ async function research() {
       sessionStorage.clear();
 
       if (!movieData.movies.length && !showData.shows.length) {
-        alert("Aucun film/série n'a été trouvé.");
+        if (!rechercheTrouvee) {
+          displayAlert("alert-danger", "Aucun film/série n'a été trouvé.");
+          rechercheTrouvee = true;
+
+          setTimeout(() => {
+            rechercheTrouvee = false;
+          }, 5500);
+        }
+        return;
       } else {
         if (movieData.movies.length > 0) {
           sessionStorage.setItem("searchResults", JSON.stringify(movieData));
@@ -1482,11 +1612,54 @@ if (
           indexTitle.textContent = randomMovie.title;
         }
 
+        note = randomMovie.notes.mean;
+        nbNotes = randomMovie.notes.total;
+        date = randomMovie.production_year;
+        duree = randomMovie.length;
+
         const indexLookType = document.querySelector(".indexLookType");
-        indexLookType.textContent = "Le regarder maintenant !";
+
+        if (randomMovie.platforms_svod.length > 0) {
+          indexLookType.textContent = "Le regarder maintenant !";
+          indexLookType.style.display = "block";
+        } else {
+          indexLookType.style.display = "none";
+        }
 
         const indexSynopsis = document.querySelector(".indexSynopsis");
         indexSynopsis.textContent = randomMovie.synopsis;
+
+        createStars2(note, nbNotes);
+        createSvodindex(randomMovie, indexLookType);
+        expandSynopsis(randomMovie);
+
+        if (duree != 0) {
+          let duration = document.createElement("h5");
+          duration.classList.add("content", "dureeFilm", "dureeFilmIndex");
+          indexTitle.appendChild(duration);
+
+          const secondes = duree;
+          const heures = Math.floor(secondes / 3600); // Nombre d'heures
+          const minutes = Math.floor((secondes % 3600) / 60); // Nombre de minutes
+          let temps = "";
+          minutes == 0
+            ? (temps = `${heures}h`)
+            : (temps = `${heures}h${minutes}`);
+          duration.innerHTML = `<strong>Durée du film</strong> : ${temps}`;
+        } else {
+          let deleteDureeFilm = document.getElementsByClassName("dureeFilm");
+          if (deleteDureeFilm.length > 0) {
+            deleteDureeFilm[0].remove();
+          }
+        }
+
+        //createCarousel(movieData, api_key, movieData2);
+
+        /*         const indexLookType = document.querySelector(".indexLookType");
+        indexLookType.textContent = "Le regarder maintenant !";
+
+        const indexSynopsis = document.querySelector(".indexSynopsis");
+        indexSynopsis.textContent = randomMovie.synopsis; */
 
         createCarousel(
           { movies },
@@ -1502,6 +1675,92 @@ if (
       console.error(error);
     }
   }
+}
+
+function createStars2(note, nbNotes) {
+  let starsTitle = document.createElement("h5");
+
+  function style() {
+    starsTitle.classList.add("stars");
+    starsTitle.style.color = "white";
+    starsTitle.style.marginTop = "0.9375rem";
+  }
+
+  if (note === 0) {
+    style();
+    starsTitle.innerHTML = "Aucune note";
+    indexTitle.appendChild(starsTitle);
+    return;
+  }
+
+  let notation = Math.round(note * 2) / 2;
+  let fullStars = Math.floor(notation);
+  let halfStar = notation % 1 >= 0.25 && notation % 1 <= 0.75;
+  let emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+  style();
+  if (note == 1 || note == 2 || note == 3 || note == 4 || note == 5) {
+    if (nbNotes > 1) {
+      starsTitle.innerHTML =
+        `<strong>Note</strong> : ` +
+        note.toFixed(0) +
+        " / 5 (" +
+        nbNotes +
+        " votes)";
+    } else {
+      starsTitle.innerHTML =
+        `<strong>Note</strong> : ` +
+        note.toFixed(0) +
+        " / 5 (" +
+        nbNotes +
+        " vote)";
+    }
+  } else {
+    if (nbNotes > 1) {
+      starsTitle.innerHTML =
+        `<strong>Note</strong> : ` +
+        note.toFixed(2) +
+        " / 5 (" +
+        nbNotes +
+        " votes)";
+    } else {
+      starsTitle.innerHTML =
+        `<strong>Note</strong> : ` +
+        note.toFixed(2) +
+        " / 5 (" +
+        nbNotes +
+        " vote)";
+    }
+  }
+
+  indexTitle.appendChild(starsTitle);
+
+  let stars = document.createElement("span");
+  stars.classList.add("stars", "indexStars");
+  stars.style.margin = "0.9375rem 0 0 0.625rem";
+
+  for (let i = 1; i <= fullStars; i++) {
+    let star = document.createElement("i");
+    star.classList.add("fas", "fa-star");
+    star.style.color = "gold";
+    stars.appendChild(star);
+  }
+
+  if (halfStar) {
+    let star = document.createElement("i");
+    star.classList.add("fas", "fa-star-half-alt");
+    star.style.color = "gold";
+    stars.appendChild(star);
+  }
+
+  for (let i = 1; i <= emptyStars; i++) {
+    let star = document.createElement("i");
+    star.classList.add("far", "fa-star");
+    star.style.color = "gray";
+    stars.appendChild(star);
+  }
+
+  starsTitle.appendChild(stars);
 }
 
 let researchBtnNav = document.querySelector(".researchLink");
@@ -1577,6 +1836,11 @@ export function createAdminButton(id, myMedia, type) {
   editBtn.setAttribute("id", `myAdminEditBtn${id}`);
 
   divBtns.appendChild(editBtn);
+  // Find the seeBtn element
+  const seeBtn = document.querySelector(".seeBtn");
+
+  // Insert the editBtn before the seeBtn
+  seeBtn.parentNode.insertBefore(editBtn, seeBtn);
 
   const myEditBtn = document.getElementById(`myAdminEditBtn${id}`);
   myEditBtn.addEventListener("click", function () {
@@ -1585,7 +1849,7 @@ export function createAdminButton(id, myMedia, type) {
   });
 }
 
-export function createFavButton(id) {
+/* export function createFavButton(id) {
   // Vérifie si le bouton editer existe déjà
   if (document.getElementById(`myFavBtn${id}`)) {
     document.getElementById(`myFavBtn${id}`).style.display = "block";
@@ -1619,6 +1883,107 @@ export function createFavButton(id) {
       : (myStarFav.style.color = "gold");
     addFav(id);
   });
+} */
+
+export function createSeeButton(id) {
+  let allSeeBtns = document.querySelectorAll(".seeBtn");
+  allSeeBtns.forEach((btn) => {
+    btn.style.display = "none";
+  });
+
+  if (document.getElementById(`mySeeBtn${id}`)) {
+    document.getElementById(`mySeeBtn${id}`).style.display = "block";
+    return;
+  }
+
+  const seeBtn = document.createElement("button");
+  seeBtn.classList.add("btn", "btn-secondary", "seeBtn");
+  seeBtn.setAttribute("id", `mySeeBtn${id}`);
+
+  const eyeInBtn = document.createElement("i");
+  eyeInBtn.classList.add("fa", "fa-eye");
+  eyeInBtn.style.color = "white";
+  eyeInBtn.setAttribute("id", `myEyeBtn${id}`);
+
+  seeBtn.appendChild(eyeInBtn);
+  divBtns.appendChild(seeBtn);
+  setTimeout(function () {
+    const myFavBtn = document.querySelector(".favBtn");
+
+    // Insert the seeBtn before the myFavBtn
+    myFavBtn.parentNode.insertBefore(seeBtn, myFavBtn);
+
+    const mySeeBtn = document.getElementById(`mySeeBtn${id}`);
+    const myEyeBtn = document.getElementById(`myEyeBtn${id}`);
+
+    mySeeBtn.addEventListener("click", function () {
+      myEyeBtn.style.color === "white"
+        ? (myEyeBtn.style.color = "green")
+        : (myEyeBtn.style.color = "white");
+    });
+  }, 200);
+}
+
+export function createFavButton(id) {
+  // Vérifie si le bouton editer existe déjà
+  if (document.getElementById(`myFavBtn${id}`)) {
+    document.getElementById(`myFavBtn${id}`).style.display = "block";
+    return;
+  }
+  let allbtns = document.querySelectorAll(".favBtn");
+  allbtns.forEach((btn) => {
+    btn.style.display = "none";
+  });
+
+  const favBtn = document.createElement("button");
+  favBtn.classList.add("btn", "btn-secondary", "favBtn");
+  favBtn.setAttribute("id", `myFavBtn${id}`);
+
+  const starFav = document.createElement("i");
+  starFav.classList.add("fas", "fa-star");
+  starFav.style.color = "white";
+  starFav.setAttribute("id", `myStarFav${id}`);
+
+  favBtn.appendChild(starFav);
+
+  setTimeout(() => {
+    // Trouver le bouton après lequel vous souhaitez insérer le bouton "suivant"
+    const nextButton = document.querySelector(".closeBtn");
+
+    // Vérifier si l'élément "closeBtn" existe
+    if (nextButton) {
+      // Insérer le bouton "suivant" avant le bouton existant
+      divBtns.insertBefore(favBtn, nextButton);
+    } else {
+      // Si l'élément "closeBtn" n'existe pas, ajouter le bouton à la fin
+      divBtns.appendChild(favBtn);
+    }
+
+    divBtns.appendChild(closeBtn);
+
+    const myFavBtn = document.getElementById(`myFavBtn${id}`);
+    const myStarFav = document.getElementById(`myStarFav${id}`);
+
+    myFavBtn.addEventListener("click", function () {
+      myStarFav.style.color === "gold"
+        ? (myStarFav.style.color = "white")
+        : (myStarFav.style.color = "gold");
+      addFav(id);
+    });
+  }, 100);
+
+  checkFav(id);
+}
+
+export function getFav(data, id) {
+  setTimeout(() => {
+    let myStarFav = document.getElementById(`myStarFav${id}`);
+    if (data == "true") {
+      myStarFav.style.color = "gold";
+    } else if (data == "false") {
+      myStarFav.style.color = "white";
+    }
+  }, 100);
 }
 
 //Split function:
@@ -1663,5 +2028,111 @@ if (
   favLink.classList.add("fw-bold");
 }
 /* FIN Links de la navbar */
+
+let favLabel = document.querySelector(".favLabel");
+let favLabel2 = " ";
+
+let delFavLabel = document.querySelector(".delFavLabel");
+let delFavLabel2 = " ";
+
+if (
+  document.location.pathname === "../index.php" ||
+  document.location.pathname === "/Bedflix/index.php"
+) {
+  favLabel.addEventListener("DOMSubtreeModified", function () {
+    //console.log("FavLabel 1 ", favLabel.textContent);
+    //console.log("FavLabel 2 ", favLabel2);
+    if (favLabel.textContent != favLabel2 && favLabel.textContent != "") {
+      favLabel2 = favLabel.textContent;
+
+      addToFav(favLabel2);
+      async function addToFav(id) {
+        try {
+          let api_key = "2d216cf10e57";
+          const movieResponse2 = await fetch(
+            `https://api.betaseries.com/movies/movie?key=${api_key}&id=${id}`
+          );
+          const movieData2 = await movieResponse2.json();
+          const myFilm = movieData2.movie;
+          //console.log("myFilm", myFilm);
+
+          //INSERE LE FILMS DANS LA BDD
+          type = "film";
+          trailer = myFilm.trailer;
+          background = myFilm.backdrop;
+          synopsis = myFilm.synopsis;
+          imdb = myFilm.imdb_id;
+          platformLink = myFilm.platform_links;
+          platformSvod = myFilm.platforms_svod;
+          duree = myFilm.length;
+          note = myFilm.notes;
+          id = myFilm.id;
+          comment = myFilm.comments;
+          yearFilm = myFilm.production_year;
+          let genreList = [];
+          for (let i = 0; i < myFilm.genres.length; i++) {
+            genreList.push(myFilm.genres[i]);
+          }
+          genres = genreList;
+
+          if (
+            myFilm.other_title != null &&
+            myFilm.other_title != "" &&
+            myFilm.other_title.language == "fr"
+          ) {
+            insererFilm(
+              myFilm.title,
+              myFilm.other_title.title,
+              type,
+              yearFilm,
+              myFilm.poster,
+              background,
+              id,
+              imdb,
+              trailer,
+              synopsis,
+              duree,
+              myFilm.notes.mean,
+              myFilm.notes.total,
+              genres
+            );
+          } else {
+            insererFilm(
+              myFilm.title,
+              "",
+              type,
+              yearFilm,
+              myFilm.poster,
+              background,
+              id,
+              imdb,
+              trailer,
+              synopsis,
+              duree,
+              myFilm.notes.mean,
+              myFilm.notes.total,
+              genres
+            );
+          }
+
+          addFav(favLabel2);
+          //console.log("ajoute aux favs", favLabel2);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+  });
+
+  delFavLabel.addEventListener("DOMSubtreeModified", function () {
+    if (
+      delFavLabel.textContent != delFavLabel2 &&
+      delFavLabel.textContent != ""
+    ) {
+      delFavLabel2 = delFavLabel.textContent;
+      addFav(delFavLabel2);
+    }
+  });
+}
 
 validateBtn.style.display = "none";

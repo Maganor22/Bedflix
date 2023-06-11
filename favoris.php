@@ -65,6 +65,8 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                         <?php foreach ($favoris as $favori) {
                             $id_film = $favori['id_films'];
                             $movie = getMoviesById($id_film, $db);
+                            $commentaires = getCommentairesByFilmId($id_film, $db);
+
                             if ($movie['titre_fr'] != "") {
                                 $titre = $movie['titre_fr'];
                             } else {
@@ -75,7 +77,8 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                             /* $commentaires = json_decode($movie['commentaires']); */
 
                             // Récupération des commentaires
-                            $commentaires = getCommentairesByFilmId($id_film, $db);
+
+                            //var_dump($commentaires);
 
                             /*                             $commentaires_json = $movie['commentaires'];
                             $commentaires = json_decode($commentaires_json, true); */
@@ -114,6 +117,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                 </div>
                             </div>
 
+
                             <div class="modal commentsModal fade" id="comments<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteCommentsModal" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
                                     <div class="modal-content">
@@ -135,9 +139,22 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                                         ?>
                                                             <li>
                                                                 <div class="commentaireBorder">
-                                                                    <img class="logoUserCommentaire" src="<?= $commentaire['picture'] ?>" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                    <?php if ($commentaire['picture'] == "null") : ?>
+                                                                        <img class="logoUserCommentaire text-white" src="./imgs/b logo.png" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                    <?php else : ?>
+                                                                        <?php
+                                                                        $picture = $commentaire['picture'];
+                                                                        $firstOccurrence = strpos($picture, "https");
+                                                                        $secondOccurrence = strpos($picture, "https", $firstOccurrence + 1);
+                                                                        if ($secondOccurrence !== false) {
+                                                                            $url = substr($picture, $secondOccurrence);
+                                                                        }
+                                                                        ?>
+                                                                        <img class="logoUserCommentaire text-white" src="<?= $url ?>" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                    <?php endif; ?>
                                                                     <p class="commentaireAuteur"><?= $commentaire['user'], " / ", $commentaire['date'] ?></p>
                                                                     <p class="commentaireTexte"><?= $commentaire['commentaire'] ?></p>
+                                                                    <?php var_dump($id); ?>
                                                                 </div>
                                                             </li>
 
@@ -148,6 +165,8 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                                 <?php
                                                 } else { ?>
                                                     <p class="commentaireTexte">Aucun commentaire pour ce film.</p>
+                                                    <?php var_dump($id); ?>
+                                                    <?php var_dump($commentaires); ?>
                                             <?php
                                                 }
                                             }
@@ -168,8 +187,6 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
 
         </main>
-
-
 
 
         <!-- <script type="module" src="./scripts/script.js"></script> -->

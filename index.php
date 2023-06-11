@@ -1,8 +1,23 @@
-<!-- Rectifications / bugs : 
-    index.php clic sur dropdown genre fais stop la ba et l'écran passe en fondu
-    Pareil pour le bouton lire la suite
+<!-- Rectifications / bugs / a faire: 
+
+    - BUGS:
+        - Mettre l'icone de favoris A JOUR quand on ouvre un film dans l'index
+        - Les boutons qui se mettent dans le désordre dans la modal de film
+
+    - RECTIFICATIONS:
+        - Supprimer l'email de vérification et mdp oublié au bout de 10min
+        - Quand on clique sur l'index pour réafficher l'index, il faut juste que ça réaffiche les infos mais que le clique soit pas pris en compte si par exemple on clique sur une image
+        - Ne pas relancer le film si le meme film est déja lancé
+
+    - AMELIORATIONS:
+        - Option signaler un bug
+        - Demande d'amélioration / changement
+        - Laisser un commentaire et une note ( ESPACE COMMENTAIRE ADMIN DE VALIDATION )
+        - Possibilité de mettre vu sur un film
+        - Trier les films par plateforme ( Netflix, Amazon Prime Video, Disney+ etc...)
+        - Ajouter un ami et voir ses favoris, ses films vu, ses commentaires / notes...
 -->
-    
+
 
 
 <?php
@@ -68,15 +83,12 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                     <div id="progress-bar" class="me-2"></div>
                 </div>
 
-
                 <img src="./imgs/b logo.png" alt="img_logo_B" class="content" id="B_logo">
                 <h1 class="text-white indexType content"></h1>
                 <h2 class="text-white indexTitle content">CHARGEMENT EN COURS</h2>
                 <h3 class="text-white indexLookType content"></h3>
                 <p class="text-white fs-5 indexSynopsis content" id="desc"></p>
                 <button class="content expandButton btn btn-secondary">Lire la suite</button>
-
-
 
                 <div class="firstCarousel content">
                     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -87,7 +99,8 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                 <button class="btn border border-1 dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Genres
                                 </button>
-                                <ul class="dropdown-menu multi-column columns-3 bg-dark text-white">
+                                <ul class="dropdown-menu multi-column columns-3 bg-dark text-white dropdown-menu-scroll">
+                                    <!-- <ul class="dropdown-menu multi-column columns-3 bg-dark text-white"> -->
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <ul class="multi-column-dropdown">
@@ -155,6 +168,8 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             </div> -->
 
             <img src="./imgs/carrousels background.png" alt="gradient_background" class="w-100 position-absolute start-0 bgcar content">
+            <p type="hidden" class="favLabel"></p>
+            <p type="hidden" class="delFavLabel"></p>
             <!-- <h5 class="position-absolute text-white fs-2 serieGender">Séries du moment</h5> -->
         </main>
 
@@ -172,8 +187,6 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
         </div>
         <p class="text-white z-3 fs-5 position-sticky">© 2022-2023 Bedflix, Inc.</p>
     </footer> -->
-
-
 
         <script type="module" src="./scripts/script.js"></script>
         <script src="https://www.youtube.com/iframe_api"></script>

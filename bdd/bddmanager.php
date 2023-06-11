@@ -201,25 +201,13 @@ function getMoviesById($id_media, $db)
     return $movie;
 }
 
-/* function setComments($id_media, $commentaires, $db)
-{
-    $commentaires_json = json_encode($commentaires);
-    $sql = "UPDATE `films` SET `commentaires` = :commentaires WHERE `id_du_media` = :id_media";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array(
-        'commentaires' => json_encode($commentaires_json),
-        'id_media' => $id_media
-    ));
-    return $result;
-} */
-function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
+/* function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
 {
 
     $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
     $req = $db->prepare($sql);
     $result = $req->execute(array('id_films' => $id_films));
     $id_films = $req->fetch(PDO::FETCH_ASSOC);
-
 
 
     $sql = "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
@@ -235,7 +223,48 @@ function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db
     ));
     return $result;
 }
+ */
 
+function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
+{
+    // Vérification du commentaire existant
+    $sql = "SELECT id FROM commentaires WHERE commentaire = :commentaire AND user = :user";
+    $req = $db->prepare($sql);
+    $req->execute(array(
+        'commentaire' => $commentaire,
+        'user' => $user
+    ));
+    $existingComment = $req->fetch(PDO::FETCH_ASSOC);
+
+    if ($existingComment) {
+        // Le commentaire existe déjà, vous pouvez décider de gérer cette situation en conséquence
+        return false;
+    }
+
+    $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_films' => $id_films));
+    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
+
+    $id_films = $id_media_row['id'];
+
+    // Le commentaire n'existe pas, on l'insert
+    $sql =
+    "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
+             VALUES (:user, :picture, :note, :date, :commentaire, :id_films)";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'user' => $user,
+        'picture' => $picture,
+        'note' => $note,
+        'date' => $date,
+        'commentaire' => $commentaire,
+        'id_films' => $id_films
+    ));
+
+    return $result;
+}
+ 
 
 function getComments($id_media, $db)
 {
@@ -379,7 +408,7 @@ function insertSerie($titre, $annee, $poster, $affiche, $id_du_media, $imdb, $ba
 
 /* FAVORIS */
 
-function addFav($id_user, $id_media, $db)
+/* function addFav($id_user, $id_media, $db)
 {
     //Selectionne l'ID unique du film par rapport à l'ID du film
     $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
@@ -411,7 +440,48 @@ function addFav($id_user, $id_media, $db)
     }
 
     return $result;
+} */
+
+function addFav($id_user, $id_media, $db)
+{
+    // Sélectionne l'ID unique du film par rapport à l'ID du média
+    $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_media' => $id_media));
+    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
+
+    $id_media = $id_media_row['id'];
+
+    // Vérifie si l'entrée existe déjà dans la table des favoris
+    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media AND id = :id_user";
+    $req = $db->prepare($sql);
+    $req->execute(array(
+        'id_media' => $id_media,
+        'id_user' => $id_user
+    ));
+    $id_media_row2 = $req->fetch(PDO::FETCH_ASSOC);
+
+    if (!$id_media_row2) {
+        // Ajoute le film aux favoris de l'utilisateur
+        $sql = "INSERT INTO favoris_film (id, id_films) VALUES (:id_user, :id_media)";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user,
+            'id_media' => $id_media
+        ));
+    } else {
+        // Supprime le film des favoris de l'utilisateur
+        $sql = "DELETE FROM favoris_film WHERE id = :id_user AND id_films = :id_media";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user,
+            'id_media' => $id_media
+        ));
+    }
+
+    return $result;
 }
+
 
 
 function delFav($id_user, $id_media, $db)
@@ -442,13 +512,41 @@ function getFavorisByUserId($id_user, $db)
     return $favoris;
 }
 
+
 function getCommentairesByFilmId($id_film, $db)
 {
+    
     $sql = "SELECT * FROM commentaires WHERE id_films = :id_film";
     $req = $db->prepare($sql);
     $result = $req->execute(array('id_film' => $id_film));
     $commentaires = $req->fetchAll(PDO::FETCH_ASSOC);
     return $commentaires;
+}
+
+function checkFav($id_user, $id_media, $db)
+{
+    // Sélectionne l'ID unique du film par rapport à l'ID du média
+    $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_media' => $id_media));
+    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
+
+    $id_media = $id_media_row['id'];
+
+    // Vérifie si l'entrée existe déjà dans la table des favoris
+    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media AND id = :id_user";
+    $req = $db->prepare($sql);
+    $req->execute(array(
+        'id_media' => $id_media,
+        'id_user' => $id_user
+    ));
+
+    // Vérifie si des résultats ont été retournés
+    if ($req->rowCount() > 0) {
+        return true; // L'entrée existe déjà dans la table des favoris
+    } else {
+        return false; // L'entrée n'existe pas dans la table des favoris
+    }
 }
 
 /* FIN FAVORIS */

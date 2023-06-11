@@ -1,6 +1,8 @@
 <?php
 session_start();
 
+$recoveryDelay = 120; // Délai de récupération en secondes (2 minutes)
+
 if (isset($_GET["success"])) {
     $success = $_GET["success"];
 }
@@ -9,9 +11,12 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
 
     function displayAlert($alertClass, $alertMessage)
     {
-        echo "<style>.alert { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
+        echo "<style>";
+        echo ".alert { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }";
+        echo "@media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+        echo "</style>";
         echo "<div class='alert $alertClass' role='alert'>$alertMessage</div>";
-        echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
+        echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 8000);</script>";
     }
 
     if (isset($_GET["error"])) {
@@ -23,6 +28,9 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             case 2:
                 displayAlert("alert-danger", "Veuillez remplir tous les champs.");
                 break;
+            case 3:
+                displayAlert("alert-danger", "Une erreur est survenue. Veuillez réessayer ulterieurement.");
+                break;
             default:
                 break;
         }
@@ -31,12 +39,30 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
         $success = $_GET["success"];
         switch ($success) {
             case "email_send":
-                displayAlert("alert-warning", "Un email de récupération de mot de passe a été envoyé à l'addresse indiquée.");
+                displayAlert("alert-success", "Un email de récupération de mot de passe a été envoyé à l'adresse indiquée.");
                 break;
+
             default:
                 break;
         }
     }
+
+    // Vérifier le délai entre les demandes de récupération
+    $lastRecoveryTime = isset($_COOKIE['last_recovery_time']) ? $_COOKIE['last_recovery_time'] : 0;
+    $currentTime = time();
+
+    if ($success === "email_send" && $currentTime - $lastRecoveryTime < $recoveryDelay) {
+        $remainingTime = $recoveryDelay - ($currentTime - $lastRecoveryTime);
+        $remainingMinutes = floor($remainingTime / 60);
+        $remainingSeconds = $remainingTime % 60;
+        displayAlert("alert-danger", "Vous devez attendre encore $remainingMinutes minute(s) et $remainingSeconds seconde(s) avant de soumettre une nouvelle demande de récupération.");
+    } else {
+        // Mettre à jour le timestamp du dernier temps de récupération
+        if ($success === "email_send") {
+            setcookie('last_recovery_time', $currentTime, $currentTime + $recoveryDelay);
+        }
+    }
+
 
 
 ?>
@@ -70,11 +96,6 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             <div class="background"></div>
             <div class="row justify-content-center">
                 <div class="mdpDiv">
-                    <?php if (!empty($success) && $success == "1") {
-                        echo "<style>.alert { position: absolute; top: 8%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
-                        echo "<div class='alert alert-success' role='alert'>Compte crée avec succes.</div>";
-                        echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
-                    } ?>
                     <div class="logoConnexion d-flex justify-content-center">
                         <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5">
                     </div>

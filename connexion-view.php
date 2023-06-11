@@ -9,10 +9,14 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
 
     function displayAlert($alertClass, $alertMessage)
     {
-        echo "<style>.alert { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
+        echo "<style>";
+        echo ".alert { position: absolute; top: 5%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }";
+        echo "@media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+        echo "</style>";
         echo "<div class='alert $alertClass' role='alert'>$alertMessage</div>";
         echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 8000);</script>";
     }
+
 
     if (isset($_GET["failed"])) {
         $failed = $_GET["failed"];
@@ -23,8 +27,8 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             case 2:
                 displayAlert("alert-danger", "Veuillez remplir tous les champs.");
                 break;
-            case 4:
-                displayAlert("alert-warning", "Le compte n'a pas été activé. Veuillez consulter vos mails. (spam ?)");
+            case 3:
+                displayAlert("alert-warning", "Le compte doit être activé. Veuillez consulter vos mails. (spam ?)");
                 break;
             default:
                 break;

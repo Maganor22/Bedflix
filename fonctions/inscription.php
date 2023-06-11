@@ -31,11 +31,11 @@ if (!empty($_POST["nickname"]) && !empty($_POST["name"]) && !empty($_POST["first
         exit();
     }
 
-    /*     if (!preg_match('/^(?=.*[A-Z])(?=.*[\W])(?=.*[a-z]).{8,}$/', $_POST['password'])) {
+    if (!preg_match('/^(?=.*[A-Z])(?=.*[\W])(?=.*[a-z]).{8,}$/', $_POST['password'])) {
         $_SESSION["error"] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un caractère spécial";
         header("Location: ../inscription-view.php?error=5");
         exit();
-    } */
+    }
 
 
     // Stockage des données du formulaire
@@ -83,7 +83,7 @@ if (!empty($_POST["nickname"]) && !empty($_POST["name"]) && !empty($_POST["first
                     ]);
 
                     $_SESSION["user"] = $nickname;
-                    $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">BEDFLIX</h1></br>
+                    $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; margin-top: 0; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">BEDFLIX</h1></br>
                     <p style="color:white">Bienvenue <span style="font-weight:bold; font-size: 14px;">' . $firstname . '</span> !</p></br>
                     <p style="color:white">Pour confirmer votre inscription à <span style="font-weight:bold; font-size: 14px;">Bedflix</span>, veuillez <span style="font-weight:bold; font-size: 14px;">confirmer votre adresse email</span> grâce au bouton ci-dessous.</p></br>
                     <p style="color:white">Vous pourrez ainsi vous connecter à votre compte avec votre pseudo : <span style="color:lightblue; font-weight:bold; font-size:14px;">' . $nickname . '</span> ou avec votre <span style="font-weight:bold; font-size:14px;">email</span>.</p>

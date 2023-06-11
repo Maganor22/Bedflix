@@ -12,7 +12,7 @@ if (!empty($_POST["identifier"]) && !empty($_POST["password"])) {
         // Vérification du mot de passe
         if (password_verify($_POST["password"], $user->mdp)) {
             if ($user->actif == 0) {
-                header("Location: ../connexion-view.php?failed=4");
+                header("Location: ../connexion-view.php?failed=3");
                 exit();
             }
             $_SESSION['id'] = $user->id;

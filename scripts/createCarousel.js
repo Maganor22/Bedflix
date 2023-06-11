@@ -2,6 +2,7 @@ const background = document.querySelector(".background_image");
 const backgroundPause = document.querySelector(".background_index");
 const indexType = document.querySelector(".indexType");
 const indexFilmTitle = document.querySelector(".indexFilmTitle");
+const expandButton = document.querySelector(".expandButton");
 indexFilmTitle.style.opacity = 0;
 // Sélection des boutons "Next" et "Previous" du carousel
 const carouselButtons = document.querySelectorAll(
@@ -86,6 +87,7 @@ function stopVideo() {
 
 function changeVideo(trailer) {
   /*   console.log(player.getVideoUrl()); */
+  expandButton.textContent = "Lire la suite";
   if (
     player.getVideoUrl() != undefined &&
     player.getVideoUrl() != "none" &&
@@ -272,11 +274,11 @@ function createCarousel(movieData, api_key, movieData2) {
           if (btnFav.style.color == "gold") {
             btnFav.style.color = "white";
             delFav(movie);
-            console.log(`${movie.title} retiré des favoris`);
+            //console.log(`${movie.title} retiré des favoris`);
           } else {
             btnFav.style.color = "gold";
             addFav(movie);
-            console.log(`${movie.title} ajouté aux favoris`);
+            //console.log(`${movie.title} ajouté aux favoris`);
           }
         });
 
@@ -314,6 +316,8 @@ function createCarousel(movieData, api_key, movieData2) {
         //fullCarousel.addEventListener("mouseout", mouseOut);
 
         img.addEventListener("click", () => {
+          //if (carousel.style.opacity == 1) {
+          console.log(carousel.style.opacity);
           background.style.opacity = 0.1;
           let trailer = movie.trailer;
 
@@ -354,33 +358,16 @@ function createCarousel(movieData, api_key, movieData2) {
               player.playVideo();
             }, 100);
           }
+          //}
         });
 
-        /*         backgroundPause.addEventListener("click", function (event) {
-          // Vérifiez si l'élément cliqué est un des boutons du carousel
-          if (
-            event.target.classList.contains("carousel-control-prev") ||
-            event.target.classList.contains("carousel-control-next")
-          ) {
-            // Si c'est le cas, arrêtez la propagation de l'événement
-            //event.stopPropagation();
-            console.log("stopPropagation")
-            return;
-          } else {
-            if (isPlaying == "play") {
-              player.pauseVideo();
-              displayElements();
-            } else {
-              isOverElement = false;
-              player.playVideo();
-            }
-          }
-        }); */
         // Vérifiez si l'élément cliqué est un des boutons du carousel
         backgroundPause.addEventListener("click", function (event) {
           if (
             event.target.classList.contains("carousel-control-prev") ||
-            event.target.classList.contains("carousel-control-next")
+            event.target.classList.contains("carousel-control-next") ||
+            event.target.classList.contains("expandButton") ||
+            event.target.classList.contains("dropdown-toggle")
           ) {
             // Si c'est le cas, arrêtez la propagation de l'événement
             event.stopPropagation();
@@ -455,7 +442,7 @@ function createCarousel(movieData, api_key, movieData2) {
               let year = movieIDData.movie.production_year;
               afficherPopUp(img, title, year);
             }
-          }, 1);
+          }, 1000);
         }
 
         function mouseOut() {
@@ -480,7 +467,17 @@ function createCarousel(movieData, api_key, movieData2) {
 }
 
 function createSvodindex(movieData, indexLookType) {
-  let movieSvod = movieData.movie.platforms_svod;
+  //console.log(movieData);
+  //let movieSvod = movieData.movie.platforms_svod;
+  let movieSvod;
+  //console.log(movieData.platforms_svod);
+
+  if (movieData && movieData.movie && movieData.movie.platforms_svod) {
+    movieSvod = movieData.movie.platforms_svod;
+  } else if (movieData && movieData.platforms_svod) {
+    movieSvod = movieData.platforms_svod;
+  }
+
   //console.log(movieSvod)
   if (movieSvod.length > 0) {
     const imagesContainer = document.createElement("div");
@@ -647,11 +644,18 @@ let favList = [];
 
 function addFav(movie) {
   favList.push(movie.id);
-  console.log("favList", favList);
+  //console.log("favList", favList);
   //createSecCarousel(movie);
+  let favLabel = document.querySelector(`.favLabel`);
+  favLabel.textContent = movie.id;
 }
 
 function delFav(movie) {
+  let delFavLabel = document.querySelector(`.delFavLabel`);
+  delFavLabel.textContent = movie.id;
+}
+
+/* function delFav(movie) {
   const favImgs = document.querySelectorAll(".favImgs");
   favImgs.forEach((img) => {
     if (img.alt === movie.title) {
@@ -687,7 +691,7 @@ function delFav(movie) {
     c2.style.display = "none";
   }
   updateArrows();
-}
+} */
 
 function updateArrows() {
   //Met à jour les flèches du carousel
@@ -784,6 +788,7 @@ function createSecCarousel(movieData, movieData2) {
       background.style.opacity = 0.1;
       let trailer = movie.trailer;
       document.getElementById("player").style.display = "block";
+      //METTRE LE NOUVEAU SYNOPSIS
       changeVideo(trailer);
     });
 
@@ -912,13 +917,44 @@ function displayMovieInfos(movie) {
   }
 }
 
+/* let indexSynopsis = document.querySelector(".indexSynopsis");
+let displaySynopsis;
+let synopsis;
+
 function expandSynopsis(myFilm) {
-  const expandButton = document.querySelector(".expandButton");
+  if (screen.width < 768) {
+    synopsis = myFilm.synopsis;
+    const maxLength = 200;
+
+    if (synopsis.length > maxLength) {
+      let shortSynopsis = synopsis.slice(0, maxLength);
+      let lastSpaceIndex = shortSynopsis.lastIndexOf(" ");
+      displaySynopsis = shortSynopsis.slice(0, lastSpaceIndex);
+
+      indexSynopsis.textContent = displaySynopsis + "...";
+      expandButton.style.display = "block";
+
+    } else {
+      indexSynopsis.textContent = synopsis;
+    }
+  }
+}
+expandButton.addEventListener("click", () => {
+  if (expandButton.textContent === "Réduire") {
+    indexSynopsis.textContent = displaySynopsis + "...";
+    expandButton.textContent = "Lire la suite";
+  } else {
+    indexSynopsis.textContent = synopsis;
+    expandButton.textContent = "Réduire";
+  }
+}); */
+
+/* Bouton Synopsis */
+function expandSynopsis(myFilm) {
   if (screen.width < 768) {
     let indexSynopsis = document.querySelector(".indexSynopsis");
     let synopsis = myFilm.synopsis;
     const maxLength = 200;
-    /* const maxLength = 430; */
 
     if (synopsis.length > maxLength) {
       let shortSynopsis = synopsis.slice(0, maxLength);
@@ -927,26 +963,37 @@ function expandSynopsis(myFilm) {
 
       indexSynopsis.textContent = displaySynopsis + "...";
       expandButton.style.display = "block";
-
-      /* expandButton.addEventListener("click", () => {
-        indexSynopsis.textContent = synopsis;
-        expandButton.textContent = "Réduire";
-        //expandButton.style.display = "none";
-      }); */
-      expandButton.addEventListener("click", () => {
-        if (expandButton.textContent === "Réduire") {
-          indexSynopsis.textContent = displaySynopsis + "...";
-          expandButton.textContent = "Lire la suite";
-        } else {
-          indexSynopsis.textContent = synopsis;
-          expandButton.textContent = "Réduire";
-        }
-      });
+      indexSynopsis.dataset.fullSynopsis = synopsis;
+      indexSynopsis.dataset.displaySynopsis = displaySynopsis;
     } else {
       indexSynopsis.textContent = synopsis;
+      expandButton.style.display = "none";
     }
   }
 }
+
+function expandButtonClicked() {
+  let indexSynopsis = document.querySelector(".indexSynopsis");
+  let synopsis = indexSynopsis.dataset.fullSynopsis;
+  let displaySynopsis = indexSynopsis.dataset.displaySynopsis;
+
+  if (indexSynopsis.textContent === displaySynopsis + "...") {
+    indexSynopsis.textContent = synopsis;
+    expandButton.textContent = "Réduire";
+  } else {
+    indexSynopsis.textContent = displaySynopsis + "...";
+    expandButton.textContent = "Lire la suite";
+    if (isPlaying == "play") {
+      player.playVideo();
+      isOverElement = false;
+      hideElements();
+    }
+  }
+}
+
+expandButton.addEventListener("click", expandButtonClicked);
+
+/* Fin Bouton Synopsis */
 
 /* DROPDOWN GENRE */
 const genreButtons = document.querySelectorAll(".genre-button");
@@ -961,6 +1008,7 @@ genreButtons.forEach((button) => {
 
 async function defineGender(genre) {
   let api_key = "2d216cf10e57";
+
   try {
     const movieResponse = await fetch(
       `https://api.betaseries.com/search/movies?key=${api_key}&genres=${genre}&limit=50`
@@ -1006,7 +1054,7 @@ async function defineGender(genre) {
 
     indexType.textContent = "Film";
 
-    const indexTitle = document.querySelector(".indexTitle");
+    /*     const indexTitle = document.querySelector(".indexTitle");
     if (
       randomMovie.other_title != null &&
       randomMovie.other_title != "" &&
@@ -1020,23 +1068,79 @@ async function defineGender(genre) {
     const indexLookType = document.querySelector(".indexLookType");
     indexLookType.textContent = "";
     indexLookType.style.display = "none";
-    /* indexLookType.textContent = "Le regarder maintenant !"; */
+    //indexLookType.textContent = "Le regarder maintenant !";
 
     const indexSynopsis = document.querySelector(".indexSynopsis");
     indexSynopsis.textContent = randomMovie.synopsis;
 
     player.stopVideo();
     createSvod(movieData2, indexLookType);
-    createCarousel(movieData, api_key, movieData2);
+    createCarousel(movieData, api_key, movieData2); */
     //console.log("RANDOM", randomMovieIds);
+
+    background.style.backgroundImage = `url(${randomMovie.backdrop})`;
+    note = randomMovie.notes.mean;
+    nbNotes = randomMovie.notes.total;
+    date = randomMovie.production_year;
+    duree = randomMovie.length;
+
+    const indexTitle = document.querySelector(".indexTitle");
+    if (
+      randomMovie.other_title != null &&
+      randomMovie.other_title != "" &&
+      randomMovie.other_title.language == "fr"
+    ) {
+      indexTitle.textContent = randomMovie.other_title.title;
+    } else {
+      indexTitle.textContent = randomMovie.title;
+    }
+
+    const indexLookType = document.querySelector(".indexLookType");
+
+    if (randomMovie.platforms_svod.length > 0) {
+      indexLookType.textContent = "Le regarder maintenant !";
+      indexLookType.style.display = "block";
+    } else {
+      indexLookType.style.display = "none";
+    }
+
+    const indexSynopsis = document.querySelector(".indexSynopsis");
+    indexSynopsis.textContent = randomMovie.synopsis;
+
+    let expandButton = document.querySelector(".expandButton");
+    expandButton.textContent = "Lire la suite";
+
+    createStars(note, nbNotes);
+    createSvodindex(movieData2, indexLookType);
+    expandSynopsis(randomMovie);
+
+    if (duree != 0) {
+      let duration = document.createElement("h5");
+      duration.classList.add("content", "dureeFilm", "dureeFilmIndex");
+      indexTitle.appendChild(duration);
+
+      const secondes = duree;
+      const heures = Math.floor(secondes / 3600); // Nombre d'heures
+      const minutes = Math.floor((secondes % 3600) / 60); // Nombre de minutes
+      let temps = "";
+      minutes == 0 ? (temps = `${heures}h`) : (temps = `${heures}h${minutes}`);
+      duration.innerHTML = `<strong>Durée du film</strong> : ${temps}`;
+    } else {
+      let deleteDureeFilm = document.getElementsByClassName("dureeFilm");
+      if (deleteDureeFilm.length > 0) {
+        deleteDureeFilm[0].remove();
+      }
+    }
+
+    player.stopVideo();
+    createCarousel(movieData, api_key, movieData2);
   } catch (error) {
     console.error(error);
   }
 }
 
-function createSvod(movieData, indexLookType) {
+/* function createSvod(movieData, indexLookType) {
   let movieSvod = movieData.movie.platforms_svod;
-  /* console.log(movieSvod); */
   if (movieSvod.length > 0) {
     const imagesContainer = document.createElement("div");
     imagesContainer.style.display = "flex";
@@ -1044,6 +1148,7 @@ function createSvod(movieData, indexLookType) {
     indexLookType.appendChild(imagesContainer);
     indexLookType.style.display = "block";
     indexLookType.textContent = "Le regarder maintenant !";
+    indexLookType.appendChild(imagesContainer);
 
     for (let i = 0; i < movieSvod.length; i++) {
       const a = document.createElement("a");
@@ -1063,7 +1168,7 @@ function createSvod(movieData, indexLookType) {
       a.appendChild(imgSvod);
     }
   }
-}
+} */
 
 /* FIN DROPDOWN GENRE */
 
@@ -1105,7 +1210,6 @@ function fadeOut(element, duration) {
 }
 
 let volume;
-
 
 // Écouteur d'événements de la roulette de la souris
 document.addEventListener("wheel", function (event) {

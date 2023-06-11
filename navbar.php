@@ -13,7 +13,7 @@
                         <a class="nav-link text-light fs-4 fw-bold ms-5 me-5 resetIndex indexLink" aria-current="page" href="./index.php">Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex researchLink" href="./researchpage.php">Recherche</a>
+                        <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex researchLink" href="#">Recherche</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light fs-4 ms-5 me-5 resetIndex favLink" href="./favoris.php">Favoris</a>
