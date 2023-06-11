@@ -90,17 +90,30 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
                             <div class="modal fade" id="<?= $id_film ?>" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
                                 <div class="modal-dialog modal-xl">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
+                                    <!-- <div class="modal-content modal-content-fav">
+                                        <div class="modal-header modal-header-fav">
                                             <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
-                                            <div class="float-right">
+                                            <div class="float-right divBtnsCommentsFav">
+                                                <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
+                                                    <i class="fas fa-star" style="color: gold;"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
+                                            </div>
+                                        </div> -->
+                                    <div class="modal-content modal-content-fav">
+                                        <div class="modal-header modal-header-fav">
+                                            <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
+                                            <div class="float-right divBtnsCommentsFav">
                                                 <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
                                                     <i class="fas fa-star" style="color: gold;"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
                                             </div>
                                         </div>
-                                        <div class="modal-body">
+
+
+
+                                        <div class="modal-body-fav">
                                             <iframe allow="autoplay; encrypted-media" allowfullscreen height="500" width="100%" id="video" src="https://www.youtube.com/embed/<?= $movie['ba'] ?>"></iframe>
 
                                             <p class="synopsisModal"><?= $movie['synopsis'] ?></p>
@@ -125,7 +138,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                             <h2 class="modal-title text-white" id="favoriteCommentsModal">Commentaires de <?= $titre . ' - ' . $movie['annee'] ?></h2>
                                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> X </button>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body-commentaires">
                                             <?php
                                             // Vérification de la validité de la chaîne JSON
                                             if (json_last_error() !== JSON_ERROR_NONE) {
@@ -139,20 +152,22 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                                         ?>
                                                             <li>
                                                                 <div class="commentaireBorder">
-                                                                    <?php if ($commentaire['picture'] == "null") : ?>
-                                                                        <img class="logoUserCommentaire text-white" src="./imgs/b logo.png" alt="avatar de <?= $commentaire['user'] ?>">
-                                                                    <?php else : ?>
-                                                                        <?php
-                                                                        $picture = $commentaire['picture'];
-                                                                        $firstOccurrence = strpos($picture, "https");
-                                                                        $secondOccurrence = strpos($picture, "https", $firstOccurrence + 1);
-                                                                        if ($secondOccurrence !== false) {
-                                                                            $url = substr($picture, $secondOccurrence);
-                                                                        }
-                                                                        ?>
-                                                                        <img class="logoUserCommentaire text-white" src="<?= $url ?>" alt="avatar de <?= $commentaire['user'] ?>">
-                                                                    <?php endif; ?>
-                                                                    <p class="commentaireAuteur"><?= $commentaire['user'], " / ", $commentaire['date'] ?></p>
+                                                                    <div class="headerCommentFav">
+                                                                        <?php if ($commentaire['picture'] == "null") : ?>
+                                                                            <img class="logoUserCommentaire text-white" src="./imgs/b logo.png" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                        <?php else : ?>
+                                                                            <?php
+                                                                            $picture = $commentaire['picture'];
+                                                                            $firstOccurrence = strpos($picture, "https");
+                                                                            $secondOccurrence = strpos($picture, "https", $firstOccurrence + 1);
+                                                                            if ($secondOccurrence !== false) {
+                                                                                $url = substr($picture, $secondOccurrence);
+                                                                            }
+                                                                            ?>
+                                                                            <img class="logoUserCommentaire text-white" src="<?= $url ?>" alt="avatar de <?= $commentaire['user'] ?>">
+                                                                        <?php endif; ?>
+                                                                        <p class="commentaireAuteur"><?= $commentaire['user'], " / ", $commentaire['date'] ?></p>
+                                                                    </div>
                                                                     <p class="commentaireTexte"><?= $commentaire['commentaire'] ?></p>
                                                                     <?php var_dump($id); ?>
                                                                 </div>

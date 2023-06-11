@@ -19,6 +19,20 @@
 }
 
 @media only screen and (min-width: 320px) and (max-width: 480px) and (orientation: portrait) {
+
+  #favoriteModal {
+    padding: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  .modal-header-fav {
+    padding: 0.5rem 0;
+    /* padding-bottom: 0!important; */
+  }
+
+  .modal-body-fav {
+    padding-top: 1rem;
+  }
   /*connexion-view*/
   .logs {
     width: 80% !important;
@@ -178,10 +192,10 @@
     margin-left: 35%;
   }
 
-  /*     .allImgs {
-        width: 20% !important;
-        height: 50% !important;
-        } */
+.divBtns {
+    margin-bottom: 0.5rem!important;
+  }
+
   .logo {
     width: 130px !important;
     margin-right: 100px !important;

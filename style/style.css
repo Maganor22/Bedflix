@@ -298,6 +298,10 @@ nav {
   margin-bottom: 0;
 }
 
+.noteFilm {
+  margin-bottom: 1rem;
+}
+
 .logo {
   transition: transform 300ms;
 }
@@ -883,6 +887,24 @@ form div > input {
 }
 /* Commentaires Favoris */
 
+.modal-header-fav {
+  margin-bottom: 1rem;
+}
+
+#favoriteCommentsModal {
+  margin-bottom: 0.5rem;
+}
+
+.modal-body-commentaires {
+  padding: 0;
+  padding-top: 1rem;
+}
+
+.headerCommentFav {
+  display: flex;
+  align-items: center;
+}
+
 .commentaireAuteur,
 .commentaireTexte {
   color: white !important;
@@ -890,6 +912,8 @@ form div > input {
 
 .commentaireAuteur {
   font-weight: bold !important;
+  margin-top: auto!important;
+  margin-bottom: auto!important;
 }
 
 .commentaireBorder {
@@ -897,6 +921,7 @@ form div > input {
   border-radius: 0.8rem;
   margin-bottom: 0.5rem;
   padding: 1rem;
+  padding-bottom: 0;
 }
 
 .commentaires {
@@ -905,7 +930,14 @@ form div > input {
 
 .logoUserCommentaire {
   width: 2.5rem;
+  height: 2.5rem;
   border-radius: 0.8rem;
+  margin-right: 1rem;
+}
+
+.commentaireTexte{
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 /* Fin Commentaires Favoris */

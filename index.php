@@ -2,7 +2,6 @@
 
     - BUGS:
         - Mettre l'icone de favoris A JOUR quand on ouvre un film dans l'index
-        - Les boutons qui se mettent dans le désordre dans la modal de film
 
     - RECTIFICATIONS:
         - Supprimer l'email de vérification et mdp oublié au bout de 10min

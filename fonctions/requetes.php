@@ -64,6 +64,21 @@ if (isset($_GET['requete'])) {
             echo json_encode($dataDelFav);
             break;
 
+        case 'addFilmVu':
+            $dataAddFav = addFav($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataAddFav);
+            break;
+
+        case 'checkFilmVu':
+            $dataCheckFav = checkFav($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataCheckFav);
+            break;
+
+        case 'delFilmVu':
+            $dataDelFav = delFav($_GET['id_user'], $_GET['id_media'], $db);
+            echo json_encode($dataDelFav);
+            break;
+
         case 'getAvatar':
             $dataGetAvatar = getAvatar($_SESSION['id'], $db);
             echo json_encode($dataGetAvatar);

@@ -282,7 +282,7 @@ export function addFromBdd(mediaInfo) {
 
   const editAdminModalContent = document.createElement("div");
   editAdminModalContent.classList.add("modal-content");
-  editAdminModalContent.style.backgroundColor = "#333333";
+  editAdminModalContent.style.backgroundColor = "#212529";
   editAdminModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   editAdminModalContent.style.padding = "2rem";
 
@@ -568,7 +568,7 @@ export function createModalUserParams(userInfo) {
   } else {
     userParamsModalContent.style.width = "30%";
   }
-  userParamsModalContent.style.backgroundColor = "#333333";
+  userParamsModalContent.style.backgroundColor = "#212529";
   userParamsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   userParamsModalContent.style.padding = "2rem";
 
@@ -899,7 +899,7 @@ export function createAvatarModal(userPicture, data) {
   } else {
     avatarModalContent.style.width = "55%";
   }
-  avatarModalContent.style.backgroundColor = "#333333";
+  avatarModalContent.style.backgroundColor = "#212529";
   avatarModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   avatarModalContent.style.padding = "2rem";
   avatarModal.appendChild(avatarModalContent);
@@ -1072,7 +1072,7 @@ function deleteUserModal() {
   const deleteUserModalContent = document.createElement("div");
   deleteUserModalContent.classList.add("modal-content");
   deleteUserModalContent.style.width = "30%";
-  deleteUserModalContent.style.backgroundColor = "#333333";
+  deleteUserModalContent.style.backgroundColor = "#212529";
   deleteUserModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   deleteUserModalContent.style.padding = "2rem";
   deleteUserModal.appendChild(deleteUserModalContent);

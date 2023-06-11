@@ -308,7 +308,7 @@ async function createCommentsModal(id, type, title) {
 
   let commentsModalContent = document.createElement("div");
   commentsModalContent.classList.add("modal-content");
-  commentsModalContent.style.backgroundColor = "#333333";
+  commentsModalContent.style.backgroundColor = "#212529";
   commentsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   commentsModalContent.style.padding = "2rem";
 
@@ -578,7 +578,7 @@ async function createActorsModal(
 
   const actorsModalContent = document.createElement("div");
   actorsModalContent.classList.add("modal-content", "modal-content-actors");
-  actorsModalContent.style.backgroundColor = "#333333";
+  actorsModalContent.style.backgroundColor = "#212529";
   actorsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   actorsModalContent.style.padding = "2rem";
 
@@ -955,7 +955,7 @@ function createActorModal(
 
   const actorModalContent = document.createElement("div");
   actorModalContent.classList.add("modal-content");
-  actorModalContent.style.backgroundColor = "#333333";
+  actorModalContent.style.backgroundColor = "#212529";
   actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   actorModalContent.style.padding = "2rem";
   if (screen.width > 768) {
@@ -1464,6 +1464,15 @@ export async function getSimilarMovies(
     const Response = await fetch(url);
     const data = await Response.json();
 
+    let allSimilarMovies = document.querySelectorAll(".similar-movies-list");
+    allSimilarMovies.forEach((movie) => {
+      movie.remove();
+    });
+
+    if (data.similars.length == 0) {
+      return;
+    }
+
     const similarMoviesList = document.createElement("div");
     similarMoviesList.style.marginTop = "1rem";
     similarMoviesList.style.display = "flex";
@@ -1471,6 +1480,7 @@ export async function getSimilarMovies(
     similarMoviesList.style.padding = "1rem";
     similarMoviesList.style.border = "1px solid white";
     similarMoviesList.style.borderRadius = "0.8rem";
+    similarMoviesList.classList.add("similar-movies-list");
     modalContent.appendChild(similarMoviesList);
 
     const SimilarMoviesTitle = document.createElement("h5");
@@ -1569,7 +1579,7 @@ async function createSimilarMoviesModal(
 
   const actorModalContent = document.createElement("div");
   actorModalContent.classList.add("modal-content");
-  actorModalContent.style.backgroundColor = "#333333";
+  actorModalContent.style.backgroundColor = "#212529";
   actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
   actorModalContent.style.padding = "2rem";
   if (screen.width > 768) {

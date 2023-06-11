@@ -392,22 +392,6 @@ actuBtn.addEventListener("click", function () {
 const filmContainer = document.createElement("div");
 filmContainer.classList.add("filmContainer");
 sectionFilm.appendChild(filmContainer);
-/*
-const aloo = document.createElement("h1");
-aloo.style.marginTop = "20px";
-aloo.style.marginLeft = "50px"
-aloo.style.fontSize = "50px"
-aloo.style.color = "red"
-sectionFilm.appendChild(aloo);
-
-setInterval(() => {
-    if (window.matchMedia("(orientation: portrait)").matches) {
-        aloo.textContent = window.innerWidth + " X " + window.innerHeight + " portrait";
-    } else if (window.matchMedia("(orientation: landscape)").matches) {
-        aloo.textContent = window.innerWidth + " X " + window.innerHeight + " paysage";
-    }
-}, 1000); */
-//mon tel 412 * 828
 
 const serieTitle = document.createElement("img");
 serieTitle.classList.add("hide-title", "serieTitle");
@@ -418,22 +402,18 @@ sectionSerie.appendChild(serieTitle);
 app.appendChild(sectionSerie);
 sectionSerie.setAttribute("id", "section-serie");
 sectionSerie.classList.add("section-serie");
-//sectionSerie.style.marginLeft = "-30px"
 
 const serieContainer = document.createElement("div");
 serieContainer.classList.add("serieContainer");
 
 sectionSerie.appendChild(serieContainer);
 
-/* const background_research = document.createElement("div");
-background_research.style.backgroundImage = "url(``)"; */
 const background_research = document.createElement("img");
 background_research.src = "";
 background_research.setAttribute("alt", "fond");
 background_research.style.objectFit = "cover";
 
 background_research.classList.add("background_research");
-/* background_research.style.opacity = "0"; */
 document.body.appendChild(background_research);
 
 const container = document.createElement("div");
@@ -465,6 +445,16 @@ if (screen.width < 768) {
   const parentElement = nextButton.parentNode;
 
   parentElement.insertBefore(avatar, nextButton);
+
+  setTimeout(function () {
+    var divBtnsCommentsFav = document.querySelector(".divBtnsCommentsFav");
+    var modalHeaderFav = document.querySelector(".modal-header-fav");
+    const parentElement2 = modalHeaderFav.parentNode;
+
+    parentElement2.insertBefore(divBtnsCommentsFav, modalHeaderFav);
+    divBtnsCommentsFav.style.display = "flex";
+    divBtnsCommentsFav.style.justifyContent = "space-between";
+  }, 100);
 }
 
 const modalHeader = document.createElement("div");
@@ -858,7 +848,7 @@ function createDomImg(
       createFavButton(id);
 
       createSeeButton(id);
-      console.log(id);
+      //console.log(id);
 
       /*         setInterval(() => {
             
