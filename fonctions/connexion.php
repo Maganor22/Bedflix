@@ -7,7 +7,6 @@ if (!empty($_POST["identifier"]) && !empty($_POST["password"])) {
 
     $user = selectUser($_POST['identifier'], $db);
 
-
     if ($user) {
         // Vérification du mot de passe
         if (password_verify($_POST["password"], $user->mdp)) {

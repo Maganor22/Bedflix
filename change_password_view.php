@@ -16,17 +16,20 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
         echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
     }
 
-    if (isset($_GET["failed"])) {
-        $failed = $_GET["failed"];
-        switch ($failed) {
+    if (isset($_GET["error"])) {
+        $error = $_GET["error"];
+        switch ($error) {
             case 1:
-                displayAlert("alert-danger", "Le pseudo ou le mot de passe est incorrect.");
+                displayAlert("alert-danger", "Une erreur est survenue.");
                 break;
             case 2:
                 displayAlert("alert-danger", "Veuillez remplir tous les champs.");
                 break;
+            case 3:
+                displayAlert("alert-danger", "Les mots de passe ne correspondent pas.");
+                break;
             case 4:
-                displayAlert("alert-warning", "Le compte n'a pas été activé. Veuillez consulter vos mails (spam ?)");
+                displayAlert("alert-danger", "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un caractère spécial.");
                 break;
             default:
                 break;
@@ -83,7 +86,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
                     <div class="logoConnexion d-flex justify-content-center">
                         <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5">
                     </div>
-                    <h2 class="text-white">Nouveau mot de passe :</h2>
+                    <h2 class="text-white" id="h2ChangePassword">Nouveau mot de passe :</h2>
                     <form action="../Bedflix/fonctions/change_password.php" method="POST" class="d-flex flex-column flex-md-row" id="changeMdpForm">
                         <div class="col-md-12">
                             <div class="form-group">

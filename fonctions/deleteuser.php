@@ -16,7 +16,6 @@ if (!isset($_POST['password']) || empty($_POST['password'])) {
     exit();
 }
 
-
 $selectUser = $db->prepare("SELECT * FROM utilisateurs WHERE id = :id");
 $selectUser->execute(array(
     'id' => $id

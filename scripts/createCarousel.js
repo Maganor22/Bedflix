@@ -317,7 +317,6 @@ function createCarousel(movieData, api_key, movieData2) {
 
         img.addEventListener("click", () => {
           //if (carousel.style.opacity == 1) {
-          console.log(carousel.style.opacity);
           background.style.opacity = 0.1;
           let trailer = movie.trailer;
 
@@ -442,7 +441,7 @@ function createCarousel(movieData, api_key, movieData2) {
               let year = movieIDData.movie.production_year;
               afficherPopUp(img, title, year);
             }
-          }, 1000);
+          }, 1);
         }
 
         function mouseOut() {
@@ -815,7 +814,7 @@ function createSecCarousel(movieData, movieData2) {
         // Vérification si les données du film ont déjà été récupérées
         if (fetchedMovieData[movie.id]) {
           displayMovieInfos(fetchedMovieData[movie.id]); // Affiche les informations du film
-          /* let title = fetchedMovieData[movie.id].movie.title; */
+          /* let title = fetchedMovieData[movie.id].movie.title;  */
           let title;
           if (
             fetchedMovieData[movie.id].movie.other_title != null &&
@@ -840,6 +839,7 @@ function createSecCarousel(movieData, movieData2) {
           afficherPopUp(img, title, year);
         }
       }, 1);
+      console.log(fetchedMovieData);
     }
 
     function mouseOut() {

@@ -18,25 +18,21 @@ if (!empty($_POST["nickname"]) && !empty($_POST["name"]) && !empty($_POST["first
         header("Location: ../inscription-view.php?error=2");
         exit();
     }
-
     if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ -]{2,}$/u", $_POST["name"])) {
         $_SESSION["error"] = "Le nom ne doit contenir que des lettres, des espaces et le tiret (-)";
         header("Location: ../inscription-view.php?error=3");
         exit();
     }
-
     if (!preg_match("/^[a-zA-ZÀ-ÖØ-öø-ÿ -]{2,}$/u", $_POST["firstname"])) {
         $_SESSION["error"] = "Le prénom ne doit contenir que des lettres, des espaces et le tiret (-)";
         header("Location: ../inscription-view.php?error=4");
         exit();
     }
-
     if (!preg_match('/^(?=.*[A-Z])(?=.*[\W])(?=.*[a-z]).{8,}$/', $_POST['password'])) {
         $_SESSION["error"] = "Le mot de passe doit contenir au moins 8 caractères, une majuscule et un caractère spécial";
         header("Location: ../inscription-view.php?error=5");
         exit();
     }
-
 
     // Stockage des données du formulaire
     $nickname = $_POST["nickname"];

@@ -1,21 +1,24 @@
 <!-- Rectifications / bugs / a faire: 
 
-    - BUGS:
-        - Mettre l'icone de favoris A JOUR quand on ouvre un film dans l'index
+    
+BUGS:
+    - Mettre l'icone de favoris A JOUR quand on ouvre un film dans l'index
 
-    - RECTIFICATIONS:
-        - Supprimer l'email de vérification et mdp oublié au bout de 10min
-        - Quand on clique sur l'index pour réafficher l'index, il faut juste que ça réaffiche les infos mais que le clique soit pas pris en compte si par exemple on clique sur une image
-        - Ne pas relancer le film si le meme film est déja lancé
-        - Ajouter bouton editer sur le modal favoris
-
-    - AMELIORATIONS:
-        - Option signaler un bug
-        - Demande d'amélioration / changement
-        - Laisser un commentaire et une note ( ESPACE COMMENTAIRE ADMIN DE VALIDATION )
-        - Possibilité de mettre vu sur un film
-        - Trier les films par plateforme ( Netflix, Amazon Prime Video, Disney+ etc...)
-        - Ajouter un ami et voir ses favoris, ses films vu, ses commentaires / notes...
+    
+RECTIFICATIONS:
+    - Supprimer l'email de vérification et mdp oublié au bout de 10min
+    - Quand on clique sur l'index pour réafficher l'index, il faut juste que ça réaffiche les infos mais que le clique soit pas pris en compte si par exemple on clique sur une image
+    - Ne pas relancer le film si le meme film est déja lancé
+    - Ajouter bouton editer sur le modal favoris
+    - Changer d'avatar, mettre les images en space evenly
+    
+AMELIORATIONS:
+    - Option signaler un bug
+    - Demande d'amélioration / changement
+    - Laisser un commentaire et une note ( ESPACE COMMENTAIRE ADMIN DE VALIDATION )
+    - Possibilité de mettre vu sur un film
+    - Trier les films par plateforme ( Netflix, Amazon Prime Video, Disney+ etc...)
+    - Ajouter un ami et voir ses favoris, ses films vu, ses commentaires / notes...
 -->
 
 

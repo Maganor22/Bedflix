@@ -966,6 +966,15 @@ export function createAvatarModal(userPicture, data) {
     divCategory.appendChild(categoryTitle);
 
     const images = categories[category];
+
+    const categoryImgs = document.createElement("div");
+    if (images.length > 4 && screen.width > 768) {
+      categoryImgs.style.display = "flex";
+      categoryImgs.style.flexWrap = "wrap";
+      categoryImgs.style.justifyContent = "space-evenly";
+    }
+    divCategory.appendChild(categoryImgs);
+
     for (let i = 0; i < images.length; i++) {
       const divImg = document.createElement("div");
       divImg.classList.add("divImg");
@@ -977,7 +986,7 @@ export function createAvatarModal(userPicture, data) {
       }
       divImg.style.border = "1px solid white";
       divImg.style.borderRadius = "0.5rem";
-      divCategory.appendChild(divImg);
+      categoryImgs.appendChild(divImg);
 
       const avatar1 = document.createElement("img");
       avatar1.setAttribute("src", `../Bedflix/imgs/avatars/${images[i].url}`);

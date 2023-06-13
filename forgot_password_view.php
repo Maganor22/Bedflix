@@ -31,6 +31,9 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             case 3:
                 displayAlert("alert-danger", "Une erreur est survenue. Veuillez réessayer ulterieurement.");
                 break;
+            case 4:
+                displayAlert("alert-danger", "Vous devez attendre 2 minutes avant de faire une nouvelle demande.");
+                break;
             default:
                 break;
         }
@@ -41,13 +44,12 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
             case "email_send":
                 displayAlert("alert-success", "Un email de récupération de mot de passe a été envoyé à l'adresse indiquée.");
                 break;
-
             default:
                 break;
         }
     }
 
-    // Vérifier le délai entre les demandes de récupération
+/*     // Vérifier le délai entre les demandes de récupération
     $lastRecoveryTime = isset($_COOKIE['last_recovery_time']) ? $_COOKIE['last_recovery_time'] : 0;
     $currentTime = time();
 
@@ -61,10 +63,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
         if ($success === "email_send") {
             setcookie('last_recovery_time', $currentTime, $currentTime + $recoveryDelay);
         }
-    }
-
-
-
+    } */
 ?>
 
     <!DOCTYPE html>

@@ -1,72 +1,72 @@
-import { modalCreation } from "./modal.js";
-import { createAdminEditButton, createFavButton } from "./script.js";
+import { modalCreation } from './modal.js';
+import { createAdminEditButton, createFavButton } from './script.js';
 import {
   insertActorBase,
   selectActorsByIdFilm,
-  setComments,
-} from "./requetes.js";
+  setComments
+} from './requetes.js';
 
-let api_key = "2d216cf10e57";
+let api_key = '2d216cf10e57';
 
 export function createPlatformLinks(platformLink, modalContent) {
-  let deletePlatLink = document.querySelectorAll(".platLinkElements");
+  let deletePlatLink = document.querySelectorAll('.platLinkElements');
   for (let i = 0; i < deletePlatLink.length; i++) {
     deletePlatLink[i].remove();
   }
   if (platformLink.length > 0) {
-    let titlePlatLink = document.createElement("h2");
-    titlePlatLink.classList.add("platLinkElements");
-    titlePlatLink.innerHTML = "Plateformes achat/location";
-    titlePlatLink.style.color = "white";
-    titlePlatLink.style.marginTop = "0.9375rem";
-    titlePlatLink.style.fontSize = "2rem";
-    titlePlatLink.style.fontWeight = "normal";
+    let titlePlatLink = document.createElement('h2');
+    titlePlatLink.classList.add('platLinkElements');
+    titlePlatLink.innerHTML = 'Plateformes achat/location';
+    titlePlatLink.style.color = 'white';
+    titlePlatLink.style.marginTop = '0.9375rem';
+    titlePlatLink.style.fontSize = '2rem';
+    titlePlatLink.style.fontWeight = 'normal';
     modalContent.appendChild(titlePlatLink);
 
     if (platformLink.length == 1) {
-      let platformLinkBtn = document.createElement("button");
-      platformLinkBtn.classList.add("btn", "btn-primary", "platLinkElements");
-      platformLinkBtn.setAttribute("data-link", platformLink[0].link);
-      platformLinkBtn.target = "_blank";
+      let platformLinkBtn = document.createElement('button');
+      platformLinkBtn.classList.add('btn', 'btn-primary', 'platLinkElements');
+      platformLinkBtn.setAttribute('data-link', platformLink[0].link);
+      platformLinkBtn.target = '_blank';
       platformLinkBtn.textContent = platformLink[0].platform;
-      platformLinkBtn.style.color = "white";
-      platformLinkBtn.style.marginTop = "0.625rem";
+      platformLinkBtn.style.color = 'white';
+      platformLinkBtn.style.marginTop = '0.625rem';
       modalContent.appendChild(platformLinkBtn);
 
-      platformLinkBtn.addEventListener("click", function () {
-        window.open(this.getAttribute("data-link"), "_blank");
+      platformLinkBtn.addEventListener('click', function () {
+        window.open(this.getAttribute('data-link'), '_blank');
       });
     } else {
-      let dropdownPlatLink = document.createElement("select");
+      let dropdownPlatLink = document.createElement('select');
       dropdownPlatLink.classList.add(
-        "btn",
-        "btn-secondary",
-        "dropdown-toggle",
-        "platLinkElements"
+        'btn',
+        'btn-secondary',
+        'dropdown-toggle',
+        'platLinkElements'
       );
 
       // Crée l'option pour chaque lien de plateforme
       for (let i = 0; i < platformLink.length; i++) {
-        let option = document.createElement("option");
+        let option = document.createElement('option');
         option.value = platformLink[i].platform;
         option.text = platformLink[i].platform;
-        option.setAttribute("href", platformLink[i].link);
+        option.setAttribute('href', platformLink[i].link);
         dropdownPlatLink.add(option);
       }
 
-      dropdownPlatLink.style.marginTop = "0.625rem";
+      dropdownPlatLink.style.marginTop = '0.625rem';
       modalContent.appendChild(dropdownPlatLink);
 
       let isDropdownOpen = false;
 
-      dropdownPlatLink.addEventListener("blur", function () {
+      dropdownPlatLink.addEventListener('blur', function () {
         isDropdownOpen = false;
       });
 
-      dropdownPlatLink.addEventListener("click", function () {
+      dropdownPlatLink.addEventListener('click', function () {
         const selectedOption = this.options[this.selectedIndex];
         if (isDropdownOpen) {
-          window.open(selectedOption.getAttribute("href"), "_blank");
+          window.open(selectedOption.getAttribute('href'), '_blank');
           isDropdownOpen = false;
         } else {
           isDropdownOpen = true;
@@ -75,7 +75,7 @@ export function createPlatformLinks(platformLink, modalContent) {
     }
   } else {
     //Supprime les éléments si il n'y a rien à ajouter
-    let deletePlatLink = document.querySelectorAll(".platLinkElements");
+    let deletePlatLink = document.querySelectorAll('.platLinkElements');
     for (let i = 0; i < deletePlatLink.length; i++) {
       deletePlatLink[i].remove();
     }
@@ -83,43 +83,43 @@ export function createPlatformLinks(platformLink, modalContent) {
 }
 
 export function createSvod(platformSvod, modalContent) {
-  let deleteSvod = document.querySelectorAll(".svodElements");
+  let deleteSvod = document.querySelectorAll('.svodElements');
   for (let i = 0; i < deleteSvod.length; i++) {
     deleteSvod[i].remove();
   }
   if (platformSvod.length > 0) {
-    let titleSvod = document.createElement("h2");
-    titleSvod.classList.add("svodElements");
-    titleSvod.innerHTML = "Vidéo à la demande";
-    titleSvod.style.color = "white";
-    titleSvod.style.marginTop = "0.9375rem";
-    titleSvod.style.fontSize = "2rem";
-    titleSvod.style.fontWeight = "normal";
+    let titleSvod = document.createElement('h2');
+    titleSvod.classList.add('svodElements');
+    titleSvod.innerHTML = 'Vidéo à la demande';
+    titleSvod.style.color = 'white';
+    titleSvod.style.marginTop = '0.9375rem';
+    titleSvod.style.fontSize = '2rem';
+    titleSvod.style.fontWeight = 'normal';
     modalContent.appendChild(titleSvod);
 
-    const imagesContainer = document.createElement("div");
-    imagesContainer.classList.add("svodElements");
-    imagesContainer.style.display = "flex";
-    imagesContainer.style.flexWrap = "wrap";
+    const imagesContainer = document.createElement('div');
+    imagesContainer.classList.add('svodElements');
+    imagesContainer.style.display = 'flex';
+    imagesContainer.style.flexWrap = 'wrap';
     modalContent.appendChild(imagesContainer);
 
     for (let i = 0; i < platformSvod.length; i++) {
-      const a = document.createElement("a");
+      const a = document.createElement('a');
       a.href = platformSvod[i].link_url;
-      a.target = "_blank";
-      a.style.display = "inline-block";
-      a.style.marginRight = "0.625rem";
-      a.style.marginBottom = "0.625rem";
+      a.target = '_blank';
+      a.style.display = 'inline-block';
+      a.style.marginRight = '0.625rem';
+      a.style.marginBottom = '0.625rem';
       imagesContainer.appendChild(a);
 
-      let imgSvod = document.createElement("img");
-      imgSvod.classList.add("svodElements", "imgSvod");
-      imgSvod.setAttribute("src", platformSvod[i].logo);
+      let imgSvod = document.createElement('img');
+      imgSvod.classList.add('svodElements', 'imgSvod');
+      imgSvod.setAttribute('src', platformSvod[i].logo);
       a.appendChild(imgSvod);
     }
   } else {
     //Supprime les éléments si il n'y a rien à ajouter
-    let deleteSvod = document.querySelectorAll(".svodElements");
+    let deleteSvod = document.querySelectorAll('.svodElements');
     for (let i = 0; i < deleteSvod.length; i++) {
       deleteSvod[i].remove();
     }
@@ -136,26 +136,26 @@ export function createGoogleSearch(
 ) {
   if (platformLink.length == 0 && platformSvod == 0) {
     //Crée le bouton de recherche google si il n'y a pas de plateforme de streaming ni de vidéos à la demande
-    let googleLinkBtn = document.createElement("button");
-    googleLinkBtn.classList.add("btn", "btn-primary", "googleBtnLink");
+    let googleLinkBtn = document.createElement('button');
+    googleLinkBtn.classList.add('btn', 'btn-primary', 'googleBtnLink');
     googleLinkBtn.setAttribute(
-      "data-link",
+      'data-link',
       `https://www.google.fr/search?q="${type} ${title} ${year}"`
     );
-    googleLinkBtn.target = "_blank";
-    googleLinkBtn.textContent = "Recherche sur Google";
-    googleLinkBtn.style.color = "white";
-    googleLinkBtn.style.marginTop = "0.625rem";
+    googleLinkBtn.target = '_blank';
+    googleLinkBtn.textContent = 'Recherche sur Google';
+    googleLinkBtn.style.color = 'white';
+    googleLinkBtn.style.marginTop = '0.625rem';
     modalContent.appendChild(googleLinkBtn);
 
-    googleLinkBtn.addEventListener("click", function () {
-      window.open(this.getAttribute("data-link"), "_blank");
+    googleLinkBtn.addEventListener('click', function () {
+      window.open(this.getAttribute('data-link'), '_blank');
     });
   }
 }
 
 export function createStars(note, modalContent) {
-  let deleteStars = document.querySelectorAll(".stars");
+  let deleteStars = document.querySelectorAll('.stars');
   for (let i = 0; i < deleteStars.length; i++) {
     if (note instanceof Object) {
       deleteStars[i].remove();
@@ -166,12 +166,12 @@ export function createStars(note, modalContent) {
     return;
   }
 
-  let starsTitle = document.createElement("h5");
+  let starsTitle = document.createElement('h5');
 
   function style() {
-    starsTitle.classList.add("stars");
-    starsTitle.style.color = "white";
-    starsTitle.style.marginTop = "0.9375rem";
+    starsTitle.classList.add('stars');
+    starsTitle.style.color = 'white';
+    starsTitle.style.marginTop = '0.9375rem';
   }
 
   let notation;
@@ -188,7 +188,7 @@ export function createStars(note, modalContent) {
 
     if (note.mean === 0) {
       style();
-      starsTitle.innerHTML = "Aucune note";
+      starsTitle.innerHTML = 'Aucune note';
       modalContent.appendChild(starsTitle);
       return;
     }
@@ -200,32 +200,32 @@ export function createStars(note, modalContent) {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(0) +
-          " / 5 (" +
+          ' / 5 (' +
           note.total +
-          " votes)";
+          ' votes)';
       } else {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(0) +
-          " / 5 (" +
+          ' / 5 (' +
           note.total +
-          " vote)";
+          ' vote)';
       }
     } else {
       if (note.total > 1) {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(2) +
-          " / 5 (" +
+          ' / 5 (' +
           note.total +
-          " votes)";
+          ' votes)';
       } else {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(2) +
-          " / 5 (" +
+          ' / 5 (' +
           note.total +
-          " vote)";
+          ' vote)';
       }
     }
   } else {
@@ -233,93 +233,93 @@ export function createStars(note, modalContent) {
     fullStars = Math.floor(notation);
     halfStar = notation % 1 >= 0.25 && notation % 1 <= 0.75;
     emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    starsTitle.style.float = "right";
+    starsTitle.style.float = 'right';
   }
   modalContent.appendChild(starsTitle);
 
-  let stars = document.createElement("span");
-  stars.classList.add("stars");
+  let stars = document.createElement('span');
+  stars.classList.add('stars');
 
   if (note instanceof Object) {
-    stars.style.margin = "0.9375rem 0 0 0.625rem";
+    stars.style.margin = '0.9375rem 0 0 0.625rem';
   }
 
   for (let i = 1; i <= fullStars; i++) {
-    let star = document.createElement("i");
-    star.classList.add("fas", "fa-star");
-    star.style.color = "gold";
+    let star = document.createElement('i');
+    star.classList.add('fas', 'fa-star');
+    star.style.color = 'gold';
     stars.appendChild(star);
   }
 
   if (halfStar) {
-    let star = document.createElement("i");
-    star.classList.add("fas", "fa-star-half-alt");
-    star.style.color = "gold";
+    let star = document.createElement('i');
+    star.classList.add('fas', 'fa-star-half-alt');
+    star.style.color = 'gold';
     stars.appendChild(star);
   }
 
   for (let i = 1; i <= emptyStars; i++) {
-    let star = document.createElement("i");
-    star.classList.add("far", "fa-star");
-    star.style.color = "gray";
+    let star = document.createElement('i');
+    star.classList.add('far', 'fa-star');
+    star.style.color = 'gray';
     stars.appendChild(star);
   }
 
   if (screen.width < 768) {
-    stars.style.display = "flex";
-    stars.style.marginLeft = "0";
+    stars.style.display = 'flex';
+    stars.style.marginLeft = '0';
   }
   starsTitle.appendChild(stars);
 }
 
 export function createComments(id, type, title, comment, modalContent) {
   if (comment != 0) {
-    let commentLink = document.querySelector("#comment-link");
+    let commentLink = document.querySelector('#comment-link');
     if (commentLink) {
       commentLink.remove();
     }
-    commentLink = document.createElement("a");
-    commentLink.id = "comment-link";
+    commentLink = document.createElement('a');
+    commentLink.id = 'comment-link';
     commentLink.innerHTML = `<u>Commentaires</u>(${comment})`;
-    commentLink.href = "#";
+    commentLink.href = '#';
     modalContent.appendChild(commentLink);
-    commentLink.addEventListener("click", function () {
+    commentLink.addEventListener('click', function () {
       createCommentsModal(id, type, title);
     });
   }
 }
 
 async function createCommentsModal(id, type, title) {
-  let modalCommentElements = document.querySelectorAll(".modalCommentElement");
+  let modalCommentElements = document.querySelectorAll('.modalCommentElement');
   for (let i = 0; i < modalCommentElements.length; i++) {
     modalCommentElements[i].remove();
   }
 
-  let commentsModal = document.createElement("div");
-  commentsModal.classList.add("modal", "modalCommentElement");
-  commentsModal.style.display = "block";
+  let commentsModal = document.createElement('div');
+  commentsModal.classList.add('modal', 'modalCommentElement');
+  commentsModal.style.display = 'block';
   const maxZIndex = Math.max(
-    ...Array.from(document.querySelectorAll("*"))
-      .map((el) => parseFloat(getComputedStyle(el).zIndex))
-      .filter((z) => !isNaN(z))
+    ...Array.from(document.querySelectorAll('*'))
+      .map(el => parseFloat(getComputedStyle(el).zIndex))
+      .filter(z => !isNaN(z))
   );
   //console.log(maxZIndex);
   commentsModal.style.zIndex = maxZIndex + 1;
 
-  let commentsModalContent = document.createElement("div");
-  commentsModalContent.classList.add("modal-content");
-  commentsModalContent.style.backgroundColor = "#212529";
-  commentsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
-  commentsModalContent.style.padding = "2rem";
+  let commentsModalContent = document.createElement('div');
+  commentsModalContent.classList.add('modal-content');
+  commentsModalContent.style.backgroundColor = '#212529';
+  commentsModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
+  commentsModalContent.style.padding = '2rem';
 
-  let commentsTitle = document.createElement("h4");
-  commentsTitle.classList.add("modal-title-comment");
+  let commentsTitle = document.createElement('h4');
+  commentsTitle.classList.add('modal-title-comment');
   commentsTitle.innerHTML = `Commentaires de ${title}`;
-  commentsTitle.style.color = "white";
-  commentsTitle.style.marginBottom = "1rem";
+  commentsTitle.style.color = 'white';
+  commentsTitle.style.marginBottom = '1rem';
   commentsModalContent.appendChild(commentsTitle);
 
-  type == "film" || type == "movie" ? (type = "movie") : (type = "show");
+  type == 'film' || type == 'movie' ? (type = 'movie') : (type = 'show');
 
   try {
     const response = await fetch(
@@ -327,55 +327,55 @@ async function createCommentsModal(id, type, title) {
     );
     const comments = await response.json();
     //console.log(comments);
-    document.body.style.cursor = "auto";
-    let commentsList = document.createElement("ul");
-    commentsList.style.listStyleType = "none";
-    commentsList.style.padding = "0";
-    commentsList.style.margin = "0";
+    document.body.style.cursor = 'auto';
+    let commentsList = document.createElement('ul');
+    commentsList.style.listStyleType = 'none';
+    commentsList.style.padding = '0';
+    commentsList.style.margin = '0';
     let commentaireList = [];
     for (let comment of comments.comments) {
-      let commentItem = document.createElement("li");
-      commentItem.style.marginBottom = "1rem";
+      let commentItem = document.createElement('li');
+      commentItem.style.marginBottom = '1rem';
 
-      let commentContainer = document.createElement("div");
-      commentContainer.style.border = "1px solid white";
-      commentContainer.style.borderRadius = "0.8rem";
-      commentContainer.style.padding = "0.5rem";
+      let commentContainer = document.createElement('div');
+      commentContainer.style.border = '1px solid white';
+      commentContainer.style.borderRadius = '0.8rem';
+      commentContainer.style.padding = '0.5rem';
       commentItem.appendChild(commentContainer);
 
-      let commentAvatar = document.createElement("img");
+      let commentAvatar = document.createElement('img');
       if (comment.avatar == null) {
-        commentAvatar.src = "./imgs/b logo.png";
+        commentAvatar.src = './imgs/b logo.png';
       } else {
         commentAvatar.src = comment.avatar;
       }
-      commentAvatar.alt = "Avatar de " + comment.login;
+      commentAvatar.alt = 'Avatar de ' + comment.login;
       commentAvatar.width = 40;
       commentAvatar.height = 40;
-      commentAvatar.style.borderRadius = "20%";
-      commentAvatar.style.marginRight = "0.5rem";
+      commentAvatar.style.borderRadius = '20%';
+      commentAvatar.style.marginRight = '0.5rem';
       commentContainer.appendChild(commentAvatar);
 
       // Définir la date de naissance de l'acteur
       const dateComment = new Date(comment.date);
       // Formater la date de naissance dans le format JJ:MM:AAAA
-      const jour = ("0" + dateComment.getDate()).slice(-2);
-      const mois = ("0" + (dateComment.getMonth() + 1)).slice(-2);
+      const jour = ('0' + dateComment.getDate()).slice(-2);
+      const mois = ('0' + (dateComment.getMonth() + 1)).slice(-2);
       const annee = dateComment.getFullYear();
       const dateFormatee = `${jour}-${mois}-${annee}`;
 
-      let commentAuthor = document.createElement("p");
+      let commentAuthor = document.createElement('p');
       commentAuthor.innerHTML = `${comment.login} / ${dateFormatee}`;
-      commentAuthor.style.color = "white";
-      commentAuthor.style.display = "inline-block";
-      commentAuthor.style.fontWeight = "bold";
+      commentAuthor.style.color = 'white';
+      commentAuthor.style.display = 'inline-block';
+      commentAuthor.style.fontWeight = 'bold';
       commentContainer.appendChild(commentAuthor);
 
       createStars(comment.user_note, commentContainer);
 
-      let commentContent = document.createElement("p");
+      let commentContent = document.createElement('p');
       commentContent.innerHTML = comment.text;
-      commentContent.style.color = "white";
+      commentContent.style.color = 'white';
       commentContainer.appendChild(commentContent);
 
       commentsList.appendChild(commentItem);
@@ -395,36 +395,36 @@ async function createCommentsModal(id, type, title) {
     commentsModalContent.appendChild(commentsList);
   } catch (err) {
     console.error(err);
-    let error = document.createElement("p");
+    let error = document.createElement('p');
     error.innerHTML =
-      "Une erreur est survenue lors du chargement des commentaires.";
-    error.style.color = "white";
+      'Une erreur est survenue lors du chargement des commentaires.';
+    error.style.color = 'white';
     commentsModalContent.appendChild(error);
   }
 
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "X";
-  closeBtn.classList.add("btn", "btn-danger", "close-btn-button");
-  closeBtn.style.width = "2.2rem";
-  closeBtn.style.float = "right";
-  closeBtn.addEventListener("click", function () {
-    commentsModal.style.display = "none";
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = 'X';
+  closeBtn.classList.add('btn', 'btn-danger', 'close-btn-button');
+  closeBtn.style.width = '2.2rem';
+  closeBtn.style.float = 'right';
+  closeBtn.addEventListener('click', function () {
+    commentsModal.style.display = 'none';
   });
   commentsTitle.appendChild(closeBtn);
 
   commentsModal.appendChild(commentsModalContent);
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement("button");
-  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
+  let scrollTopBtn = document.createElement('button');
+  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   commentsModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener("click", () => {
+  scrollTopBtn.addEventListener('click', () => {
     commentsModal.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth'
     });
   });
 
@@ -449,26 +449,26 @@ export function createActors(
   background,
   modal
 ) {
-  let actorsLink = document.querySelectorAll("#actors-link");
+  let actorsLink = document.querySelectorAll('#actors-link');
   for (let actor of actorsLink) {
     actor.remove();
   }
   /*     if (actorsLink) {
             actorsLink.remove();
         } */
-  actorsLink = document.createElement("a");
-  actorsLink.id = "actors-link";
-  actorsLink.style.width = "fit-content";
-  type == "film"
+  actorsLink = document.createElement('a');
+  actorsLink.id = 'actors-link';
+  actorsLink.style.width = 'fit-content';
+  type == 'film'
     ? (actorsLink.textContent = `Acteurs du ${type}`)
     : (actorsLink.textContent = `Acteurs de la ${type}`);
   //actorsLink.style.display = "block";
-  actorsLink.style.marginTop = "0.5rem";
-  actorsLink.style.color = "white";
-  actorsLink.style.fontSize = "1.25rem";
-  actorsLink.href = "#";
+  actorsLink.style.marginTop = '0.5rem';
+  actorsLink.style.color = 'white';
+  actorsLink.style.fontSize = '1.25rem';
+  actorsLink.href = '#';
   modalContent.appendChild(actorsLink);
-  actorsLink.addEventListener("click", function () {
+  actorsLink.addEventListener('click', function () {
     selectActorsByIdFilm(
       id,
       type,
@@ -485,7 +485,7 @@ export function createActors(
       modal,
       modalContent
     );
-    document.body.style.cursor = "wait";
+    document.body.style.cursor = 'wait';
   });
 }
 
@@ -508,7 +508,7 @@ export function actorsInBdd(
   modalContent
 ) {
   //console.log(data);
-  if (data != "") {
+  if (data != '') {
     createActorsModal(
       id,
       type,
@@ -527,7 +527,7 @@ export function actorsInBdd(
       data
     );
   } else {
-    let data = "";
+    let data = '';
     createActorsModal(
       id,
       type,
@@ -545,7 +545,7 @@ export function actorsInBdd(
       modalContent,
       data
     );
-    document.body.style.cursor = "wait";
+    document.body.style.cursor = 'wait';
   }
 }
 
@@ -566,107 +566,107 @@ async function createActorsModal(
   modalContent,
   data
 ) {
-  let actorsModalElements = document.querySelectorAll(".modalActors");
+  let actorsModalElements = document.querySelectorAll('.modalActors');
   let bdd;
   for (let actorModal of actorsModalElements) {
     actorModal.remove();
   }
 
-  const actorsModal = document.createElement("div");
-  actorsModal.classList.add("modal", "modalActors");
-  actorsModal.style.display = "block";
+  const actorsModal = document.createElement('div');
+  actorsModal.classList.add('modal', 'modalActors');
+  actorsModal.style.display = 'block';
 
-  const actorsModalContent = document.createElement("div");
-  actorsModalContent.classList.add("modal-content", "modal-content-actors");
-  actorsModalContent.style.backgroundColor = "#212529";
-  actorsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
-  actorsModalContent.style.padding = "2rem";
+  const actorsModalContent = document.createElement('div');
+  actorsModalContent.classList.add('modal-content', 'modal-content-actors');
+  actorsModalContent.style.backgroundColor = '#212529';
+  actorsModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
+  actorsModalContent.style.padding = '2rem';
 
-  const actorsTitle = document.createElement("h4");
-  actorsTitle.classList.add("actors-modal-title");
+  const actorsTitle = document.createElement('h4');
+  actorsTitle.classList.add('actors-modal-title');
   actorsTitle.innerHTML = `Acteurs de ${title}`;
-  actorsTitle.style.color = "white";
-  actorsTitle.style.marginBottom = "1rem";
+  actorsTitle.style.color = 'white';
+  actorsTitle.style.marginBottom = '1rem';
   actorsModalContent.appendChild(actorsTitle);
 
-  type = type === "film" ? "movies" : "shows";
+  type = type === 'film' ? 'movies' : 'shows';
 
-  if (data != "") {
+  if (data != '') {
     /*         if (actors.characters.length === 0) {
                     let actorsLink = document.querySelector("#actors-link");
                     actorsLink.remove();
                     document.body.style.cursor = "auto"; // Set the cursor back to default
                     return
                 } */
-    document.body.style.cursor = "auto"; // Set the cursor back to default
+    document.body.style.cursor = 'auto'; // Set the cursor back to default
 
-    const actorsList = document.createElement("ul");
-    actorsList.style.listStyleType = "none";
-    actorsList.style.padding = "0";
-    actorsList.style.margin = "0";
-    actorsList.style.display = "flex";
-    actorsList.style.flexWrap = "wrap";
-    actorsList.style.justifyContent = "center";
+    const actorsList = document.createElement('ul');
+    actorsList.style.listStyleType = 'none';
+    actorsList.style.padding = '0';
+    actorsList.style.margin = '0';
+    actorsList.style.display = 'flex';
+    actorsList.style.flexWrap = 'wrap';
+    actorsList.style.justifyContent = 'center';
 
     for (let actor of data) {
-      const actorItem = document.createElement("li");
-      actorItem.classList.add("actor-item");
-      actorItem.style.marginBottom = "1rem";
-      actorItem.style.marginRight = "1rem";
+      const actorItem = document.createElement('li');
+      actorItem.classList.add('actor-item');
+      actorItem.style.marginBottom = '1rem';
+      actorItem.style.marginRight = '1rem';
 
-      const actorContainer = document.createElement("div");
-      actorContainer.style.border = "1px solid white";
-      actorContainer.style.borderRadius = "0.8rem";
-      actorContainer.style.padding = "0.7rem";
+      const actorContainer = document.createElement('div');
+      actorContainer.style.border = '1px solid white';
+      actorContainer.style.borderRadius = '0.8rem';
+      actorContainer.style.padding = '0.7rem';
       if (screen.width > 768) {
-        actorContainer.style.width = "fit-content";
+        actorContainer.style.width = 'fit-content';
       }
       actorItem.appendChild(actorContainer);
 
-      const actorLink = document.createElement("a");
-      actorLink.href = "#";
+      const actorLink = document.createElement('a');
+      actorLink.href = '#';
       actorContainer.appendChild(actorLink);
 
-      const actorImg = document.createElement("img");
+      const actorImg = document.createElement('img');
       actorImg.src = actor.infos.poster;
       actorImg.alt = `Photo de ${actor.infos.nom}`;
       actorImg.width = 250;
       actorImg.height = 350;
-      actorImg.style.borderRadius = "5%";
-      actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+      actorImg.style.borderRadius = '5%';
+      actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
       actorLink.appendChild(actorImg);
 
-      const actorAuthor = document.createElement("p");
+      const actorAuthor = document.createElement('p');
       actorAuthor.textContent = `Acteur : ${actor.infos.nom}`;
-      actorAuthor.style.color = "white";
-      actorAuthor.style.fontWeight = "bold";
-      actorAuthor.style.marginTop = "0.5rem";
-      actorAuthor.style.marginBottom = "0.5rem";
+      actorAuthor.style.color = 'white';
+      actorAuthor.style.fontWeight = 'bold';
+      actorAuthor.style.marginTop = '0.5rem';
+      actorAuthor.style.marginBottom = '0.5rem';
       actorContainer.appendChild(actorAuthor);
 
-      const actorContent = document.createElement("p");
+      const actorContent = document.createElement('p');
       actorContent.textContent = `Alias : ${actor.alias}`;
-      actorContent.style.color = "white";
-      actorContent.style.marginBottom = "0";
+      actorContent.style.color = 'white';
+      actorContent.style.marginBottom = '0';
       actorContainer.appendChild(actorContent);
 
       actorsList.appendChild(actorItem);
 
       actorImg.style.transition =
-        "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
-      actorImg.addEventListener("mouseover", function () {
-        actorImg.style.transform = "scale(1.03)";
-        actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+      actorImg.addEventListener('mouseover', function () {
+        actorImg.style.transform = 'scale(1.03)';
+        actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
       });
 
-      actorImg.addEventListener("mouseout", function () {
-        actorImg.style.transform = "scale(1)";
-        actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+      actorImg.addEventListener('mouseout', function () {
+        actorImg.style.transform = 'scale(1)';
+        actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
       });
 
-      actorImg.addEventListener("click", function () {
+      actorImg.addEventListener('click', function () {
         bdd = true;
-        if (type == "movies") {
+        if (type == 'movies') {
           createActorModal(
             actor,
             bdd,
@@ -685,8 +685,8 @@ async function createActorsModal(
           fetch(
             `https://api.betaseries.com/persons/person?id=${actor.info.id}&key=${api_key}`
           )
-            .then((response) => response.json())
-            .then((actorInfo) =>
+            .then(response => response.json())
+            .then(actorInfo =>
               createActorModal(
                 actorInfo,
                 bdd,
@@ -703,9 +703,9 @@ async function createActorsModal(
                 modalContent
               )
             )
-            .catch((error) => console.error(error));
+            .catch(error => console.error(error));
         } else {
-          console.log("serie");
+          console.log('serie');
         }
       });
     }
@@ -736,8 +736,8 @@ async function createActorsModal(
         const age = Math.floor(difference / (365.25 * 24 * 60 * 60 * 1000));
 
         // Formater la date de naissance dans le format JJ:MM:AAAA
-        const jour = ("0" + dateNaissance.getDate()).slice(-2);
-        const mois = ("0" + (dateNaissance.getMonth() + 1)).slice(-2);
+        const jour = ('0' + dateNaissance.getDate()).slice(-2);
+        const mois = ('0' + (dateNaissance.getMonth() + 1)).slice(-2);
         const annee = dateNaissance.getFullYear();
         const dateFormatee = `${jour}-${mois}-${annee}`;
         insertActorBase(
@@ -752,23 +752,23 @@ async function createActorsModal(
       }
 
       if (actors.characters.length === 0) {
-        let actorsLink = document.querySelector("#actors-link");
+        let actorsLink = document.querySelector('#actors-link');
         actorsLink.remove();
-        document.body.style.cursor = "auto"; // Set the cursor back to default
+        document.body.style.cursor = 'auto'; // Set the cursor back to default
         return;
       }
-      const actorsList = document.createElement("ul");
-      actorsList.style.listStyleType = "none";
-      actorsList.style.padding = "0";
-      actorsList.style.margin = "0";
-      actorsList.style.display = "flex";
-      actorsList.style.flexWrap = "wrap";
-      actorsList.style.justifyContent = "center";
+      const actorsList = document.createElement('ul');
+      actorsList.style.listStyleType = 'none';
+      actorsList.style.padding = '0';
+      actorsList.style.margin = '0';
+      actorsList.style.display = 'flex';
+      actorsList.style.flexWrap = 'wrap';
+      actorsList.style.justifyContent = 'center';
 
       for (let actor of actors.characters) {
         let actorAvatar = null;
         let actorInfos = null;
-        if (type === "movies" && actor.person_id) {
+        if (type === 'movies' && actor.person_id) {
           const actorResponse = await fetch(
             `https://api.betaseries.com/persons/person?id=${actor.person_id}&key=${api_key}`
           );
@@ -780,72 +780,72 @@ async function createActorsModal(
         }
 
         if (actorAvatar != null) {
-          const actorItem = document.createElement("li");
+          const actorItem = document.createElement('li');
           //actorItem.classList.add("actor-item");
-          actorItem.style.marginBottom = "1rem";
-          actorItem.style.marginRight = "1rem";
+          actorItem.style.marginBottom = '1rem';
+          actorItem.style.marginRight = '1rem';
 
-          const actorContainer = document.createElement("div");
-          actorContainer.style.border = "1px solid white";
-          actorContainer.style.borderRadius = "0.8rem";
-          actorContainer.style.padding = "0.7rem";
+          const actorContainer = document.createElement('div');
+          actorContainer.style.border = '1px solid white';
+          actorContainer.style.borderRadius = '0.8rem';
+          actorContainer.style.padding = '0.7rem';
           if (screen.width > 768) {
-            actorContainer.style.width = "fit-content";
+            actorContainer.style.width = 'fit-content';
           }
           actorItem.appendChild(actorContainer);
 
-          const actorLink = document.createElement("a");
-          actorLink.href = "#";
+          const actorLink = document.createElement('a');
+          actorLink.href = '#';
           actorContainer.appendChild(actorLink);
 
-          const actorImg = document.createElement("img");
+          const actorImg = document.createElement('img');
           actorImg.src = actorAvatar;
           actorImg.alt = `Photo de ${actor.actor}`;
           actorImg.width = 250;
           actorImg.height = 350;
-          actorImg.style.borderRadius = "5%";
-          actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+          actorImg.style.borderRadius = '5%';
+          actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           actorLink.appendChild(actorImg);
 
-          const actorAuthor = document.createElement("p");
+          const actorAuthor = document.createElement('p');
           actorAuthor.textContent = `Acteur : ${actor.actor}`;
-          actorAuthor.style.color = "white";
-          actorAuthor.style.fontWeight = "bold";
-          actorAuthor.style.marginTop = "0.5rem";
-          actorAuthor.style.marginBottom = "0.5rem";
+          actorAuthor.style.color = 'white';
+          actorAuthor.style.fontWeight = 'bold';
+          actorAuthor.style.marginTop = '0.5rem';
+          actorAuthor.style.marginBottom = '0.5rem';
           actorContainer.appendChild(actorAuthor);
 
           // Suppression de texte inutile dans le nom de l'acteur
           const name = actor.name
-            .replaceAll("Additional Voices (voice) /", "")
-            .replaceAll("/ Additional Voices", "")
-            .replaceAll("(voice)", "");
+            .replaceAll('Additional Voices (voice) /', '')
+            .replaceAll('/ Additional Voices', '')
+            .replaceAll('(voice)', '');
 
-          const actorContent = document.createElement("p");
+          const actorContent = document.createElement('p');
           actorContent.textContent = `Alias : ${name}`;
-          actorContent.style.color = "white";
-          actorContent.style.marginBottom = "0";
+          actorContent.style.color = 'white';
+          actorContent.style.marginBottom = '0';
           actorContainer.appendChild(actorContent);
 
           actorsList.appendChild(actorItem);
 
           actorImg.style.transition =
-            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
-          actorImg.addEventListener("mouseover", function () {
-            actorImg.style.transform = "scale(1.03)";
+            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+          actorImg.addEventListener('mouseover', function () {
+            actorImg.style.transform = 'scale(1.03)';
             actorImg.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
           });
 
-          actorImg.addEventListener("mouseout", function () {
-            actorImg.style.transform = "scale(1)";
+          actorImg.addEventListener('mouseout', function () {
+            actorImg.style.transform = 'scale(1)';
             actorImg.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           });
 
-          actorImg.addEventListener("click", function () {
+          actorImg.addEventListener('click', function () {
             bdd = false;
-            if (type == "movies") {
+            if (type == 'movies') {
               createActorModal(
                 actorInfos,
                 bdd,
@@ -865,8 +865,8 @@ async function createActorsModal(
               fetch(
                 `https://api.betaseries.com/persons/person?id=${actor.person_id}&key=${api_key}`
               )
-                .then((response) => response.json())
-                .then((actorInfo) =>
+                .then(response => response.json())
+                .then(actorInfo =>
                   createActorModal(
                     actorInfo,
                     bdd,
@@ -883,7 +883,7 @@ async function createActorsModal(
                     modalContent
                   )
                 )
-                .catch((error) => console.error(error));
+                .catch(error => console.error(error));
             }
           });
         }
@@ -892,36 +892,36 @@ async function createActorsModal(
       actorsModalContent.appendChild(actorsList);
     } catch (err) {
       console.error(err);
-      const error = document.createElement("p");
+      const error = document.createElement('p');
       error.innerHTML =
-        "Une erreur est survenue lors du chargement des acteurs.";
-      error.style.color = "white";
+        'Une erreur est survenue lors du chargement des acteurs.';
+      error.style.color = 'white';
       actorsModalContent.appendChild(error);
-      document.body.style.cursor = "auto"; // Set the cursor back to default
+      document.body.style.cursor = 'auto'; // Set the cursor back to default
     }
   }
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement("button");
-  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
+  let scrollTopBtn = document.createElement('button');
+  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   actorsModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener("click", () => {
+  scrollTopBtn.addEventListener('click', () => {
     actorsModal.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth'
     });
   });
 
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "X";
-  closeBtn.classList.add("btn", "btn-danger", "close-btn-button");
-  closeBtn.style.width = "2.2rem";
-  closeBtn.style.float = "right";
-  closeBtn.addEventListener("click", function () {
-    actorsModal.style.display = "none";
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = 'X';
+  closeBtn.classList.add('btn', 'btn-danger', 'close-btn-button');
+  closeBtn.style.width = '2.2rem';
+  closeBtn.style.float = 'right';
+  closeBtn.addEventListener('click', function () {
+    actorsModal.style.display = 'none';
   });
   actorsTitle.appendChild(closeBtn);
 
@@ -929,7 +929,7 @@ async function createActorsModal(
 
   document.body.appendChild(actorsModal);
 
-  document.body.style.cursor = "auto"; // Set the cursor back to default
+  document.body.style.cursor = 'auto'; // Set the cursor back to default
   return actorsModal;
 }
 
@@ -949,42 +949,42 @@ function createActorModal(
   modalContent
 ) {
   //console.log(actor)
-  const actorModal = document.createElement("div");
-  actorModal.classList.add("modal");
-  actorModal.style.display = "block";
+  const actorModal = document.createElement('div');
+  actorModal.classList.add('modal');
+  actorModal.style.display = 'block';
 
-  const actorModalContent = document.createElement("div");
-  actorModalContent.classList.add("modal-content");
-  actorModalContent.style.backgroundColor = "#212529";
-  actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
-  actorModalContent.style.padding = "2rem";
+  const actorModalContent = document.createElement('div');
+  actorModalContent.classList.add('modal-content');
+  actorModalContent.style.backgroundColor = '#212529';
+  actorModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
+  actorModalContent.style.padding = '2rem';
   if (screen.width > 768) {
-    actorModalContent.style.width = "50%";
+    actorModalContent.style.width = '50%';
   } else {
-    actorModalContent.style.width = "80%";
+    actorModalContent.style.width = '80%';
   }
 
-  const actorTitle = document.createElement("h4");
+  const actorTitle = document.createElement('h4');
 
   if (bdd) {
     actorTitle.innerHTML = `Acteur : ${actor.infos.nom}`;
   } else {
     actorTitle.innerHTML = `Acteur : ${actor.person.name}`;
   }
-  actorTitle.style.color = "white";
-  actorTitle.style.marginBottom = "1rem";
+  actorTitle.style.color = 'white';
+  actorTitle.style.marginBottom = '1rem';
   actorModalContent.appendChild(actorTitle);
 
-  const actorContainer = document.createElement("div");
-  actorContainer.style.border = "1px solid white";
-  actorContainer.style.borderRadius = "0.8rem";
-  actorContainer.style.padding = "0.5rem";
+  const actorContainer = document.createElement('div');
+  actorContainer.style.border = '1px solid white';
+  actorContainer.style.borderRadius = '0.8rem';
+  actorContainer.style.padding = '0.5rem';
   if (screen.width > 768) {
-    actorContainer.style.width = "fit-content";
+    actorContainer.style.width = 'fit-content';
   }
   actorModalContent.appendChild(actorContainer);
 
-  const actorImg = document.createElement("img");
+  const actorImg = document.createElement('img');
   if (bdd) {
     actorImg.src = actor.infos.poster;
     actorImg.alt = `Photo de ${actor.infos.nom}`;
@@ -993,16 +993,16 @@ function createActorModal(
     actorImg.alt = `Photo de ${actor.person.name}`;
   }
   if (screen.width < 768) {
-    actorImg.style.width = "100%";
-    actorImg.style.height = "100%";
+    actorImg.style.width = '100%';
+    actorImg.style.height = '100%';
   } else {
     actorImg.width = 400;
     actorImg.height = 550;
   }
-  actorImg.style.borderRadius = "5%";
+  actorImg.style.borderRadius = '5%';
   actorContainer.appendChild(actorImg);
 
-  const actorAge = document.createElement("p");
+  const actorAge = document.createElement('p');
   if (!bdd) {
     // Définir la date de naissance de l'acteur
     const dateNaissance = new Date(actor.person.birthday);
@@ -1017,16 +1017,16 @@ function createActorModal(
     const age = Math.floor(difference / (365.25 * 24 * 60 * 60 * 1000));
 
     // Formater la date de naissance dans le format JJ:MM:AAAA
-    const jour = ("0" + dateNaissance.getDate()).slice(-2);
-    const mois = ("0" + (dateNaissance.getMonth() + 1)).slice(-2);
+    const jour = ('0' + dateNaissance.getDate()).slice(-2);
+    const mois = ('0' + (dateNaissance.getMonth() + 1)).slice(-2);
     const annee = dateNaissance.getFullYear();
     const dateFormatee = `${jour}-${mois}-${annee}`;
 
     // Afficher l'âge et la date de naissance formatée
     if (
       actor.person.birthday != null &&
-      actor.person.birthday != "null" &&
-      actor.person.birthday != ""
+      actor.person.birthday != 'null' &&
+      actor.person.birthday != ''
     ) {
       actorAge.innerHTML = `<strong>Naissance :</strong> ${dateFormatee} / <strong>Age :</strong> ${age} ans`;
     } else {
@@ -1036,8 +1036,8 @@ function createActorModal(
     // Afficher l'âge et la date de naissance formatée
     if (
       actor.infos.date != null &&
-      actor.infos.date != "null" &&
-      actor.infos.date != ""
+      actor.infos.date != 'null' &&
+      actor.infos.date != ''
     ) {
       actorAge.innerHTML = `<strong>Naissance :</strong> ${actor.infos.date} / <strong>Age :</strong> ${actor.infos.age} ans`;
     } else {
@@ -1045,17 +1045,17 @@ function createActorModal(
     }
   }
   /* actorAge.innerHTML = `<strong>Naissance :</strong> ${dateFormatee} / <strong>Age :</strong> ${age} ans`; */
-  actorAge.style.color = "white";
-  actorAge.style.marginTop = "1rem";
+  actorAge.style.color = 'white';
+  actorAge.style.marginTop = '1rem';
   actorContainer.appendChild(actorAge);
 
-  const actorDescription = document.createElement("p");
-  actorDescription.style.color = "white";
+  const actorDescription = document.createElement('p');
+  actorDescription.style.color = 'white';
   if (bdd) {
     if (
       actor.infos.biographie != null &&
-      actor.infos.biographie != "null" &&
-      actor.infos.biographie != ""
+      actor.infos.biographie != 'null' &&
+      actor.infos.biographie != ''
     ) {
       actorDescription.innerHTML = `<strong>Biographie :</strong> ${actor.infos.biographie}`;
     } else {
@@ -1064,8 +1064,8 @@ function createActorModal(
   } else {
     if (
       actor.person.description != null &&
-      actor.person.description != "null" &&
-      actor.person.description != ""
+      actor.person.description != 'null' &&
+      actor.person.description != ''
     ) {
       actorDescription.innerHTML = `<strong>Biographie :</strong> ${actor.person.description}`;
     } else {
@@ -1080,104 +1080,104 @@ function createActorModal(
     // FILMS
     if (actor.person.movies.length > 0) {
       // Liste des films dans lesquels l'acteur a joué
-      const actorMoviesList = document.createElement("div");
-      actorMoviesList.style.marginTop = "1rem";
-      actorMoviesList.style.display = "flex";
-      actorMoviesList.style.flexWrap = "wrap";
-      actorMoviesList.style.padding = "1rem";
-      actorMoviesList.style.border = "1px solid white";
-      actorMoviesList.style.borderRadius = "0.8rem";
+      const actorMoviesList = document.createElement('div');
+      actorMoviesList.style.marginTop = '1rem';
+      actorMoviesList.style.display = 'flex';
+      actorMoviesList.style.flexWrap = 'wrap';
+      actorMoviesList.style.padding = '1rem';
+      actorMoviesList.style.border = '1px solid white';
+      actorMoviesList.style.borderRadius = '0.8rem';
       actorContainer.appendChild(actorMoviesList);
 
-      const actorMoviesTitle = document.createElement("h5");
+      const actorMoviesTitle = document.createElement('h5');
       actorMoviesTitle.innerHTML = `Films dans lesquels ${actor.person.name} a joué :`;
-      actorMoviesTitle.style.color = "white";
-      actorMoviesTitle.style.marginBottom = "1rem";
-      actorMoviesTitle.style.width = "100%";
+      actorMoviesTitle.style.color = 'white';
+      actorMoviesTitle.style.marginBottom = '1rem';
+      actorMoviesTitle.style.width = '100%';
       actorMoviesList.appendChild(actorMoviesTitle);
 
       // Parcourir l'array des films de l'acteur et ajouter chaque film à la liste
       for (let i = 0; i < actor.person.movies.length; i++) {
         if (
           actor.person.movies[i].movie.poster != null &&
-          actor.person.movies[i].movie.poster != "null" &&
-          actor.person.movies[i].movie.poster != ""
+          actor.person.movies[i].movie.poster != 'null' &&
+          actor.person.movies[i].movie.poster != ''
         ) {
           const movie = actor.person.movies[i];
-          const movieContainer = document.createElement("div");
-          movieContainer.style.marginRight = "0.5rem";
+          const movieContainer = document.createElement('div');
+          movieContainer.style.marginRight = '0.5rem';
           actorMoviesList.appendChild(movieContainer);
 
-          const movieLink = document.createElement("a");
-          movieLink.href = "#";
-          movieLink.style.display = "inline-block";
-          movieLink.style.marginRight = "0.5rem";
+          const movieLink = document.createElement('a');
+          movieLink.href = '#';
+          movieLink.style.display = 'inline-block';
+          movieLink.style.marginRight = '0.5rem';
           movieContainer.appendChild(movieLink);
 
-          const moviePoster = document.createElement("img");
+          const moviePoster = document.createElement('img');
           moviePoster.src = movie.movie.poster;
           moviePoster.alt = `Affiche de ${movie.movie.title}`;
           moviePoster.width = 150;
           moviePoster.height = 225;
-          moviePoster.style.borderRadius = "5%";
+          moviePoster.style.borderRadius = '5%';
           moviePoster.style.boxShadow =
-            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+            'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           movieLink.appendChild(moviePoster);
 
-          const movieInfo = document.createElement("div");
+          const movieInfo = document.createElement('div');
           movieContainer.appendChild(movieInfo);
 
-          const movieTitle = document.createElement("p");
+          const movieTitle = document.createElement('p');
           movieTitle.innerHTML = `${movie.movie.title} (${movie.movie.production_year})`;
-          movieTitle.style.color = "white";
-          movieTitle.style.width = "150px";
-          movieTitle.style.marginTop = "0.5rem";
-          movieTitle.style.textAlign = "center";
+          movieTitle.style.color = 'white';
+          movieTitle.style.width = '150px';
+          movieTitle.style.marginTop = '0.5rem';
+          movieTitle.style.textAlign = 'center';
           movieContainer.appendChild(movieTitle);
 
-          const movieAlias = document.createElement("p");
+          const movieAlias = document.createElement('p');
           // Suppression de texte inutile dans le nom de l'acteur
           const name = movie.name
-            .replaceAll("Additional Voices (voice) /", "")
-            .replaceAll("/ Additional Voices", "")
-            .replaceAll("(voice)", "");
+            .replaceAll('Additional Voices (voice) /', '')
+            .replaceAll('/ Additional Voices', '')
+            .replaceAll('(voice)', '');
           movieAlias.innerHTML = `Alias : ${name}`;
-          movieAlias.style.color = "white";
-          movieAlias.style.marginTop = "0.5rem";
-          movieAlias.style.width = "150px";
-          movieAlias.style.textAlign = "center";
-          movieAlias.style.textDecoration = "none";
+          movieAlias.style.color = 'white';
+          movieAlias.style.marginTop = '0.5rem';
+          movieAlias.style.width = '150px';
+          movieAlias.style.textAlign = 'center';
+          movieAlias.style.textDecoration = 'none';
           movieContainer.appendChild(movieAlias);
 
           moviePoster.style.transition =
-            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
-          moviePoster.addEventListener("mouseover", function () {
-            moviePoster.style.transform = "scale(1.03)";
+            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+          moviePoster.addEventListener('mouseover', function () {
+            moviePoster.style.transform = 'scale(1.03)';
             moviePoster.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
           });
 
-          moviePoster.addEventListener("mouseout", function () {
-            moviePoster.style.transform = "scale(1)";
+          moviePoster.addEventListener('mouseout', function () {
+            moviePoster.style.transform = 'scale(1)';
             moviePoster.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           });
 
-          moviePoster.addEventListener("click", function () {
+          moviePoster.addEventListener('click', function () {
             console.log(actor.person.movies[i].movie.tmdb_id);
             fetch(
               `https://api.betaseries.com/movies/movie?key=${api_key}&id=${actor.person.movies[i].movie.id}`
             )
-              .then((response) => response.json())
-              .then((filmInfo) => filmInformations(filmInfo))
-              .catch((error) => console.error(error));
+              .then(response => response.json())
+              .then(filmInfo => filmInformations(filmInfo))
+              .catch(error => console.error(error));
 
             function filmInformations(filmInfo) {
-              console.log("INFO DU FILM", filmInfo);
+              console.log('INFO DU FILM', filmInfo);
               let info = filmInfo.movie;
               let note = info.notes;
               let id = info.id;
-              let type = "movie";
+              let type = 'movie';
               let title = info.title;
               let comment = info.comments;
               let platformLink = info.platform_links;
@@ -1226,11 +1226,11 @@ function createActorModal(
                 api_key,
                 genreList
               );
-              modal.style.display = "block";
+              modal.style.display = 'block';
               const maxZIndex = Math.max(
-                ...Array.from(document.querySelectorAll("*"))
-                  .map((el) => parseFloat(getComputedStyle(el).zIndex))
-                  .filter((z) => !isNaN(z))
+                ...Array.from(document.querySelectorAll('*'))
+                  .map(el => parseFloat(getComputedStyle(el).zIndex))
+                  .filter(z => !isNaN(z))
               );
               modal.style.zIndex = maxZIndex + 1;
               createAdminEditButton(id, filmInfo, type);
@@ -1246,104 +1246,104 @@ function createActorModal(
     // SERIES
     if (actor.person.shows.length > 0) {
       // Liste des series dans lesquels l'acteur a joué
-      const actorSeriesList = document.createElement("div");
-      actorSeriesList.style.marginTop = "1rem";
-      actorSeriesList.style.display = "flex";
-      actorSeriesList.style.flexWrap = "wrap";
-      actorSeriesList.style.padding = "1rem";
-      actorSeriesList.style.border = "1px solid white";
-      actorSeriesList.style.borderRadius = "0.8rem";
+      const actorSeriesList = document.createElement('div');
+      actorSeriesList.style.marginTop = '1rem';
+      actorSeriesList.style.display = 'flex';
+      actorSeriesList.style.flexWrap = 'wrap';
+      actorSeriesList.style.padding = '1rem';
+      actorSeriesList.style.border = '1px solid white';
+      actorSeriesList.style.borderRadius = '0.8rem';
       actorContainer.appendChild(actorSeriesList);
 
-      const actorSeriesTitle = document.createElement("h5");
+      const actorSeriesTitle = document.createElement('h5');
       actorSeriesTitle.textContent = `Séries dans lesquels ${actor.person.name} a joué :`;
-      actorSeriesTitle.style.color = "white";
-      actorSeriesTitle.style.marginBottom = "1rem";
-      actorSeriesTitle.style.width = "100%";
+      actorSeriesTitle.style.color = 'white';
+      actorSeriesTitle.style.marginBottom = '1rem';
+      actorSeriesTitle.style.width = '100%';
       actorSeriesList.appendChild(actorSeriesTitle);
 
       // Parcourir l'array des films de l'acteur et ajouter chaque film à la liste
       for (let i = 0; i < actor.person.shows.length; i++) {
         if (
           actor.person.shows[i].show.poster != null &&
-          actor.person.shows[i].show.poster != "null" &&
-          actor.person.shows[i].show.poster != ""
+          actor.person.shows[i].show.poster != 'null' &&
+          actor.person.shows[i].show.poster != ''
         ) {
           const serie = actor.person.shows[i];
-          const serieContainer = document.createElement("div");
-          serieContainer.style.marginRight = "0.5rem";
+          const serieContainer = document.createElement('div');
+          serieContainer.style.marginRight = '0.5rem';
           actorSeriesList.appendChild(serieContainer);
 
-          const serieLink = document.createElement("a");
-          serieLink.href = "#";
-          serieLink.style.display = "inline-block";
-          serieLink.style.marginRight = "0.5rem";
+          const serieLink = document.createElement('a');
+          serieLink.href = '#';
+          serieLink.style.display = 'inline-block';
+          serieLink.style.marginRight = '0.5rem';
           serieContainer.appendChild(serieLink);
 
-          const seriePoster = document.createElement("img");
+          const seriePoster = document.createElement('img');
           seriePoster.src = serie.show.poster;
           seriePoster.alt = `Affiche de ${serie.show.title}`;
           seriePoster.width = 150;
           seriePoster.height = 225;
-          seriePoster.style.borderRadius = "5%";
+          seriePoster.style.borderRadius = '5%';
           seriePoster.style.boxShadow =
-            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+            'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           serieLink.appendChild(seriePoster);
 
-          const serieInfo = document.createElement("div");
+          const serieInfo = document.createElement('div');
           serieContainer.appendChild(serieInfo);
 
-          const serieTitle = document.createElement("p");
+          const serieTitle = document.createElement('p');
           serieTitle.innerHTML = `${serie.show.title} (${serie.show.creation})`;
-          serieTitle.style.color = "white";
-          serieTitle.style.width = "150px";
-          serieTitle.style.marginTop = "0.5rem";
-          serieTitle.style.textAlign = "center";
+          serieTitle.style.color = 'white';
+          serieTitle.style.width = '150px';
+          serieTitle.style.marginTop = '0.5rem';
+          serieTitle.style.textAlign = 'center';
           serieContainer.appendChild(serieTitle);
 
-          const serieAlias = document.createElement("p");
+          const serieAlias = document.createElement('p');
           // Suppression de texte inutile dans le nom de l'acteur
           const name = serie.name
-            .replaceAll("Additional Voices (voice) /", "")
-            .replaceAll("/ Additional Voices", "")
-            .replaceAll("(voice)", "");
+            .replaceAll('Additional Voices (voice) /', '')
+            .replaceAll('/ Additional Voices', '')
+            .replaceAll('(voice)', '');
           serieAlias.innerHTML = `Alias : ${name}`;
-          serieAlias.style.color = "white";
-          serieAlias.style.marginTop = "0.5rem";
-          serieAlias.style.width = "150px";
-          serieAlias.style.textAlign = "center";
-          serieAlias.style.textDecoration = "none";
+          serieAlias.style.color = 'white';
+          serieAlias.style.marginTop = '0.5rem';
+          serieAlias.style.width = '150px';
+          serieAlias.style.textAlign = 'center';
+          serieAlias.style.textDecoration = 'none';
           serieContainer.appendChild(serieAlias);
 
           seriePoster.style.transition =
-            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
-          seriePoster.addEventListener("mouseover", function () {
-            seriePoster.style.transform = "scale(1.03)";
+            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+          seriePoster.addEventListener('mouseover', function () {
+            seriePoster.style.transform = 'scale(1.03)';
             seriePoster.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
           });
 
-          seriePoster.addEventListener("mouseout", function () {
-            seriePoster.style.transform = "scale(1)";
+          seriePoster.addEventListener('mouseout', function () {
+            seriePoster.style.transform = 'scale(1)';
             seriePoster.style.boxShadow =
-              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
           });
 
-          seriePoster.addEventListener("click", function () {
+          seriePoster.addEventListener('click', function () {
             console.log(actor.person.shows[i].show.thetvdb_id);
             fetch(
               `https://api.betaseries.com/shows/display?key=${api_key}&id=${actor.person.shows[i].show.id}`
             )
-              .then((response) => response.json())
-              .then((serieInfo) => filmInformations(serieInfo))
-              .catch((error) => console.error(error));
+              .then(response => response.json())
+              .then(serieInfo => filmInformations(serieInfo))
+              .catch(error => console.error(error));
 
             function filmInformations(serieInfo) {
               console.log(serieInfo);
               let info = serieInfo.show;
               let note = info.notes;
               let id = info.id;
-              let type = "show";
+              let type = 'show';
               let title = info.title;
               let comment = info.comments;
               let platformLink;
@@ -1351,14 +1351,14 @@ function createActorModal(
               let year = info.creation;
               let trailer = info.next_trailer;
               let imdb = info.imdb_id;
-              let duree = "0";
+              let duree = '0';
               let synopsis = info.description;
               let link = `https://www.g2stream.com/stream/series?imdb=${imdb}&language=fr&sea=1&epi=1`;
               if (info.platforms == null) {
-                platformLink = "";
-                platformSvod = "";
+                platformLink = '';
+                platformSvod = '';
               } else {
-                platformLink = "";
+                platformLink = '';
                 platformSvod = info.platforms.svods;
               }
 
@@ -1394,11 +1394,11 @@ function createActorModal(
                 background,
                 api_key
               );
-              modal.style.display = "block";
+              modal.style.display = 'block';
               const maxZIndex = Math.max(
-                ...Array.from(document.querySelectorAll("*"))
-                  .map((el) => parseFloat(getComputedStyle(el).zIndex))
-                  .filter((z) => !isNaN(z))
+                ...Array.from(document.querySelectorAll('*'))
+                  .map(el => parseFloat(getComputedStyle(el).zIndex))
+                  .filter(z => !isNaN(z))
               );
               console.log(maxZIndex);
               modal.style.zIndex = maxZIndex + 1;
@@ -1413,29 +1413,29 @@ function createActorModal(
     }
   }
 
-  const closeBtn = document.createElement("button");
-  closeBtn.textContent = "X";
-  closeBtn.classList.add("btn", "btn-danger");
-  closeBtn.style.width = "2.2rem";
-  closeBtn.style.float = "right";
-  closeBtn.addEventListener("click", function () {
-    actorModal.style.display = "none";
+  const closeBtn = document.createElement('button');
+  closeBtn.textContent = 'X';
+  closeBtn.classList.add('btn', 'btn-danger');
+  closeBtn.style.width = '2.2rem';
+  closeBtn.style.float = 'right';
+  closeBtn.addEventListener('click', function () {
+    actorModal.style.display = 'none';
   });
   actorTitle.appendChild(closeBtn);
 
   actorModal.appendChild(actorModalContent);
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement("button");
-  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
+  let scrollTopBtn = document.createElement('button');
+  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   actorModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener("click", () => {
+  scrollTopBtn.addEventListener('click', () => {
     actorModal.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth'
     });
   });
 
@@ -1444,28 +1444,14 @@ function createActorModal(
   return actorModal;
 }
 
-export async function getSimilarMovies(
-  id,
-  title,
-  backgroundModal,
-  linkYtbBtn,
-  videoFrame,
-  modalTitle,
-  seasonsSelect,
-  episodesSelect,
-  validateBtn,
-  synopsisModal,
-  background,
-  modal,
-  modalContent
-) {
+export async function getSimilarMovies(id, title, modalContent) {
   try {
     let url = `https://api.betaseries.com/movies/similars?key=${api_key}&id=${id}&details=true`;
     const Response = await fetch(url);
     const data = await Response.json();
 
-    let allSimilarMovies = document.querySelectorAll(".similar-movies-list");
-    allSimilarMovies.forEach((movie) => {
+    let allSimilarMovies = document.querySelectorAll('.similar-movies-list');
+    allSimilarMovies.forEach(movie => {
       movie.remove();
     });
 
@@ -1473,41 +1459,41 @@ export async function getSimilarMovies(
       return;
     }
 
-    const similarMoviesList = document.createElement("div");
-    similarMoviesList.style.marginTop = "1rem";
-    similarMoviesList.style.display = "flex";
-    similarMoviesList.style.flexWrap = "wrap";
-    similarMoviesList.style.padding = "1rem";
-    similarMoviesList.style.border = "1px solid white";
-    similarMoviesList.style.borderRadius = "0.8rem";
-    similarMoviesList.classList.add("similar-movies-list");
+    const similarMoviesList = document.createElement('div');
+    similarMoviesList.style.marginTop = '1rem';
+    similarMoviesList.style.display = 'flex';
+    similarMoviesList.style.flexWrap = 'wrap';
+    similarMoviesList.style.padding = '1rem';
+    similarMoviesList.style.border = '1px solid white';
+    similarMoviesList.style.borderRadius = '0.8rem';
+    similarMoviesList.classList.add('similar-movies-list');
     modalContent.appendChild(similarMoviesList);
 
-    const SimilarMoviesTitle = document.createElement("h5");
+    const SimilarMoviesTitle = document.createElement('h5');
     SimilarMoviesTitle.innerHTML = `Films similaires à ${title}:`;
-    SimilarMoviesTitle.style.color = "white";
-    SimilarMoviesTitle.style.width = "100%";
+    SimilarMoviesTitle.style.color = 'white';
+    SimilarMoviesTitle.style.width = '100%';
     similarMoviesList.appendChild(SimilarMoviesTitle);
 
-    const similarMoviesContainer = document.createElement("div");
-    similarMoviesContainer.style.display = "flex";
-    similarMoviesContainer.style.flexWrap = "wrap";
-    similarMoviesContainer.style.width = "100%";
-    similarMoviesContainer.style.marginTop = "1rem";
-    similarMoviesContainer.style.justifyContent = "space-between";
+    const similarMoviesContainer = document.createElement('div');
+    similarMoviesContainer.style.display = 'flex';
+    similarMoviesContainer.style.flexWrap = 'wrap';
+    similarMoviesContainer.style.width = '100%';
+    similarMoviesContainer.style.marginTop = '1rem';
+    similarMoviesContainer.style.justifyContent = 'space-between';
     SimilarMoviesTitle.appendChild(similarMoviesContainer);
 
     for (let i = 0; i < data.similars.length; i++) {
       const movie = data.similars[i].movie;
 
-      const movieLink = document.createElement("a");
-      movieLink.href = "#";
-      movieLink.style.display = "inline-block";
-      movieLink.style.marginRight = "0.5rem";
-      movieLink.style.marginBottom = "0.8rem";
+      const movieLink = document.createElement('a');
+      movieLink.href = '#';
+      movieLink.style.display = 'inline-block';
+      movieLink.style.marginRight = '0.5rem';
+      movieLink.style.marginBottom = '0.8rem';
       similarMoviesContainer.appendChild(movieLink);
 
-      const moviePoster = document.createElement("img");
+      const moviePoster = document.createElement('img');
       moviePoster.src = movie.poster;
       moviePoster.alt = `Affiche de ${movie.title}`;
       if (screen.width < 768) {
@@ -1517,27 +1503,127 @@ export async function getSimilarMovies(
         moviePoster.width = 150;
         moviePoster.height = 225;
       }
-      moviePoster.style.borderRadius = "5%";
-      moviePoster.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+      moviePoster.style.borderRadius = '5%';
+      moviePoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
       movieLink.appendChild(moviePoster);
 
       moviePoster.style.transition =
-        "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
 
-      moviePoster.addEventListener("mouseover", function () {
-        moviePoster.style.transform = "scale(1.1)";
+      moviePoster.addEventListener('mouseover', function () {
+        moviePoster.style.transform = 'scale(1.1)';
         moviePoster.style.boxShadow =
-          "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+          'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
         afficherPopUp(moviePoster, movie.title, movie.production_year);
       });
 
-      moviePoster.addEventListener("mouseout", function () {
+      moviePoster.addEventListener('mouseout', function () {
         cacherPopUp();
-        moviePoster.style.transform = "scale(1)";
-        moviePoster.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+        moviePoster.style.transform = 'scale(1)';
+        moviePoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
       });
 
-      moviePoster.addEventListener("click", function () {
+      moviePoster.addEventListener('click', function () {
+        /*         createSimilarMoviesModal(
+          id,
+          backgroundModal,
+          linkYtbBtn,
+          videoFrame,
+          modalTitle,
+          seasonsSelect,
+          episodesSelect,
+          validateBtn,
+          synopsisModal,
+          background,
+          modal,
+          modalContent
+        ); */
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getSimilarShows(id, title, modalContent) {
+  try {
+    let url = `https://api.betaseries.com/shows/similars?key=${api_key}&id=${id}&details=true`;
+    const Response = await fetch(url);
+    const data = await Response.json();
+
+    let allSimilarShows = document.querySelectorAll('.similar-shows-list');
+    allSimilarShows.forEach(show => {
+      show.remove();
+    });
+
+    if (data.similars.length == 0) {
+      return;
+    }
+
+    const similarShowsList = document.createElement('div');
+    similarShowsList.style.marginTop = '1rem';
+    similarShowsList.style.display = 'flex';
+    similarShowsList.style.flexWrap = 'wrap';
+    similarShowsList.style.padding = '1rem';
+    similarShowsList.style.border = '1px solid white';
+    similarShowsList.style.borderRadius = '0.8rem';
+    similarShowsList.classList.add('similar-shows-list');
+    modalContent.appendChild(similarShowsList);
+
+    const SimilarShowsTitle = document.createElement('h5');
+    SimilarShowsTitle.innerHTML = `Séries similaires à ${title}:`;
+    SimilarShowsTitle.style.color = 'white';
+    SimilarShowsTitle.style.width = '100%';
+    similarShowsList.appendChild(SimilarShowsTitle);
+
+    const similarShowsContainer = document.createElement('div');
+    similarShowsContainer.style.display = 'flex';
+    similarShowsContainer.style.flexWrap = 'wrap';
+    similarShowsContainer.style.width = '100%';
+    similarShowsContainer.style.marginTop = '1rem';
+    similarShowsContainer.style.justifyContent = 'space-between';
+    SimilarShowsTitle.appendChild(similarShowsContainer);
+
+    for (let i = 0; i < data.similars.length; i++) {
+      const show = data.similars[i].show;
+
+      const showLink = document.createElement('a');
+      showLink.href = '#';
+      showLink.style.display = 'inline-block';
+      showLink.style.marginRight = '0.5rem';
+      showLink.style.marginBottom = '0.8rem';
+      similarShowsContainer.appendChild(showLink);
+
+      const showPoster = document.createElement('img');
+      showPoster.src = show.poster;
+      showPoster.alt = `Affiche de ${show.title}`;
+      if (screen.width < 768) {
+        showPoster.width = 100;
+        showPoster.height = 150;
+      } else {
+        showPoster.width = 150;
+        showPoster.height = 225;
+      }
+      showPoster.style.borderRadius = '5%';
+      showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+      showLink.appendChild(showPoster);
+
+      showPoster.style.transition =
+        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
+
+      showPoster.addEventListener('mouseover', function () {
+        showPoster.style.transform = 'scale(1.1)';
+        showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
+        afficherPopUp(showPoster, show.title, show.production_year);
+      });
+
+      showPoster.addEventListener('mouseout', function () {
+        cacherPopUp();
+        showPoster.style.transform = 'scale(1)';
+        showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+      });
+
+      showPoster.addEventListener('click', function () {
         /*         createSimilarMoviesModal(
           id,
           backgroundModal,
@@ -1573,33 +1659,33 @@ async function createSimilarMoviesModal(
   modal,
   modalContent
 ) {
-  const actorModal = document.createElement("div");
-  actorModal.classList.add("modal");
-  actorModal.style.display = "block";
+  const actorModal = document.createElement('div');
+  actorModal.classList.add('modal');
+  actorModal.style.display = 'block';
 
-  const actorModalContent = document.createElement("div");
-  actorModalContent.classList.add("modal-content");
-  actorModalContent.style.backgroundColor = "#212529";
-  actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
-  actorModalContent.style.padding = "2rem";
+  const actorModalContent = document.createElement('div');
+  actorModalContent.classList.add('modal-content');
+  actorModalContent.style.backgroundColor = '#212529';
+  actorModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
+  actorModalContent.style.padding = '2rem';
   if (screen.width > 768) {
-    actorModalContent.style.width = "50%";
+    actorModalContent.style.width = '50%';
   } else {
-    actorModalContent.style.width = "80%";
+    actorModalContent.style.width = '80%';
   }
 
   //console.log(actor.person.movies[i].movie.tmdb_id);
   fetch(`https://api.betaseries.com/movies/movie?key=${api_key}&id=${id}`)
-    .then((response) => response.json())
-    .then((filmInfo) => filmInformations(filmInfo))
-    .catch((error) => console.error(error));
+    .then(response => response.json())
+    .then(filmInfo => filmInformations(filmInfo))
+    .catch(error => console.error(error));
 
   function filmInformations(filmInfo) {
-    console.log("INFO DU FILM", filmInfo);
+    console.log('INFO DU FILM', filmInfo);
     let info = filmInfo.movie;
     let note = info.notes;
     let id = info.id;
-    let type = "movie";
+    let type = 'movie';
     let title = info.title;
     let comment = info.comments;
     let platformLink = info.platform_links;
@@ -1648,11 +1734,11 @@ async function createSimilarMoviesModal(
       api_key,
       genreList
     );
-    modal.style.display = "block";
+    modal.style.display = 'block';
     const maxZIndex = Math.max(
-      ...Array.from(document.querySelectorAll("*"))
-        .map((el) => parseFloat(getComputedStyle(el).zIndex))
-        .filter((z) => !isNaN(z))
+      ...Array.from(document.querySelectorAll('*'))
+        .map(el => parseFloat(getComputedStyle(el).zIndex))
+        .filter(z => !isNaN(z))
     );
     modal.style.zIndex = maxZIndex + 1;
     createAdminEditButton(id, filmInfo, type);
@@ -1668,15 +1754,15 @@ function afficherPopUp(img, title, year) {
     return;
   }
   // Création de l'élément de pop-up
-  const popUp = document.createElement("div");
-  popUp.classList.add("pop-up");
+  const popUp = document.createElement('div');
+  popUp.classList.add('pop-up');
   popUp.textContent = `${title} - ${year}`;
-  popUp.id = "monPopUp";
+  popUp.id = 'monPopUp';
 
   const maxZIndex = Math.max(
-    ...Array.from(document.querySelectorAll("*"))
-      .map((el) => parseFloat(getComputedStyle(el).zIndex))
-      .filter((z) => !isNaN(z))
+    ...Array.from(document.querySelectorAll('*'))
+      .map(el => parseFloat(getComputedStyle(el).zIndex))
+      .filter(z => !isNaN(z))
   );
   //console.log(maxZIndex);
   popUp.style.zIndex = maxZIndex + 1;
@@ -1685,18 +1771,18 @@ function afficherPopUp(img, title, year) {
   document.body.appendChild(popUp);
 
   // Écouteur d'événement pour suivre les mouvements de la souris
-  img.addEventListener("mousemove", deplacerPopUp);
+  img.addEventListener('mousemove', deplacerPopUp);
 }
 
 // Fonction pour déplacer le pop-up avec la souris
 function deplacerPopUp(event) {
-  const popUp = document.querySelector(".pop-up");
+  const popUp = document.querySelector('.pop-up');
   if (popUp) {
     // Utilisation de setTimeout pour limiter la fréquence de mise à jour de la position du pop-up
     clearTimeout(popUp.timerId); // annule le délai d'attente précédent (s'il existe)
     popUp.timerId = setTimeout(() => {
-      popUp.style.top = event.clientY + 0 + "px"; // décaler le pop-up vers le bas de 15 pixels pour qu'il ne soit pas exactement sur la souris
-      popUp.style.left = event.clientX + 30 + "px"; // décaler le pop-up vers la droite de 30 pixels pour qu'il soit un peu plus éloigné de la souris
+      popUp.style.top = event.clientY + 0 + 'px'; // décaler le pop-up vers le bas de 15 pixels pour qu'il ne soit pas exactement sur la souris
+      popUp.style.left = event.clientX + 30 + 'px'; // décaler le pop-up vers la droite de 30 pixels pour qu'il soit un peu plus éloigné de la souris
     }, 10); // délai d'attente de 10 millisecondes
   }
 }
@@ -1704,7 +1790,7 @@ function deplacerPopUp(event) {
 // Fonction à exécuter lorsque la souris quitte l'élément
 function cacherPopUp() {
   // Suppression de l'élément de pop-up s'il existe
-  const popUp = document.getElementById("monPopUp");
+  const popUp = document.getElementById('monPopUp');
   if (popUp) {
     document.body.removeChild(popUp);
     //popUp.removeEventListener('mousemove', deplacerPopUp); // supprimer l'écouteur d'événement
