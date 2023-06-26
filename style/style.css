@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
+/* @import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap%27"); */
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@800&display=swap%27");
+
 /* Pour les navigateurs basés sur WebKit (Google Chrome, Safari) */
 body::-webkit-scrollbar {
   display: none;
@@ -17,6 +20,31 @@ body::-webkit-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
   /* pour Internet Explorer */
+}
+
+.cineramaLogo {
+  margin-bottom: 0;
+  font-family: 'Cinzel', serif;
+  margin-left: 0.5rem;
+}
+
+.cinerama {
+  font-family: 'Cinzel', serif;
+  font-size: 2.5rem!important;
+  color: red;
+  margin-bottom: 2rem;
+}
+
+.indexLink,
+.researchLink,
+.favLink {
+  font-family: 'Cinzel', serif;
+  font-size: 1.4rem!important;
+}
+
+.favListTitle {
+  font-family: 'Cinzel', serif;
+  font-size: 1.8rem!important;
 }
 
 html {
@@ -99,12 +127,6 @@ h1,
 
 .dropdownsTop {
   margin-left: 0.625rem;
-}
-
-/*Affiche le scroll du dropdown du menu genre sur l'index*/
-.dropdown-menu-scroll {
-  max-height: 300px;
-  overflow-y: auto;
 }
 
 #player {
@@ -298,6 +320,7 @@ nav {
 
 .logo:hover {
   transform: scale(1.1);
+  text-shadow: rgb(255, 255, 255) 0.0625rem 0 1.5rem;
 }
 
 #cloche {
@@ -316,14 +339,22 @@ nav {
 
 #connect,
 #deconnect,
-#userParams {
+#userParams,
+#stats {
   color: white;
+  text-decoration: none;
+}
+
+#administration {
+  color: yellow;
   text-decoration: none;
 }
 
 #connect:hover,
 #deconnect:hover,
-#userParams:hover {
+#userParams:hover,
+#stats:hover,
+#administration:hover {
   color: white;
   text-shadow: 1px 1px 1px red;
 }
@@ -449,10 +480,6 @@ h5 {
   top: 50%;
 }
 
-.carousel-control-prev:hover {
-  transform: scale(1.2);
-}
-
 .carousel-control-next {
   margin-right: -8%;
   width: fit-content;
@@ -461,6 +488,7 @@ h5 {
   top: 50%;
 }
 
+.carousel-control-prev:hover,
 .carousel-control-next:hover {
   transform: scale(1.2);
 }
@@ -819,7 +847,7 @@ footer > * {
   position: absolute;
   width: 100%;
   height: 100vh;
-  background: url("../imgs/backjumanji.png") no-repeat;
+  /* background: url("../imgs/backjumanji.png") no-repeat; */
   background-size: cover;
   background-position: center;
   opacity: 0.3;
@@ -846,6 +874,7 @@ form div > input {
 .inscriptionDiv,
 .connexionDiv,
 .mdpDiv {
+  opacity: 0.75;
   z-index: 1;
   padding: 3rem;
   background-color: black;
@@ -860,13 +889,16 @@ form div > input {
 
 .modal-header-fav {
   margin-bottom: 1rem;
+  padding: 0;
+  padding-bottom: 1rem;
 }
 
 #favoriteCommentsModal {
   margin-bottom: 0.5rem;
 }
 
-.modal-body-commentaires {
+.modal-body-commentaires,
+.modal-body-user {
   padding: 0;
   padding-top: 1rem;
 }
@@ -883,8 +915,8 @@ form div > input {
 
 .commentaireAuteur {
   font-weight: bold !important;
-  margin-top: auto!important;
-  margin-bottom: auto!important;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
 }
 
 .commentaireBorder {
@@ -906,7 +938,7 @@ form div > input {
   margin-right: 1rem;
 }
 
-.commentaireTexte{
+.commentaireTexte {
   margin-top: 1rem;
   margin-bottom: 0;
 }
@@ -929,19 +961,76 @@ form div > input {
 }
 
 .scroll-top-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 1.5rem;
-    height: 1.5rem;
-    border-radius: 50%;
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.5);
-    bottom: 1rem;
-    right: 1rem;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  bottom: 1rem;
+  right: 1rem;
+}
 
-  #h2ChangePassword {
-    font-size: 2rem;
-  }
-  
+#h2ChangePassword {
+  font-size: 2rem;
+}
+
+.formIndex {
+  margin-bottom: 0;
+}
+
+/* Admin*/
+.block {
+  border: 1px solid white;
+  padding: 10px;
+}
+
+.space {
+  display: flex;
+  justify-content: space-evenly;
+  z-index: 1;
+  margin-top: 200px;
+  height: fit-content;
+}
+
+.user {
+  color: white;
+}
+
+.usersList {
+  display: flex;
+  justify-content: space-between;
+}
+
+hr {
+  margin-top: 0;
+}
+
+.fas:not(.btnFav, .myAdminEditBtn) {
+  color: red;
+}
+
+.fa-check{
+  color: green;
+  font-size: 2rem;
+}
+
+.fa-xmark:not(.redCross) {
+  color: red;
+  font-size: 2rem;
+}
+
+.redCross {
+  color: red;
+  font-size: 1.5rem;
+}
+
+.modal-user-list {
+  width: 50%;
+}
+
+#captcha-random {
+    user-select: none;
+}

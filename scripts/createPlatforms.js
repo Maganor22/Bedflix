@@ -1,72 +1,76 @@
-import { modalCreation } from './modal.js';
-import { createAdminEditButton, createFavButton } from './script.js';
+import { modalCreation } from "./modal.js";
+import { createAdminEditButton, createFavButton } from "./script.js";
 import {
   insertActorBase,
   selectActorsByIdFilm,
-  setComments
-} from './requetes.js';
+  setComments,
+  addUserComment,
+  getComments,
+  checkBanComment,
+} from "./requetes.js";
 
-let api_key = '2d216cf10e57';
+let api_key = "2d216cf10e57";
 
 export function createPlatformLinks(platformLink, modalContent) {
-  let deletePlatLink = document.querySelectorAll('.platLinkElements');
+  let deletePlatLink = document.querySelectorAll(".platLinkElements");
   for (let i = 0; i < deletePlatLink.length; i++) {
     deletePlatLink[i].remove();
   }
+
   if (platformLink.length > 0) {
-    let titlePlatLink = document.createElement('h2');
-    titlePlatLink.classList.add('platLinkElements');
-    titlePlatLink.innerHTML = 'Plateformes achat/location';
-    titlePlatLink.style.color = 'white';
-    titlePlatLink.style.marginTop = '0.9375rem';
-    titlePlatLink.style.fontSize = '2rem';
-    titlePlatLink.style.fontWeight = 'normal';
+    let titlePlatLink = document.createElement("h2");
+    titlePlatLink.classList.add("platLinkElements");
+    titlePlatLink.innerHTML = "Plateformes achat/location";
+    titlePlatLink.style.color = "white";
+    titlePlatLink.style.marginTop = "0.9375rem";
+    titlePlatLink.style.fontSize = "2rem";
+    titlePlatLink.style.fontWeight = "normal";
     modalContent.appendChild(titlePlatLink);
 
     if (platformLink.length == 1) {
-      let platformLinkBtn = document.createElement('button');
-      platformLinkBtn.classList.add('btn', 'btn-primary', 'platLinkElements');
-      platformLinkBtn.setAttribute('data-link', platformLink[0].link);
-      platformLinkBtn.target = '_blank';
+      let platformLinkBtn = document.createElement("button");
+      platformLinkBtn.classList.add("btn", "btn-primary", "platLinkElements");
+      platformLinkBtn.setAttribute("data-link", platformLink[0].link);
+      platformLinkBtn.target = "_blank";
       platformLinkBtn.textContent = platformLink[0].platform;
-      platformLinkBtn.style.color = 'white';
-      platformLinkBtn.style.marginTop = '0.625rem';
+      platformLinkBtn.style.color = "white";
+      platformLinkBtn.style.marginTop = "0.625rem";
       modalContent.appendChild(platformLinkBtn);
 
-      platformLinkBtn.addEventListener('click', function () {
-        window.open(this.getAttribute('data-link'), '_blank');
+      platformLinkBtn.addEventListener("click", function () {
+        window.open(this.getAttribute("data-link"), "_blank");
       });
     } else {
-      let dropdownPlatLink = document.createElement('select');
+      let dropdownPlatLink = document.createElement("select");
       dropdownPlatLink.classList.add(
-        'btn',
-        'btn-secondary',
-        'dropdown-toggle',
-        'platLinkElements'
+        "btn",
+        "btn-secondary",
+        "dropdown-toggle",
+        "platLinkElements"
       );
 
       // Crée l'option pour chaque lien de plateforme
       for (let i = 0; i < platformLink.length; i++) {
-        let option = document.createElement('option');
+        let option = document.createElement("option");
         option.value = platformLink[i].platform;
         option.text = platformLink[i].platform;
-        option.setAttribute('href', platformLink[i].link);
+        option.setAttribute("href", platformLink[i].link);
         dropdownPlatLink.add(option);
       }
 
-      dropdownPlatLink.style.marginTop = '0.625rem';
+      dropdownPlatLink.style.marginTop = "0.625rem";
       modalContent.appendChild(dropdownPlatLink);
 
       let isDropdownOpen = false;
 
-      dropdownPlatLink.addEventListener('blur', function () {
+      dropdownPlatLink.addEventListener("blur", function () {
         isDropdownOpen = false;
       });
 
-      dropdownPlatLink.addEventListener('click', function () {
+      dropdownPlatLink.addEventListener("click", function () {
         const selectedOption = this.options[this.selectedIndex];
         if (isDropdownOpen) {
-          window.open(selectedOption.getAttribute('href'), '_blank');
+          window.open(selectedOption.getAttribute("href"), "_blank");
           isDropdownOpen = false;
         } else {
           isDropdownOpen = true;
@@ -75,7 +79,7 @@ export function createPlatformLinks(platformLink, modalContent) {
     }
   } else {
     //Supprime les éléments si il n'y a rien à ajouter
-    let deletePlatLink = document.querySelectorAll('.platLinkElements');
+    let deletePlatLink = document.querySelectorAll(".platLinkElements");
     for (let i = 0; i < deletePlatLink.length; i++) {
       deletePlatLink[i].remove();
     }
@@ -83,43 +87,43 @@ export function createPlatformLinks(platformLink, modalContent) {
 }
 
 export function createSvod(platformSvod, modalContent) {
-  let deleteSvod = document.querySelectorAll('.svodElements');
+  let deleteSvod = document.querySelectorAll(".svodElements");
   for (let i = 0; i < deleteSvod.length; i++) {
     deleteSvod[i].remove();
   }
   if (platformSvod.length > 0) {
-    let titleSvod = document.createElement('h2');
-    titleSvod.classList.add('svodElements');
-    titleSvod.innerHTML = 'Vidéo à la demande';
-    titleSvod.style.color = 'white';
-    titleSvod.style.marginTop = '0.9375rem';
-    titleSvod.style.fontSize = '2rem';
-    titleSvod.style.fontWeight = 'normal';
+    let titleSvod = document.createElement("h2");
+    titleSvod.classList.add("svodElements");
+    titleSvod.innerHTML = "Vidéo à la demande";
+    titleSvod.style.color = "white";
+    titleSvod.style.marginTop = "0.9375rem";
+    titleSvod.style.fontSize = "2rem";
+    titleSvod.style.fontWeight = "normal";
     modalContent.appendChild(titleSvod);
 
-    const imagesContainer = document.createElement('div');
-    imagesContainer.classList.add('svodElements');
-    imagesContainer.style.display = 'flex';
-    imagesContainer.style.flexWrap = 'wrap';
+    const imagesContainer = document.createElement("div");
+    imagesContainer.classList.add("svodElements");
+    imagesContainer.style.display = "flex";
+    imagesContainer.style.flexWrap = "wrap";
     modalContent.appendChild(imagesContainer);
 
     for (let i = 0; i < platformSvod.length; i++) {
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = platformSvod[i].link_url;
-      a.target = '_blank';
-      a.style.display = 'inline-block';
-      a.style.marginRight = '0.625rem';
-      a.style.marginBottom = '0.625rem';
+      a.target = "_blank";
+      a.style.display = "inline-block";
+      a.style.marginRight = "0.625rem";
+      a.style.marginBottom = "0.625rem";
       imagesContainer.appendChild(a);
 
-      let imgSvod = document.createElement('img');
-      imgSvod.classList.add('svodElements', 'imgSvod');
-      imgSvod.setAttribute('src', platformSvod[i].logo);
+      let imgSvod = document.createElement("img");
+      imgSvod.classList.add("svodElements", "imgSvod");
+      imgSvod.setAttribute("src", platformSvod[i].logo);
       a.appendChild(imgSvod);
     }
   } else {
     //Supprime les éléments si il n'y a rien à ajouter
-    let deleteSvod = document.querySelectorAll('.svodElements');
+    let deleteSvod = document.querySelectorAll(".svodElements");
     for (let i = 0; i < deleteSvod.length; i++) {
       deleteSvod[i].remove();
     }
@@ -136,26 +140,26 @@ export function createGoogleSearch(
 ) {
   if (platformLink.length == 0 && platformSvod == 0) {
     //Crée le bouton de recherche google si il n'y a pas de plateforme de streaming ni de vidéos à la demande
-    let googleLinkBtn = document.createElement('button');
-    googleLinkBtn.classList.add('btn', 'btn-primary', 'googleBtnLink');
+    let googleLinkBtn = document.createElement("button");
+    googleLinkBtn.classList.add("btn", "btn-primary", "googleBtnLink");
     googleLinkBtn.setAttribute(
-      'data-link',
+      "data-link",
       `https://www.google.fr/search?q="${type} ${title} ${year}"`
     );
-    googleLinkBtn.target = '_blank';
-    googleLinkBtn.textContent = 'Recherche sur Google';
-    googleLinkBtn.style.color = 'white';
-    googleLinkBtn.style.marginTop = '0.625rem';
+    googleLinkBtn.target = "_blank";
+    googleLinkBtn.textContent = "Recherche sur Google";
+    googleLinkBtn.style.color = "white";
+    googleLinkBtn.style.marginTop = "0.625rem";
     modalContent.appendChild(googleLinkBtn);
 
-    googleLinkBtn.addEventListener('click', function () {
-      window.open(this.getAttribute('data-link'), '_blank');
+    googleLinkBtn.addEventListener("click", function () {
+      window.open(this.getAttribute("data-link"), "_blank");
     });
   }
 }
 
 export function createStars(note, modalContent) {
-  let deleteStars = document.querySelectorAll('.stars');
+  let deleteStars = document.querySelectorAll(".stars");
   for (let i = 0; i < deleteStars.length; i++) {
     if (note instanceof Object) {
       deleteStars[i].remove();
@@ -166,12 +170,12 @@ export function createStars(note, modalContent) {
     return;
   }
 
-  let starsTitle = document.createElement('h5');
+  let starsTitle = document.createElement("h5");
 
   function style() {
-    starsTitle.classList.add('stars');
-    starsTitle.style.color = 'white';
-    starsTitle.style.marginTop = '0.9375rem';
+    starsTitle.classList.add("stars");
+    starsTitle.style.color = "white";
+    starsTitle.style.marginTop = "0.9375rem";
   }
 
   let notation;
@@ -188,7 +192,7 @@ export function createStars(note, modalContent) {
 
     if (note.mean === 0) {
       style();
-      starsTitle.innerHTML = 'Aucune note';
+      starsTitle.innerHTML = "Aucune note";
       modalContent.appendChild(starsTitle);
       return;
     }
@@ -200,32 +204,32 @@ export function createStars(note, modalContent) {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(0) +
-          ' / 5 (' +
+          " / 5 (" +
           note.total +
-          ' votes)';
+          " votes)";
       } else {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(0) +
-          ' / 5 (' +
+          " / 5 (" +
           note.total +
-          ' vote)';
+          " vote)";
       }
     } else {
       if (note.total > 1) {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(2) +
-          ' / 5 (' +
+          " / 5 (" +
           note.total +
-          ' votes)';
+          " votes)";
       } else {
         starsTitle.innerHTML =
           `<strong>Note</strong> : ` +
           note.mean.toFixed(2) +
-          ' / 5 (' +
+          " / 5 (" +
           note.total +
-          ' vote)';
+          " vote)";
       }
     }
   } else {
@@ -233,204 +237,550 @@ export function createStars(note, modalContent) {
     fullStars = Math.floor(notation);
     halfStar = notation % 1 >= 0.25 && notation % 1 <= 0.75;
     emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    starsTitle.style.float = 'right';
+    starsTitle.style.float = "right";
   }
   modalContent.appendChild(starsTitle);
 
-  let stars = document.createElement('span');
-  stars.classList.add('stars');
+  let stars = document.createElement("span");
+  stars.classList.add("stars");
 
   if (note instanceof Object) {
-    stars.style.margin = '0.9375rem 0 0 0.625rem';
+    stars.style.margin = "0.9375rem 0 0 0.625rem";
   }
 
   for (let i = 1; i <= fullStars; i++) {
-    let star = document.createElement('i');
-    star.classList.add('fas', 'fa-star');
-    star.style.color = 'gold';
+    let star = document.createElement("i");
+    star.classList.add("fas", "fa-star");
+    star.style.color = "gold";
     stars.appendChild(star);
   }
 
   if (halfStar) {
-    let star = document.createElement('i');
-    star.classList.add('fas', 'fa-star-half-alt');
-    star.style.color = 'gold';
+    let star = document.createElement("i");
+    star.classList.add("fas", "fa-star-half-alt");
+    star.style.color = "gold";
     stars.appendChild(star);
   }
 
   for (let i = 1; i <= emptyStars; i++) {
-    let star = document.createElement('i');
-    star.classList.add('far', 'fa-star');
-    star.style.color = 'gray';
+    let star = document.createElement("i");
+    star.classList.add("far", "fa-star");
+    star.style.color = "gray";
     stars.appendChild(star);
   }
 
   if (screen.width < 768) {
-    stars.style.display = 'flex';
-    stars.style.marginLeft = '0';
+    stars.style.display = "flex";
+    stars.style.marginLeft = "0";
   }
   starsTitle.appendChild(stars);
 }
 
-export function createComments(id, type, title, comment, modalContent) {
-  if (comment != 0) {
-    let commentLink = document.querySelector('#comment-link');
-    if (commentLink) {
-      commentLink.remove();
+let myNote;
+function createStarsClick(note, modalContent) {
+  let deleteStars = document.querySelectorAll(".stars");
+  for (let i = 0; i < deleteStars.length; i++) {
+    if (note instanceof Object) {
+      deleteStars[i].remove();
     }
-    commentLink = document.createElement('a');
-    commentLink.id = 'comment-link';
-    commentLink.innerHTML = `<u>Commentaires</u>(${comment})`;
-    commentLink.href = '#';
-    modalContent.appendChild(commentLink);
-    commentLink.addEventListener('click', function () {
-      createCommentsModal(id, type, title);
-    });
   }
+
+  let starsTitle = document.createElement("h5");
+  modalContent.appendChild(starsTitle);
+
+  let stars = document.createElement("span");
+  stars.classList.add("stars");
+
+  if (note instanceof Object) {
+    stars.style.margin = "0.9375rem 0 0 0.625rem";
+  }
+
+  const starHovered = (hoveredIndex) => {
+    for (let i = 0; i < stars.children.length; i++) {
+      const star = stars.children[i];
+      myNote = hoveredIndex + 1;
+      if (i <= hoveredIndex) {
+        star.style.borderColor = "white";
+        star.style.transform = "scale(1.2)";
+        star.style.color = "gold";
+      } else {
+        star.style.borderColor = "";
+        star.style.transform = "";
+        star.style.color = "gray";
+      }
+    }
+  };
+
+  const starUnhovered = () => {
+    for (let i = 0; i < stars.children.length; i++) {
+      const star = stars.children[i];
+      star.style.borderColor = "";
+      star.style.transform = "";
+    }
+  };
+
+  for (let i = 0; i < 5; i++) {
+    let star = document.createElement("i");
+    star.classList.add("fas", "fa-star");
+    star.style.color = "gray";
+
+    star.addEventListener("mouseover", () => starHovered(i));
+    star.addEventListener("mouseout", starUnhovered);
+    stars.appendChild(star);
+  }
+
+  if (screen.width < 768) {
+    stars.style.display = "flex";
+    stars.style.marginLeft = "0";
+  }
+
+  starsTitle.appendChild(stars);
 }
 
-async function createCommentsModal(id, type, title) {
-  let modalCommentElements = document.querySelectorAll('.modalCommentElement');
+export function createComments(id, type, title, comment, modalContent) {
+  //if (comment != 0) {
+  let commentLink = document.querySelector("#comment-link");
+  if (commentLink) {
+    commentLink.remove();
+  }
+  commentLink = document.createElement("a");
+  commentLink.id = "comment-link";
+  commentLink.innerHTML = `<u>Commentaires</u>(${comment})`;
+  commentLink.href = "#";
+  modalContent.appendChild(commentLink);
+  commentLink.addEventListener("click", function () {
+    getComments(id, type, title);
+    //createCommentsModal(id, type, title);
+  });
+}
+
+export function getBanned(data, id, type, title) {
+  checkBanComment(data, id, type, title);
+}
+
+export async function createCommentsModal(
+  dataBan,
+  dataComments,
+  id,
+  type,
+  title
+) {
+  let modalCommentElements = document.querySelectorAll(".modalCommentElement");
   for (let i = 0; i < modalCommentElements.length; i++) {
     modalCommentElements[i].remove();
   }
 
-  let commentsModal = document.createElement('div');
-  commentsModal.classList.add('modal', 'modalCommentElement');
-  commentsModal.style.display = 'block';
+  let commentsModal = document.createElement("div");
+  commentsModal.classList.add("modal", "modalCommentElement");
+  commentsModal.style.display = "block";
   const maxZIndex = Math.max(
-    ...Array.from(document.querySelectorAll('*'))
-      .map(el => parseFloat(getComputedStyle(el).zIndex))
-      .filter(z => !isNaN(z))
+    ...Array.from(document.querySelectorAll("*"))
+      .map((el) => parseFloat(getComputedStyle(el).zIndex))
+      .filter((z) => !isNaN(z))
   );
   //console.log(maxZIndex);
   commentsModal.style.zIndex = maxZIndex + 1;
 
-  let commentsModalContent = document.createElement('div');
-  commentsModalContent.classList.add('modal-content');
-  commentsModalContent.style.backgroundColor = '#212529';
-  commentsModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
-  commentsModalContent.style.padding = '2rem';
+  let commentsModalContent = document.createElement("div");
+  commentsModalContent.classList.add("modal-content");
+  commentsModalContent.style.backgroundColor = "#212529";
+  commentsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  commentsModalContent.style.padding = "2rem";
 
-  let commentsTitle = document.createElement('h4');
-  commentsTitle.classList.add('modal-title-comment');
+  let commentsTitle = document.createElement("h4");
+  commentsTitle.classList.add("modal-title-comment");
   commentsTitle.innerHTML = `Commentaires de ${title}`;
-  commentsTitle.style.color = 'white';
-  commentsTitle.style.marginBottom = '1rem';
+  commentsTitle.style.color = "white";
+  commentsTitle.style.marginBottom = "1rem";
   commentsModalContent.appendChild(commentsTitle);
 
-  type == 'film' || type == 'movie' ? (type = 'movie') : (type = 'show');
+  type == "film" || type == "movie" ? (type = "movie") : (type = "show");
 
-  try {
-    const response = await fetch(
-      `https://api.betaseries.com/comments/comments?key=${api_key}&id=${id}&type=${type}&order=desc&replies=0&nbpp=50`
-    );
-    const comments = await response.json();
-    //console.log(comments);
-    document.body.style.cursor = 'auto';
-    let commentsList = document.createElement('ul');
-    commentsList.style.listStyleType = 'none';
-    commentsList.style.padding = '0';
-    commentsList.style.margin = '0';
-    let commentaireList = [];
-    for (let comment of comments.comments) {
-      let commentItem = document.createElement('li');
-      commentItem.style.marginBottom = '1rem';
+  if (dataBan == 1) {
+    const pBan = document.createElement("p");
+    pBan.innerHTML = "Vous avez été banni, vous ne pouvez plus commenter.";
+    pBan.style.color = "red";
+    pBan.style.marginBottom = "2rem";
+    commentsModalContent.appendChild(pBan);
+  } else {
+    const addComment = document.createElement("button");
+    addComment.classList.add("btn", "btn-warning", "add-comment", "mb-3");
+    addComment.style.width = "fit-content";
+    addComment.innerHTML = "Ajouter un commentaire";
+    addComment.style.marginBottom = "2rem";
+    addComment.addEventListener("click", function () {
+      createAddCommentModal(id);
+    });
+    commentsModalContent.appendChild(addComment);
+  }
 
-      let commentContainer = document.createElement('div');
-      commentContainer.style.border = '1px solid white';
-      commentContainer.style.borderRadius = '0.8rem';
-      commentContainer.style.padding = '0.5rem';
+  let commentsList = document.createElement("ul");
+  commentsList.style.listStyleType = "none";
+  commentsList.style.padding = "0";
+  commentsList.style.margin = "0";
+
+  // Parsez le retour de la requête JSON en utilisant JSON.parse
+  let allDatas = JSON.parse(dataComments);
+
+  allDatas.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Vérifiez que data est bien un tableau
+  if (Array.isArray(allDatas)) {
+    // Parcourez les commentaires avec forEach
+    allDatas.forEach((comment) => {
+      let commentItem = document.createElement("li");
+      commentItem.style.marginBottom = "1rem";
+
+      let commentContainer = document.createElement("div");
+      commentContainer.style.border = "1px solid white";
+      commentContainer.style.borderRadius = "0.8rem";
+      commentContainer.style.padding = "0.5rem";
       commentItem.appendChild(commentContainer);
 
-      let commentAvatar = document.createElement('img');
-      if (comment.avatar == null) {
-        commentAvatar.src = './imgs/b logo.png';
+      let commentAvatar = document.createElement("img");
+      if (comment.picture == null) {
+        commentAvatar.src = "./imgs/b logo.png";
+      } else if (comment.picture.includes("https")) {
+        //supprime tout ce qu'il y a devant le deuxieme https:// pour refaire le lien
+        let picture = comment.picture;
+        let firstOccurrence = picture.indexOf("https");
+        let secondOccurrence = picture.indexOf("https", firstOccurrence + 1);
+        let url = "";
+        if (secondOccurrence !== -1) {
+          url = picture.substring(secondOccurrence);
+        }
+        commentAvatar.src = url;
       } else {
-        commentAvatar.src = comment.avatar;
+        commentAvatar.src = comment.picture;
       }
-      commentAvatar.alt = 'Avatar de ' + comment.login;
+      commentAvatar.alt = "Avatar de " + comment.user;
       commentAvatar.width = 40;
       commentAvatar.height = 40;
-      commentAvatar.style.borderRadius = '20%';
-      commentAvatar.style.marginRight = '0.5rem';
+      commentAvatar.style.borderRadius = "20%";
+      commentAvatar.style.marginRight = "0.5rem";
       commentContainer.appendChild(commentAvatar);
 
       // Définir la date de naissance de l'acteur
       const dateComment = new Date(comment.date);
       // Formater la date de naissance dans le format JJ:MM:AAAA
-      const jour = ('0' + dateComment.getDate()).slice(-2);
-      const mois = ('0' + (dateComment.getMonth() + 1)).slice(-2);
+      const jour = ("0" + dateComment.getDate()).slice(-2);
+      const mois = ("0" + (dateComment.getMonth() + 1)).slice(-2);
       const annee = dateComment.getFullYear();
       const dateFormatee = `${jour}-${mois}-${annee}`;
 
-      let commentAuthor = document.createElement('p');
-      commentAuthor.innerHTML = `${comment.login} / ${dateFormatee}`;
-      commentAuthor.style.color = 'white';
-      commentAuthor.style.display = 'inline-block';
-      commentAuthor.style.fontWeight = 'bold';
+      let commentAuthor = document.createElement("p");
+      commentAuthor.innerHTML = `${comment.user} / ${dateFormatee}`;
+      commentAuthor.style.color = "white";
+      commentAuthor.style.display = "inline-block";
+      commentAuthor.style.fontWeight = "bold";
       commentContainer.appendChild(commentAuthor);
 
-      createStars(comment.user_note, commentContainer);
+      createStars(comment.note, commentContainer);
 
-      let commentContent = document.createElement('p');
-      commentContent.innerHTML = comment.text;
-      commentContent.style.color = 'white';
+      let commentContent = document.createElement("p");
+      commentContent.innerHTML = comment.commentaire;
+      commentContent.style.color = "white";
       commentContainer.appendChild(commentContent);
 
       commentsList.appendChild(commentItem);
-
-      /* ENVOYER LA REQUETE D'INSERTION */
-      commentaireList.push(comment.text);
-      setComments(
-        comment.login,
-        comment.avatar,
-        comment.user_note,
-        comment.date,
-        comment.text,
-        id
-      );
-      console.log(comment.avatar);
-    }
-    commentsModalContent.appendChild(commentsList);
-  } catch (err) {
-    console.error(err);
-    let error = document.createElement('p');
-    error.innerHTML =
-      'Une erreur est survenue lors du chargement des commentaires.';
-    error.style.color = 'white';
-    commentsModalContent.appendChild(error);
+      commentsModalContent.appendChild(commentsList);
+    });
   }
 
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = 'X';
-  closeBtn.classList.add('btn', 'btn-danger', 'close-btn-button');
-  closeBtn.style.width = '2.2rem';
-  closeBtn.style.float = 'right';
-  closeBtn.addEventListener('click', function () {
-    commentsModal.style.display = 'none';
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger", "close-btn-button");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    commentsModal.style.display = "none";
   });
   commentsTitle.appendChild(closeBtn);
 
   commentsModal.appendChild(commentsModalContent);
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement('button');
-  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
+  let scrollTopBtn = document.createElement("button");
+  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   commentsModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener('click', () => {
+  scrollTopBtn.addEventListener("click", () => {
     commentsModal.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   });
 
   document.body.appendChild(commentsModal);
 
   return commentsModal;
+}
+
+function createAddCommentModal(id) {
+  let modalAddCommentElements = document.querySelectorAll(
+    ".modalAddCommentElements"
+  );
+  for (let i = 0; i < modalAddCommentElements.length; i++) {
+    modalAddCommentElements[i].remove();
+  }
+
+  let addCommentModal = document.createElement("div");
+  addCommentModal.classList.add("modal", "modalAddCommentElements");
+  addCommentModal.style.display = "block";
+  const maxZIndex = Math.max(
+    ...Array.from(document.querySelectorAll("*"))
+      .map((el) => parseFloat(getComputedStyle(el).zIndex))
+      .filter((z) => !isNaN(z))
+  );
+  //console.log(maxZIndex);
+  addCommentModal.style.zIndex = maxZIndex + 1;
+  document.body.appendChild(addCommentModal);
+
+  let addCommentsModalContent = document.createElement("div");
+  addCommentsModalContent.classList.add(
+    "modal-content-comment-modal",
+    "m-auto"
+  );
+  addCommentsModalContent.style.backgroundColor = "#212529";
+  addCommentsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  addCommentsModalContent.style.padding = "2rem";
+  addCommentsModalContent.style.width = "30%";
+
+  let addCommentTitle = document.createElement("h4");
+  addCommentTitle.classList.add("modal-title-comment");
+  addCommentTitle.innerHTML = `Ajouter un commentaire`;
+  addCommentTitle.style.color = "white";
+  addCommentTitle.style.marginBottom = "1rem";
+  addCommentsModalContent.appendChild(addCommentTitle);
+
+  let closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger", "close-btn-button");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    addCommentModal.style.display = "none";
+  });
+  addCommentTitle.appendChild(closeBtn);
+
+  addCommentsModalContent.appendChild(addCommentTitle);
+
+  let addCommentForm = document.createElement("form");
+  addCommentForm.id = "add-comment-form";
+  addCommentForm.style.display = "flex";
+  addCommentForm.style.flexDirection = "column";
+  addCommentForm.style.alignItems = "center";
+
+  let note = "0";
+
+  createStarsClick(note, addCommentsModalContent);
+
+  let captchaObj = randomCaptcha();
+
+  let addCommentFormContent = document.createElement("textarea");
+  addCommentFormContent.classList.add("mt-3");
+  addCommentFormContent.id = "add-comment-form-content";
+  addCommentFormContent.name = "add-comment-form-content";
+  addCommentFormContent.placeholder = "Votre commentaire";
+  addCommentFormContent.style.width = "100%";
+  addCommentFormContent.style.height = "10rem";
+  addCommentFormContent.style.marginBottom = "1rem";
+  addCommentFormContent.style.borderRadius = "0.8rem";
+  addCommentFormContent.style.padding = "0.5rem";
+  addCommentFormContent.style.border = "1px solid #888";
+  addCommentFormContent.style.backgroundColor = "#1a1a1a";
+  addCommentFormContent.style.color = "white";
+  addCommentFormContent.style.fontSize = "1rem";
+  addCommentFormContent.style.textAlign = "center";
+  addCommentFormContent.style.fontFamily = "Roboto";
+  addCommentFormContent.style.fontWeight = "bold";
+  addCommentFormContent.style.outline = "none";
+  addCommentFormContent.style.boxShadow = "none";
+  addCommentFormContent.style.transition = "all 0.3s ease-in-out";
+  addCommentFormContent.addEventListener("mouseover", function () {
+    addCommentFormContent.style.border = "1px solid #fff";
+  });
+  addCommentFormContent.addEventListener("mouseout", function () {
+    addCommentFormContent.style.border = "1px solid #888";
+  });
+  addCommentFormContent.addEventListener("blur", function () {
+    addCommentFormContent.style.border = "1px solid #888";
+  });
+
+  let addCommentFormSubmit = document.createElement("input");
+  addCommentFormSubmit.type = "submit";
+  addCommentFormSubmit.id = "add-comment-form-submit";
+  addCommentFormSubmit.name = "add-comment-form-submit";
+  addCommentFormSubmit.value = "Envoyer";
+  addCommentFormSubmit.classList.add("btn", "btn-warning");
+  addCommentFormSubmit.style.width = "100%";
+  addCommentFormSubmit.style.marginBottom = "1rem";
+  addCommentFormSubmit.style.borderRadius = "0.8rem";
+  addCommentFormSubmit.style.padding = "0.5rem";
+  addCommentFormSubmit.style.border = "1px solid #888";
+  //addCommentFormSubmit.style.backgroundColor = "#1a1a1a";
+  //addCommentFormSubmit.style.color = "white";
+  addCommentFormSubmit.style.fontSize = "1rem";
+  addCommentFormSubmit.style.textAlign = "center";
+  addCommentFormSubmit.style.fontFamily = "Roboto";
+  addCommentFormSubmit.style.fontWeight = "bold";
+  addCommentFormSubmit.style.outline = "none";
+  addCommentFormSubmit.style.boxShadow = "none";
+  addCommentFormSubmit.style.transition = "all 0.3s ease-in-out";
+  addCommentFormSubmit.addEventListener("mouseover", function () {
+    addCommentFormSubmit.style.border = "1px solid #fff";
+  });
+  addCommentFormSubmit.addEventListener("mouseout", function () {
+    addCommentFormSubmit.style.border = "1px solid #888";
+  });
+  addCommentFormSubmit.addEventListener("blur", function () {
+    addCommentFormSubmit.style.border = "1px solid #888";
+  });
+  addCommentFormSubmit.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (captchaObj.result != captchaInput.value) {
+      displayAlert("alert-danger", "Le captcha est incorrect.");
+    } else {
+      addUserComment(id, myNote, addCommentFormContent.value);
+    }
+  });
+
+  let captcha = document.createElement("div");
+  captcha.classList.add("w-100");
+
+  let captchaText = document.createElement("p");
+  captchaText.innerHTML = "Veuillez remplir le captcha ci-dessous :";
+  captchaText.style.color = "white";
+  captchaText.style.marginBottom = "1rem";
+  captcha.appendChild(captchaText);
+
+  let divContainerCaptcha = document.createElement("div");
+  divContainerCaptcha.classList.add(
+    "d-flex",
+    "justify-content-between",
+    "gap-5"
+  );
+
+  captcha.appendChild(divContainerCaptcha);
+
+  let captchaRandom = document.createElement("p");
+  captchaRandom.classList.add("align-self-center");
+  captchaRandom.id = "captcha-random";
+  captchaRandom.style.color = "white";
+  captchaRandom.style.marginBottom = "1rem";
+  captchaRandom.innerHTML = captchaObj.captcha;
+  //captcha.appendChild(captchaRandom);
+  divContainerCaptcha.appendChild(captchaRandom);
+
+  let captchaInput = document.createElement("input");
+  captchaInput.classList.add("w-50");
+  captchaInput.type = "captcha";
+  captchaInput.id = "captcha-input";
+  captchaInput.name = "captcha-input";
+  captchaInput.placeholder = "Captcha";
+  captchaInput.style.width = "100%";
+  captchaInput.style.marginBottom = "1rem";
+  captchaInput.style.borderRadius = "0.8rem";
+  captchaInput.style.padding = "0.5rem";
+  captchaInput.style.border = "1px solid #888";
+  captchaInput.style.backgroundColor = "#1a1a1a";
+  captchaInput.style.color = "white";
+  captchaInput.style.fontSize = "1rem";
+  captchaInput.style.textAlign = "center";
+  captchaInput.style.fontFamily = "Roboto";
+  captchaInput.style.fontWeight = "bold";
+  captchaInput.style.outline = "none";
+  captchaInput.style.boxShadow = "none";
+  captchaInput.style.transition = "all 0.3s ease-in-out";
+  captchaInput.addEventListener("mouseover", function () {
+    captchaInput.style.border = "1px solid #fff";
+  });
+  captchaInput.addEventListener("mouseout", function () {
+    captchaInput.style.border = "1px solid #888";
+  });
+  captchaInput.addEventListener("blur", function () {
+    captchaInput.style.border = "1px solid #888";
+  });
+  //captcha.appendChild(captchaInput);
+  divContainerCaptcha.appendChild(captchaInput);
+
+  addCommentForm.appendChild(addCommentFormContent);
+  addCommentForm.appendChild(captcha);
+  addCommentForm.appendChild(addCommentFormSubmit);
+
+  addCommentsModalContent.appendChild(addCommentForm);
+
+  addCommentModal.appendChild(addCommentsModalContent);
+}
+
+function randomCaptcha() {
+  let num1 = Math.floor(Math.random() * 10);
+  let num2 = Math.floor(Math.random() * 10);
+  let total = num1 + num2;
+  let captcha = num1 + " + " + num2 + " = ?";
+  return { captcha: captcha, result: total };
+}
+
+export function responseComment(data) {
+  let modalCom = document.querySelector(".modalAddCommentElements");
+  modalCom.style.display = "none";
+  if (data == "true") {
+    displayAlert(
+      "alert-success",
+      "Votre commentaire a bien été envoyé. Il sera ajouté après validation par un administrateur."
+    );
+  } else {
+    // Expression régulière pour extraire le message d'erreur
+    var regex = /Exception: ([^<]+)/;
+    var match = regex.exec(data);
+
+    if (match && match.length > 1) {
+      displayAlert("alert-danger", "Vous avez été banni des commentaires.");
+    } else {
+      displayAlert(
+        "alert-danger",
+        "Une erreur est survenue lors de l'envoi de votre commentaire."
+      );
+    }
+  }
+}
+
+function displayAlert(alertClass, alertMessage) {
+  let style = document.createElement("style");
+  style.innerHTML =
+    ".alert { position: fixed; top: 10%; left: 50%; transform: translateX(-50%); z-index: 99999999999999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; } .alert.sticky { position: fixed !important; top: 10% !important; } @media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+  document.head.appendChild(style);
+
+  let alertDiv = document.createElement("div");
+  alertDiv.classList.add("alert");
+  alertDiv.classList.add(alertClass);
+  alertDiv.setAttribute("role", "alert");
+  alertDiv.innerHTML = alertMessage;
+  document.body.appendChild(alertDiv);
+
+  function adjustAlertPosition() {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    if (scrollTop > 0) {
+      alertDiv.classList.add("sticky");
+    } else {
+      alertDiv.classList.remove("sticky");
+    }
+    requestAnimationFrame(adjustAlertPosition);
+  }
+
+  window.addEventListener("scroll", adjustAlertPosition);
+
+  setTimeout(function () {
+    window.removeEventListener("scroll", adjustAlertPosition);
+    alertDiv.style.opacity = "0";
+    setTimeout(function () {
+      alertDiv.style.display = "none";
+    }, 500);
+  }, 5000);
+
+  adjustAlertPosition(); // Démarrer la mise à jour continue de la position de l'alerte
 }
 
 export function createActors(
@@ -449,27 +799,45 @@ export function createActors(
   background,
   modal
 ) {
-  let actorsLink = document.querySelectorAll('#actors-link');
+  let actorsLink = document.querySelectorAll("#actors-link");
   for (let actor of actorsLink) {
     actor.remove();
   }
   /*     if (actorsLink) {
             actorsLink.remove();
         } */
-  actorsLink = document.createElement('a');
-  actorsLink.id = 'actors-link';
-  actorsLink.style.width = 'fit-content';
-  type == 'film'
+  actorsLink = document.createElement("a");
+  actorsLink.id = "actors-link";
+  actorsLink.style.width = "fit-content";
+  type == "film"
     ? (actorsLink.textContent = `Acteurs du ${type}`)
     : (actorsLink.textContent = `Acteurs de la ${type}`);
   //actorsLink.style.display = "block";
-  actorsLink.style.marginTop = '0.5rem';
-  actorsLink.style.color = 'white';
-  actorsLink.style.fontSize = '1.25rem';
-  actorsLink.href = '#';
+  actorsLink.style.marginTop = "0.5rem";
+  actorsLink.style.color = "white";
+  actorsLink.style.fontSize = "1.25rem";
+  actorsLink.href = "#";
   modalContent.appendChild(actorsLink);
-  actorsLink.addEventListener('click', function () {
-    selectActorsByIdFilm(
+  actorsLink.addEventListener("click", function () {
+    let data = "";
+    createActorsModal(
+      id,
+      type,
+      title,
+      backgroundModal,
+      linkYtbBtn,
+      videoFrame,
+      modalTitle,
+      seasonsSelect,
+      episodesSelect,
+      validateBtn,
+      synopsisModal,
+      background,
+      modal,
+      modalContent,
+      data
+    );
+    /*     selectActorsByIdFilm(
       id,
       type,
       title,
@@ -484,8 +852,8 @@ export function createActors(
       background,
       modal,
       modalContent
-    );
-    document.body.style.cursor = 'wait';
+    ); */
+    document.body.style.cursor = "wait";
   });
 }
 
@@ -508,7 +876,7 @@ export function actorsInBdd(
   modalContent
 ) {
   //console.log(data);
-  if (data != '') {
+  if (data != "") {
     createActorsModal(
       id,
       type,
@@ -527,7 +895,7 @@ export function actorsInBdd(
       data
     );
   } else {
-    let data = '';
+    let data = "";
     createActorsModal(
       id,
       type,
@@ -545,7 +913,7 @@ export function actorsInBdd(
       modalContent,
       data
     );
-    document.body.style.cursor = 'wait';
+    document.body.style.cursor = "wait";
   }
 }
 
@@ -566,107 +934,107 @@ async function createActorsModal(
   modalContent,
   data
 ) {
-  let actorsModalElements = document.querySelectorAll('.modalActors');
+  let actorsModalElements = document.querySelectorAll(".modalActors");
   let bdd;
   for (let actorModal of actorsModalElements) {
     actorModal.remove();
   }
 
-  const actorsModal = document.createElement('div');
-  actorsModal.classList.add('modal', 'modalActors');
-  actorsModal.style.display = 'block';
+  const actorsModal = document.createElement("div");
+  actorsModal.classList.add("modal", "modalActors");
+  actorsModal.style.display = "block";
 
-  const actorsModalContent = document.createElement('div');
-  actorsModalContent.classList.add('modal-content', 'modal-content-actors');
-  actorsModalContent.style.backgroundColor = '#212529';
-  actorsModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
-  actorsModalContent.style.padding = '2rem';
+  const actorsModalContent = document.createElement("div");
+  actorsModalContent.classList.add("modal-content", "modal-content-actors");
+  actorsModalContent.style.backgroundColor = "#212529";
+  actorsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  actorsModalContent.style.padding = "2rem";
 
-  const actorsTitle = document.createElement('h4');
-  actorsTitle.classList.add('actors-modal-title');
+  const actorsTitle = document.createElement("h4");
+  actorsTitle.classList.add("actors-modal-title");
   actorsTitle.innerHTML = `Acteurs de ${title}`;
-  actorsTitle.style.color = 'white';
-  actorsTitle.style.marginBottom = '1rem';
+  actorsTitle.style.color = "white";
+  actorsTitle.style.marginBottom = "1rem";
   actorsModalContent.appendChild(actorsTitle);
 
-  type = type === 'film' ? 'movies' : 'shows';
+  type = type === "film" ? "movies" : "shows";
 
-  if (data != '') {
+  if (data != "") {
     /*         if (actors.characters.length === 0) {
                     let actorsLink = document.querySelector("#actors-link");
                     actorsLink.remove();
                     document.body.style.cursor = "auto"; // Set the cursor back to default
                     return
                 } */
-    document.body.style.cursor = 'auto'; // Set the cursor back to default
+    document.body.style.cursor = "auto"; // Set the cursor back to default
 
-    const actorsList = document.createElement('ul');
-    actorsList.style.listStyleType = 'none';
-    actorsList.style.padding = '0';
-    actorsList.style.margin = '0';
-    actorsList.style.display = 'flex';
-    actorsList.style.flexWrap = 'wrap';
-    actorsList.style.justifyContent = 'center';
+    const actorsList = document.createElement("ul");
+    actorsList.style.listStyleType = "none";
+    actorsList.style.padding = "0";
+    actorsList.style.margin = "0";
+    actorsList.style.display = "flex";
+    actorsList.style.flexWrap = "wrap";
+    actorsList.style.justifyContent = "center";
 
     for (let actor of data) {
-      const actorItem = document.createElement('li');
-      actorItem.classList.add('actor-item');
-      actorItem.style.marginBottom = '1rem';
-      actorItem.style.marginRight = '1rem';
+      const actorItem = document.createElement("li");
+      actorItem.classList.add("actor-item");
+      actorItem.style.marginBottom = "1rem";
+      actorItem.style.marginRight = "1rem";
 
-      const actorContainer = document.createElement('div');
-      actorContainer.style.border = '1px solid white';
-      actorContainer.style.borderRadius = '0.8rem';
-      actorContainer.style.padding = '0.7rem';
+      const actorContainer = document.createElement("div");
+      actorContainer.style.border = "1px solid white";
+      actorContainer.style.borderRadius = "0.8rem";
+      actorContainer.style.padding = "0.7rem";
       if (screen.width > 768) {
-        actorContainer.style.width = 'fit-content';
+        actorContainer.style.width = "fit-content";
       }
       actorItem.appendChild(actorContainer);
 
-      const actorLink = document.createElement('a');
-      actorLink.href = '#';
+      const actorLink = document.createElement("a");
+      actorLink.href = "#";
       actorContainer.appendChild(actorLink);
 
-      const actorImg = document.createElement('img');
+      const actorImg = document.createElement("img");
       actorImg.src = actor.infos.poster;
       actorImg.alt = `Photo de ${actor.infos.nom}`;
       actorImg.width = 250;
       actorImg.height = 350;
-      actorImg.style.borderRadius = '5%';
-      actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+      actorImg.style.borderRadius = "5%";
+      actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
       actorLink.appendChild(actorImg);
 
-      const actorAuthor = document.createElement('p');
+      const actorAuthor = document.createElement("p");
       actorAuthor.textContent = `Acteur : ${actor.infos.nom}`;
-      actorAuthor.style.color = 'white';
-      actorAuthor.style.fontWeight = 'bold';
-      actorAuthor.style.marginTop = '0.5rem';
-      actorAuthor.style.marginBottom = '0.5rem';
+      actorAuthor.style.color = "white";
+      actorAuthor.style.fontWeight = "bold";
+      actorAuthor.style.marginTop = "0.5rem";
+      actorAuthor.style.marginBottom = "0.5rem";
       actorContainer.appendChild(actorAuthor);
 
-      const actorContent = document.createElement('p');
+      const actorContent = document.createElement("p");
       actorContent.textContent = `Alias : ${actor.alias}`;
-      actorContent.style.color = 'white';
-      actorContent.style.marginBottom = '0';
+      actorContent.style.color = "white";
+      actorContent.style.marginBottom = "0";
       actorContainer.appendChild(actorContent);
 
       actorsList.appendChild(actorItem);
 
       actorImg.style.transition =
-        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-      actorImg.addEventListener('mouseover', function () {
-        actorImg.style.transform = 'scale(1.03)';
-        actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
+        "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+      actorImg.addEventListener("mouseover", function () {
+        actorImg.style.transform = "scale(1.03)";
+        actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
       });
 
-      actorImg.addEventListener('mouseout', function () {
-        actorImg.style.transform = 'scale(1)';
-        actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+      actorImg.addEventListener("mouseout", function () {
+        actorImg.style.transform = "scale(1)";
+        actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
       });
 
-      actorImg.addEventListener('click', function () {
+      actorImg.addEventListener("click", function () {
         bdd = true;
-        if (type == 'movies') {
+        if (type == "movies") {
           createActorModal(
             actor,
             bdd,
@@ -685,8 +1053,8 @@ async function createActorsModal(
           fetch(
             `https://api.betaseries.com/persons/person?id=${actor.info.id}&key=${api_key}`
           )
-            .then(response => response.json())
-            .then(actorInfo =>
+            .then((response) => response.json())
+            .then((actorInfo) =>
               createActorModal(
                 actorInfo,
                 bdd,
@@ -703,9 +1071,9 @@ async function createActorsModal(
                 modalContent
               )
             )
-            .catch(error => console.error(error));
+            .catch((error) => console.error(error));
         } else {
-          console.log('serie');
+          console.log("serie");
         }
       });
     }
@@ -736,8 +1104,8 @@ async function createActorsModal(
         const age = Math.floor(difference / (365.25 * 24 * 60 * 60 * 1000));
 
         // Formater la date de naissance dans le format JJ:MM:AAAA
-        const jour = ('0' + dateNaissance.getDate()).slice(-2);
-        const mois = ('0' + (dateNaissance.getMonth() + 1)).slice(-2);
+        const jour = ("0" + dateNaissance.getDate()).slice(-2);
+        const mois = ("0" + (dateNaissance.getMonth() + 1)).slice(-2);
         const annee = dateNaissance.getFullYear();
         const dateFormatee = `${jour}-${mois}-${annee}`;
         insertActorBase(
@@ -752,23 +1120,23 @@ async function createActorsModal(
       }
 
       if (actors.characters.length === 0) {
-        let actorsLink = document.querySelector('#actors-link');
+        let actorsLink = document.querySelector("#actors-link");
         actorsLink.remove();
-        document.body.style.cursor = 'auto'; // Set the cursor back to default
+        document.body.style.cursor = "auto"; // Set the cursor back to default
         return;
       }
-      const actorsList = document.createElement('ul');
-      actorsList.style.listStyleType = 'none';
-      actorsList.style.padding = '0';
-      actorsList.style.margin = '0';
-      actorsList.style.display = 'flex';
-      actorsList.style.flexWrap = 'wrap';
-      actorsList.style.justifyContent = 'center';
+      const actorsList = document.createElement("ul");
+      actorsList.style.listStyleType = "none";
+      actorsList.style.padding = "0";
+      actorsList.style.margin = "0";
+      actorsList.style.display = "flex";
+      actorsList.style.flexWrap = "wrap";
+      actorsList.style.justifyContent = "center";
 
       for (let actor of actors.characters) {
         let actorAvatar = null;
         let actorInfos = null;
-        if (type === 'movies' && actor.person_id) {
+        if (type === "movies" && actor.person_id) {
           const actorResponse = await fetch(
             `https://api.betaseries.com/persons/person?id=${actor.person_id}&key=${api_key}`
           );
@@ -780,72 +1148,72 @@ async function createActorsModal(
         }
 
         if (actorAvatar != null) {
-          const actorItem = document.createElement('li');
+          const actorItem = document.createElement("li");
           //actorItem.classList.add("actor-item");
-          actorItem.style.marginBottom = '1rem';
-          actorItem.style.marginRight = '1rem';
+          actorItem.style.marginBottom = "1rem";
+          actorItem.style.marginRight = "1rem";
 
-          const actorContainer = document.createElement('div');
-          actorContainer.style.border = '1px solid white';
-          actorContainer.style.borderRadius = '0.8rem';
-          actorContainer.style.padding = '0.7rem';
+          const actorContainer = document.createElement("div");
+          actorContainer.style.border = "1px solid white";
+          actorContainer.style.borderRadius = "0.8rem";
+          actorContainer.style.padding = "0.7rem";
           if (screen.width > 768) {
-            actorContainer.style.width = 'fit-content';
+            actorContainer.style.width = "fit-content";
           }
           actorItem.appendChild(actorContainer);
 
-          const actorLink = document.createElement('a');
-          actorLink.href = '#';
+          const actorLink = document.createElement("a");
+          actorLink.href = "#";
           actorContainer.appendChild(actorLink);
 
-          const actorImg = document.createElement('img');
+          const actorImg = document.createElement("img");
           actorImg.src = actorAvatar;
           actorImg.alt = `Photo de ${actor.actor}`;
           actorImg.width = 250;
           actorImg.height = 350;
-          actorImg.style.borderRadius = '5%';
-          actorImg.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+          actorImg.style.borderRadius = "5%";
+          actorImg.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           actorLink.appendChild(actorImg);
 
-          const actorAuthor = document.createElement('p');
+          const actorAuthor = document.createElement("p");
           actorAuthor.textContent = `Acteur : ${actor.actor}`;
-          actorAuthor.style.color = 'white';
-          actorAuthor.style.fontWeight = 'bold';
-          actorAuthor.style.marginTop = '0.5rem';
-          actorAuthor.style.marginBottom = '0.5rem';
+          actorAuthor.style.color = "white";
+          actorAuthor.style.fontWeight = "bold";
+          actorAuthor.style.marginTop = "0.5rem";
+          actorAuthor.style.marginBottom = "0.5rem";
           actorContainer.appendChild(actorAuthor);
 
           // Suppression de texte inutile dans le nom de l'acteur
           const name = actor.name
-            .replaceAll('Additional Voices (voice) /', '')
-            .replaceAll('/ Additional Voices', '')
-            .replaceAll('(voice)', '');
+            .replaceAll("Additional Voices (voice) /", "")
+            .replaceAll("/ Additional Voices", "")
+            .replaceAll("(voice)", "");
 
-          const actorContent = document.createElement('p');
+          const actorContent = document.createElement("p");
           actorContent.textContent = `Alias : ${name}`;
-          actorContent.style.color = 'white';
-          actorContent.style.marginBottom = '0';
+          actorContent.style.color = "white";
+          actorContent.style.marginBottom = "0";
           actorContainer.appendChild(actorContent);
 
           actorsList.appendChild(actorItem);
 
           actorImg.style.transition =
-            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-          actorImg.addEventListener('mouseover', function () {
-            actorImg.style.transform = 'scale(1.03)';
+            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+          actorImg.addEventListener("mouseover", function () {
+            actorImg.style.transform = "scale(1.03)";
             actorImg.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
           });
 
-          actorImg.addEventListener('mouseout', function () {
-            actorImg.style.transform = 'scale(1)';
+          actorImg.addEventListener("mouseout", function () {
+            actorImg.style.transform = "scale(1)";
             actorImg.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           });
 
-          actorImg.addEventListener('click', function () {
+          actorImg.addEventListener("click", function () {
             bdd = false;
-            if (type == 'movies') {
+            if (type == "movies") {
               createActorModal(
                 actorInfos,
                 bdd,
@@ -865,8 +1233,8 @@ async function createActorsModal(
               fetch(
                 `https://api.betaseries.com/persons/person?id=${actor.person_id}&key=${api_key}`
               )
-                .then(response => response.json())
-                .then(actorInfo =>
+                .then((response) => response.json())
+                .then((actorInfo) =>
                   createActorModal(
                     actorInfo,
                     bdd,
@@ -883,7 +1251,7 @@ async function createActorsModal(
                     modalContent
                   )
                 )
-                .catch(error => console.error(error));
+                .catch((error) => console.error(error));
             }
           });
         }
@@ -892,36 +1260,36 @@ async function createActorsModal(
       actorsModalContent.appendChild(actorsList);
     } catch (err) {
       console.error(err);
-      const error = document.createElement('p');
+      const error = document.createElement("p");
       error.innerHTML =
-        'Une erreur est survenue lors du chargement des acteurs.';
-      error.style.color = 'white';
+        "Une erreur est survenue lors du chargement des acteurs.";
+      error.style.color = "white";
       actorsModalContent.appendChild(error);
-      document.body.style.cursor = 'auto'; // Set the cursor back to default
+      document.body.style.cursor = "auto"; // Set the cursor back to default
     }
   }
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement('button');
-  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
+  let scrollTopBtn = document.createElement("button");
+  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   actorsModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener('click', () => {
+  scrollTopBtn.addEventListener("click", () => {
     actorsModal.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   });
 
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = 'X';
-  closeBtn.classList.add('btn', 'btn-danger', 'close-btn-button');
-  closeBtn.style.width = '2.2rem';
-  closeBtn.style.float = 'right';
-  closeBtn.addEventListener('click', function () {
-    actorsModal.style.display = 'none';
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger", "close-btn-button");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    actorsModal.style.display = "none";
   });
   actorsTitle.appendChild(closeBtn);
 
@@ -929,7 +1297,7 @@ async function createActorsModal(
 
   document.body.appendChild(actorsModal);
 
-  document.body.style.cursor = 'auto'; // Set the cursor back to default
+  document.body.style.cursor = "auto"; // Set the cursor back to default
   return actorsModal;
 }
 
@@ -949,42 +1317,42 @@ function createActorModal(
   modalContent
 ) {
   //console.log(actor)
-  const actorModal = document.createElement('div');
-  actorModal.classList.add('modal');
-  actorModal.style.display = 'block';
+  const actorModal = document.createElement("div");
+  actorModal.classList.add("modal");
+  actorModal.style.display = "block";
 
-  const actorModalContent = document.createElement('div');
-  actorModalContent.classList.add('modal-content');
-  actorModalContent.style.backgroundColor = '#212529';
-  actorModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
-  actorModalContent.style.padding = '2rem';
+  const actorModalContent = document.createElement("div");
+  actorModalContent.classList.add("modal-content");
+  actorModalContent.style.backgroundColor = "#212529";
+  actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  actorModalContent.style.padding = "2rem";
   if (screen.width > 768) {
-    actorModalContent.style.width = '50%';
+    actorModalContent.style.width = "50%";
   } else {
-    actorModalContent.style.width = '80%';
+    actorModalContent.style.width = "80%";
   }
 
-  const actorTitle = document.createElement('h4');
+  const actorTitle = document.createElement("h4");
 
   if (bdd) {
     actorTitle.innerHTML = `Acteur : ${actor.infos.nom}`;
   } else {
     actorTitle.innerHTML = `Acteur : ${actor.person.name}`;
   }
-  actorTitle.style.color = 'white';
-  actorTitle.style.marginBottom = '1rem';
+  actorTitle.style.color = "white";
+  actorTitle.style.marginBottom = "1rem";
   actorModalContent.appendChild(actorTitle);
 
-  const actorContainer = document.createElement('div');
-  actorContainer.style.border = '1px solid white';
-  actorContainer.style.borderRadius = '0.8rem';
-  actorContainer.style.padding = '0.5rem';
+  const actorContainer = document.createElement("div");
+  actorContainer.style.border = "1px solid white";
+  actorContainer.style.borderRadius = "0.8rem";
+  actorContainer.style.padding = "0.5rem";
   if (screen.width > 768) {
-    actorContainer.style.width = 'fit-content';
+    actorContainer.style.width = "fit-content";
   }
   actorModalContent.appendChild(actorContainer);
 
-  const actorImg = document.createElement('img');
+  const actorImg = document.createElement("img");
   if (bdd) {
     actorImg.src = actor.infos.poster;
     actorImg.alt = `Photo de ${actor.infos.nom}`;
@@ -993,16 +1361,16 @@ function createActorModal(
     actorImg.alt = `Photo de ${actor.person.name}`;
   }
   if (screen.width < 768) {
-    actorImg.style.width = '100%';
-    actorImg.style.height = '100%';
+    actorImg.style.width = "100%";
+    actorImg.style.height = "100%";
   } else {
     actorImg.width = 400;
     actorImg.height = 550;
   }
-  actorImg.style.borderRadius = '5%';
+  actorImg.style.borderRadius = "5%";
   actorContainer.appendChild(actorImg);
 
-  const actorAge = document.createElement('p');
+  const actorAge = document.createElement("p");
   if (!bdd) {
     // Définir la date de naissance de l'acteur
     const dateNaissance = new Date(actor.person.birthday);
@@ -1017,16 +1385,16 @@ function createActorModal(
     const age = Math.floor(difference / (365.25 * 24 * 60 * 60 * 1000));
 
     // Formater la date de naissance dans le format JJ:MM:AAAA
-    const jour = ('0' + dateNaissance.getDate()).slice(-2);
-    const mois = ('0' + (dateNaissance.getMonth() + 1)).slice(-2);
+    const jour = ("0" + dateNaissance.getDate()).slice(-2);
+    const mois = ("0" + (dateNaissance.getMonth() + 1)).slice(-2);
     const annee = dateNaissance.getFullYear();
     const dateFormatee = `${jour}-${mois}-${annee}`;
 
     // Afficher l'âge et la date de naissance formatée
     if (
       actor.person.birthday != null &&
-      actor.person.birthday != 'null' &&
-      actor.person.birthday != ''
+      actor.person.birthday != "null" &&
+      actor.person.birthday != ""
     ) {
       actorAge.innerHTML = `<strong>Naissance :</strong> ${dateFormatee} / <strong>Age :</strong> ${age} ans`;
     } else {
@@ -1036,8 +1404,8 @@ function createActorModal(
     // Afficher l'âge et la date de naissance formatée
     if (
       actor.infos.date != null &&
-      actor.infos.date != 'null' &&
-      actor.infos.date != ''
+      actor.infos.date != "null" &&
+      actor.infos.date != ""
     ) {
       actorAge.innerHTML = `<strong>Naissance :</strong> ${actor.infos.date} / <strong>Age :</strong> ${actor.infos.age} ans`;
     } else {
@@ -1045,17 +1413,17 @@ function createActorModal(
     }
   }
   /* actorAge.innerHTML = `<strong>Naissance :</strong> ${dateFormatee} / <strong>Age :</strong> ${age} ans`; */
-  actorAge.style.color = 'white';
-  actorAge.style.marginTop = '1rem';
+  actorAge.style.color = "white";
+  actorAge.style.marginTop = "1rem";
   actorContainer.appendChild(actorAge);
 
-  const actorDescription = document.createElement('p');
-  actorDescription.style.color = 'white';
+  const actorDescription = document.createElement("p");
+  actorDescription.style.color = "white";
   if (bdd) {
     if (
       actor.infos.biographie != null &&
-      actor.infos.biographie != 'null' &&
-      actor.infos.biographie != ''
+      actor.infos.biographie != "null" &&
+      actor.infos.biographie != ""
     ) {
       actorDescription.innerHTML = `<strong>Biographie :</strong> ${actor.infos.biographie}`;
     } else {
@@ -1064,8 +1432,8 @@ function createActorModal(
   } else {
     if (
       actor.person.description != null &&
-      actor.person.description != 'null' &&
-      actor.person.description != ''
+      actor.person.description != "null" &&
+      actor.person.description != ""
     ) {
       actorDescription.innerHTML = `<strong>Biographie :</strong> ${actor.person.description}`;
     } else {
@@ -1080,104 +1448,104 @@ function createActorModal(
     // FILMS
     if (actor.person.movies.length > 0) {
       // Liste des films dans lesquels l'acteur a joué
-      const actorMoviesList = document.createElement('div');
-      actorMoviesList.style.marginTop = '1rem';
-      actorMoviesList.style.display = 'flex';
-      actorMoviesList.style.flexWrap = 'wrap';
-      actorMoviesList.style.padding = '1rem';
-      actorMoviesList.style.border = '1px solid white';
-      actorMoviesList.style.borderRadius = '0.8rem';
+      const actorMoviesList = document.createElement("div");
+      actorMoviesList.style.marginTop = "1rem";
+      actorMoviesList.style.display = "flex";
+      actorMoviesList.style.flexWrap = "wrap";
+      actorMoviesList.style.padding = "1rem";
+      actorMoviesList.style.border = "1px solid white";
+      actorMoviesList.style.borderRadius = "0.8rem";
       actorContainer.appendChild(actorMoviesList);
 
-      const actorMoviesTitle = document.createElement('h5');
+      const actorMoviesTitle = document.createElement("h5");
       actorMoviesTitle.innerHTML = `Films dans lesquels ${actor.person.name} a joué :`;
-      actorMoviesTitle.style.color = 'white';
-      actorMoviesTitle.style.marginBottom = '1rem';
-      actorMoviesTitle.style.width = '100%';
+      actorMoviesTitle.style.color = "white";
+      actorMoviesTitle.style.marginBottom = "1rem";
+      actorMoviesTitle.style.width = "100%";
       actorMoviesList.appendChild(actorMoviesTitle);
 
       // Parcourir l'array des films de l'acteur et ajouter chaque film à la liste
       for (let i = 0; i < actor.person.movies.length; i++) {
         if (
           actor.person.movies[i].movie.poster != null &&
-          actor.person.movies[i].movie.poster != 'null' &&
-          actor.person.movies[i].movie.poster != ''
+          actor.person.movies[i].movie.poster != "null" &&
+          actor.person.movies[i].movie.poster != ""
         ) {
           const movie = actor.person.movies[i];
-          const movieContainer = document.createElement('div');
-          movieContainer.style.marginRight = '0.5rem';
+          const movieContainer = document.createElement("div");
+          movieContainer.style.marginRight = "0.5rem";
           actorMoviesList.appendChild(movieContainer);
 
-          const movieLink = document.createElement('a');
-          movieLink.href = '#';
-          movieLink.style.display = 'inline-block';
-          movieLink.style.marginRight = '0.5rem';
+          const movieLink = document.createElement("a");
+          movieLink.href = "#";
+          movieLink.style.display = "inline-block";
+          movieLink.style.marginRight = "0.5rem";
           movieContainer.appendChild(movieLink);
 
-          const moviePoster = document.createElement('img');
+          const moviePoster = document.createElement("img");
           moviePoster.src = movie.movie.poster;
           moviePoster.alt = `Affiche de ${movie.movie.title}`;
           moviePoster.width = 150;
           moviePoster.height = 225;
-          moviePoster.style.borderRadius = '5%';
+          moviePoster.style.borderRadius = "5%";
           moviePoster.style.boxShadow =
-            'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           movieLink.appendChild(moviePoster);
 
-          const movieInfo = document.createElement('div');
+          const movieInfo = document.createElement("div");
           movieContainer.appendChild(movieInfo);
 
-          const movieTitle = document.createElement('p');
+          const movieTitle = document.createElement("p");
           movieTitle.innerHTML = `${movie.movie.title} (${movie.movie.production_year})`;
-          movieTitle.style.color = 'white';
-          movieTitle.style.width = '150px';
-          movieTitle.style.marginTop = '0.5rem';
-          movieTitle.style.textAlign = 'center';
+          movieTitle.style.color = "white";
+          movieTitle.style.width = "150px";
+          movieTitle.style.marginTop = "0.5rem";
+          movieTitle.style.textAlign = "center";
           movieContainer.appendChild(movieTitle);
 
-          const movieAlias = document.createElement('p');
+          const movieAlias = document.createElement("p");
           // Suppression de texte inutile dans le nom de l'acteur
           const name = movie.name
-            .replaceAll('Additional Voices (voice) /', '')
-            .replaceAll('/ Additional Voices', '')
-            .replaceAll('(voice)', '');
+            .replaceAll("Additional Voices (voice) /", "")
+            .replaceAll("/ Additional Voices", "")
+            .replaceAll("(voice)", "");
           movieAlias.innerHTML = `Alias : ${name}`;
-          movieAlias.style.color = 'white';
-          movieAlias.style.marginTop = '0.5rem';
-          movieAlias.style.width = '150px';
-          movieAlias.style.textAlign = 'center';
-          movieAlias.style.textDecoration = 'none';
+          movieAlias.style.color = "white";
+          movieAlias.style.marginTop = "0.5rem";
+          movieAlias.style.width = "150px";
+          movieAlias.style.textAlign = "center";
+          movieAlias.style.textDecoration = "none";
           movieContainer.appendChild(movieAlias);
 
           moviePoster.style.transition =
-            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-          moviePoster.addEventListener('mouseover', function () {
-            moviePoster.style.transform = 'scale(1.03)';
+            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+          moviePoster.addEventListener("mouseover", function () {
+            moviePoster.style.transform = "scale(1.03)";
             moviePoster.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
           });
 
-          moviePoster.addEventListener('mouseout', function () {
-            moviePoster.style.transform = 'scale(1)';
+          moviePoster.addEventListener("mouseout", function () {
+            moviePoster.style.transform = "scale(1)";
             moviePoster.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           });
 
-          moviePoster.addEventListener('click', function () {
-            console.log(actor.person.movies[i].movie.tmdb_id);
+          moviePoster.addEventListener("click", function () {
+            //console.log(actor.person.movies[i].movie.tmdb_id);
             fetch(
               `https://api.betaseries.com/movies/movie?key=${api_key}&id=${actor.person.movies[i].movie.id}`
             )
-              .then(response => response.json())
-              .then(filmInfo => filmInformations(filmInfo))
-              .catch(error => console.error(error));
+              .then((response) => response.json())
+              .then((filmInfo) => filmInformations(filmInfo))
+              .catch((error) => console.error(error));
 
             function filmInformations(filmInfo) {
-              console.log('INFO DU FILM', filmInfo);
+              //console.log("INFO DU FILM", filmInfo);
               let info = filmInfo.movie;
               let note = info.notes;
               let id = info.id;
-              let type = 'movie';
+              let type = "movie";
               let title = info.title;
               let comment = info.comments;
               let platformLink = info.platform_links;
@@ -1226,11 +1594,11 @@ function createActorModal(
                 api_key,
                 genreList
               );
-              modal.style.display = 'block';
+              modal.style.display = "block";
               const maxZIndex = Math.max(
-                ...Array.from(document.querySelectorAll('*'))
-                  .map(el => parseFloat(getComputedStyle(el).zIndex))
-                  .filter(z => !isNaN(z))
+                ...Array.from(document.querySelectorAll("*"))
+                  .map((el) => parseFloat(getComputedStyle(el).zIndex))
+                  .filter((z) => !isNaN(z))
               );
               modal.style.zIndex = maxZIndex + 1;
               createAdminEditButton(id, filmInfo, type);
@@ -1246,104 +1614,104 @@ function createActorModal(
     // SERIES
     if (actor.person.shows.length > 0) {
       // Liste des series dans lesquels l'acteur a joué
-      const actorSeriesList = document.createElement('div');
-      actorSeriesList.style.marginTop = '1rem';
-      actorSeriesList.style.display = 'flex';
-      actorSeriesList.style.flexWrap = 'wrap';
-      actorSeriesList.style.padding = '1rem';
-      actorSeriesList.style.border = '1px solid white';
-      actorSeriesList.style.borderRadius = '0.8rem';
+      const actorSeriesList = document.createElement("div");
+      actorSeriesList.style.marginTop = "1rem";
+      actorSeriesList.style.display = "flex";
+      actorSeriesList.style.flexWrap = "wrap";
+      actorSeriesList.style.padding = "1rem";
+      actorSeriesList.style.border = "1px solid white";
+      actorSeriesList.style.borderRadius = "0.8rem";
       actorContainer.appendChild(actorSeriesList);
 
-      const actorSeriesTitle = document.createElement('h5');
+      const actorSeriesTitle = document.createElement("h5");
       actorSeriesTitle.textContent = `Séries dans lesquels ${actor.person.name} a joué :`;
-      actorSeriesTitle.style.color = 'white';
-      actorSeriesTitle.style.marginBottom = '1rem';
-      actorSeriesTitle.style.width = '100%';
+      actorSeriesTitle.style.color = "white";
+      actorSeriesTitle.style.marginBottom = "1rem";
+      actorSeriesTitle.style.width = "100%";
       actorSeriesList.appendChild(actorSeriesTitle);
 
       // Parcourir l'array des films de l'acteur et ajouter chaque film à la liste
       for (let i = 0; i < actor.person.shows.length; i++) {
         if (
           actor.person.shows[i].show.poster != null &&
-          actor.person.shows[i].show.poster != 'null' &&
-          actor.person.shows[i].show.poster != ''
+          actor.person.shows[i].show.poster != "null" &&
+          actor.person.shows[i].show.poster != ""
         ) {
           const serie = actor.person.shows[i];
-          const serieContainer = document.createElement('div');
-          serieContainer.style.marginRight = '0.5rem';
+          const serieContainer = document.createElement("div");
+          serieContainer.style.marginRight = "0.5rem";
           actorSeriesList.appendChild(serieContainer);
 
-          const serieLink = document.createElement('a');
-          serieLink.href = '#';
-          serieLink.style.display = 'inline-block';
-          serieLink.style.marginRight = '0.5rem';
+          const serieLink = document.createElement("a");
+          serieLink.href = "#";
+          serieLink.style.display = "inline-block";
+          serieLink.style.marginRight = "0.5rem";
           serieContainer.appendChild(serieLink);
 
-          const seriePoster = document.createElement('img');
+          const seriePoster = document.createElement("img");
           seriePoster.src = serie.show.poster;
           seriePoster.alt = `Affiche de ${serie.show.title}`;
           seriePoster.width = 150;
           seriePoster.height = 225;
-          seriePoster.style.borderRadius = '5%';
+          seriePoster.style.borderRadius = "5%";
           seriePoster.style.boxShadow =
-            'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           serieLink.appendChild(seriePoster);
 
-          const serieInfo = document.createElement('div');
+          const serieInfo = document.createElement("div");
           serieContainer.appendChild(serieInfo);
 
-          const serieTitle = document.createElement('p');
+          const serieTitle = document.createElement("p");
           serieTitle.innerHTML = `${serie.show.title} (${serie.show.creation})`;
-          serieTitle.style.color = 'white';
-          serieTitle.style.width = '150px';
-          serieTitle.style.marginTop = '0.5rem';
-          serieTitle.style.textAlign = 'center';
+          serieTitle.style.color = "white";
+          serieTitle.style.width = "150px";
+          serieTitle.style.marginTop = "0.5rem";
+          serieTitle.style.textAlign = "center";
           serieContainer.appendChild(serieTitle);
 
-          const serieAlias = document.createElement('p');
+          const serieAlias = document.createElement("p");
           // Suppression de texte inutile dans le nom de l'acteur
           const name = serie.name
-            .replaceAll('Additional Voices (voice) /', '')
-            .replaceAll('/ Additional Voices', '')
-            .replaceAll('(voice)', '');
+            .replaceAll("Additional Voices (voice) /", "")
+            .replaceAll("/ Additional Voices", "")
+            .replaceAll("(voice)", "");
           serieAlias.innerHTML = `Alias : ${name}`;
-          serieAlias.style.color = 'white';
-          serieAlias.style.marginTop = '0.5rem';
-          serieAlias.style.width = '150px';
-          serieAlias.style.textAlign = 'center';
-          serieAlias.style.textDecoration = 'none';
+          serieAlias.style.color = "white";
+          serieAlias.style.marginTop = "0.5rem";
+          serieAlias.style.width = "150px";
+          serieAlias.style.textAlign = "center";
+          serieAlias.style.textDecoration = "none";
           serieContainer.appendChild(serieAlias);
 
           seriePoster.style.transition =
-            'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-          seriePoster.addEventListener('mouseover', function () {
-            seriePoster.style.transform = 'scale(1.03)';
+            "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+          seriePoster.addEventListener("mouseover", function () {
+            seriePoster.style.transform = "scale(1.03)";
             seriePoster.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
           });
 
-          seriePoster.addEventListener('mouseout', function () {
-            seriePoster.style.transform = 'scale(1)';
+          seriePoster.addEventListener("mouseout", function () {
+            seriePoster.style.transform = "scale(1)";
             seriePoster.style.boxShadow =
-              'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
+              "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
           });
 
-          seriePoster.addEventListener('click', function () {
+          seriePoster.addEventListener("click", function () {
             console.log(actor.person.shows[i].show.thetvdb_id);
             fetch(
               `https://api.betaseries.com/shows/display?key=${api_key}&id=${actor.person.shows[i].show.id}`
             )
-              .then(response => response.json())
-              .then(serieInfo => filmInformations(serieInfo))
-              .catch(error => console.error(error));
+              .then((response) => response.json())
+              .then((serieInfo) => filmInformations(serieInfo))
+              .catch((error) => console.error(error));
 
             function filmInformations(serieInfo) {
               console.log(serieInfo);
               let info = serieInfo.show;
               let note = info.notes;
               let id = info.id;
-              let type = 'show';
+              let type = "show";
               let title = info.title;
               let comment = info.comments;
               let platformLink;
@@ -1351,14 +1719,14 @@ function createActorModal(
               let year = info.creation;
               let trailer = info.next_trailer;
               let imdb = info.imdb_id;
-              let duree = '0';
+              let duree = "0";
               let synopsis = info.description;
               let link = `https://www.g2stream.com/stream/series?imdb=${imdb}&language=fr&sea=1&epi=1`;
               if (info.platforms == null) {
-                platformLink = '';
-                platformSvod = '';
+                platformLink = "";
+                platformSvod = "";
               } else {
-                platformLink = '';
+                platformLink = "";
                 platformSvod = info.platforms.svods;
               }
 
@@ -1394,11 +1762,11 @@ function createActorModal(
                 background,
                 api_key
               );
-              modal.style.display = 'block';
+              modal.style.display = "block";
               const maxZIndex = Math.max(
-                ...Array.from(document.querySelectorAll('*'))
-                  .map(el => parseFloat(getComputedStyle(el).zIndex))
-                  .filter(z => !isNaN(z))
+                ...Array.from(document.querySelectorAll("*"))
+                  .map((el) => parseFloat(getComputedStyle(el).zIndex))
+                  .filter((z) => !isNaN(z))
               );
               console.log(maxZIndex);
               modal.style.zIndex = maxZIndex + 1;
@@ -1413,29 +1781,29 @@ function createActorModal(
     }
   }
 
-  const closeBtn = document.createElement('button');
-  closeBtn.textContent = 'X';
-  closeBtn.classList.add('btn', 'btn-danger');
-  closeBtn.style.width = '2.2rem';
-  closeBtn.style.float = 'right';
-  closeBtn.addEventListener('click', function () {
-    actorModal.style.display = 'none';
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    actorModal.style.display = "none";
   });
   actorTitle.appendChild(closeBtn);
 
   actorModal.appendChild(actorModalContent);
 
   //Bouton pour remonter en haut de la modal
-  let scrollTopBtn = document.createElement('button');
-  scrollTopBtn.classList.add('scroll-top-btn', 'btn', 'btn-secondary');
+  let scrollTopBtn = document.createElement("button");
+  scrollTopBtn.classList.add("scroll-top-btn", "btn", "btn-secondary");
   scrollTopBtn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
 
   actorModal.appendChild(scrollTopBtn);
 
-  scrollTopBtn.addEventListener('click', () => {
+  scrollTopBtn.addEventListener("click", () => {
     actorModal.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   });
 
@@ -1450,95 +1818,102 @@ export async function getSimilarMovies(id, title, modalContent) {
     const Response = await fetch(url);
     const data = await Response.json();
 
-    let allSimilarMovies = document.querySelectorAll('.similar-movies-list');
-    allSimilarMovies.forEach(movie => {
+    let allSimilarMovies = document.querySelectorAll(".similar-movies-list");
+    allSimilarMovies.forEach((movie) => {
       movie.remove();
+    });
+    let allSimilarShows = document.querySelectorAll(".similar-shows-list");
+    allSimilarShows.forEach((show) => {
+      show.remove();
     });
 
     if (data.similars.length == 0) {
       return;
     }
 
-    const similarMoviesList = document.createElement('div');
-    similarMoviesList.style.marginTop = '1rem';
-    similarMoviesList.style.display = 'flex';
-    similarMoviesList.style.flexWrap = 'wrap';
-    similarMoviesList.style.padding = '1rem';
-    similarMoviesList.style.border = '1px solid white';
-    similarMoviesList.style.borderRadius = '0.8rem';
-    similarMoviesList.classList.add('similar-movies-list');
+    const similarMoviesList = document.createElement("div");
+    similarMoviesList.style.marginTop = "1rem";
+    similarMoviesList.style.display = "flex";
+    similarMoviesList.style.flexWrap = "wrap";
+    similarMoviesList.style.padding = "1rem";
+    similarMoviesList.style.border = "1px solid white";
+    similarMoviesList.style.borderRadius = "0.8rem";
+    similarMoviesList.classList.add("similar-movies-list");
     modalContent.appendChild(similarMoviesList);
 
-    const SimilarMoviesTitle = document.createElement('h5');
-    SimilarMoviesTitle.innerHTML = `Films similaires à ${title}:`;
-    SimilarMoviesTitle.style.color = 'white';
-    SimilarMoviesTitle.style.width = '100%';
-    similarMoviesList.appendChild(SimilarMoviesTitle);
+    const similarMoviesTitle = document.createElement("h5");
+    similarMoviesTitle.innerHTML = `Films similaires à ${title}:`;
+    similarMoviesTitle.style.color = "white";
+    similarMoviesTitle.style.width = "100%";
+    similarMoviesList.appendChild(similarMoviesTitle);
 
-    const similarMoviesContainer = document.createElement('div');
-    similarMoviesContainer.style.display = 'flex';
-    similarMoviesContainer.style.flexWrap = 'wrap';
-    similarMoviesContainer.style.width = '100%';
-    similarMoviesContainer.style.marginTop = '1rem';
-    similarMoviesContainer.style.justifyContent = 'space-between';
-    SimilarMoviesTitle.appendChild(similarMoviesContainer);
+    const similarMoviesContainer = document.createElement("div");
+    similarMoviesContainer.style.display = "flex";
+    similarMoviesContainer.style.flexWrap = "wrap";
+    similarMoviesContainer.style.width = "100%";
+    similarMoviesContainer.style.marginTop = "1rem";
+    similarMoviesContainer.style.justifyContent = "space-between";
+    similarMoviesTitle.appendChild(similarMoviesContainer);
 
     for (let i = 0; i < data.similars.length; i++) {
       const movie = data.similars[i].movie;
 
-      const movieLink = document.createElement('a');
-      movieLink.href = '#';
-      movieLink.style.display = 'inline-block';
-      movieLink.style.marginRight = '0.5rem';
-      movieLink.style.marginBottom = '0.8rem';
-      similarMoviesContainer.appendChild(movieLink);
+      if (movie.poster != null) {
+        const movieLink = document.createElement("a");
+        movieLink.href = "#";
+        movieLink.style.display = "inline-block";
+        movieLink.style.marginRight = "0.5rem";
+        movieLink.style.marginBottom = "0.8rem";
+        similarMoviesContainer.appendChild(movieLink);
 
-      const moviePoster = document.createElement('img');
-      moviePoster.src = movie.poster;
-      moviePoster.alt = `Affiche de ${movie.title}`;
-      if (screen.width < 768) {
-        moviePoster.width = 100;
-        moviePoster.height = 150;
-      } else {
-        moviePoster.width = 150;
-        moviePoster.height = 225;
+        const moviePoster = document.createElement("img");
+        moviePoster.src = movie.poster;
+        moviePoster.alt = `Affiche de ${movie.title}`;
+        if (screen.width < 768) {
+          moviePoster.width = 100;
+          moviePoster.height = 150;
+        } else {
+          moviePoster.width = 150;
+          moviePoster.height = 225;
+        }
+        moviePoster.style.borderRadius = "5%";
+        moviePoster.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+        movieLink.appendChild(moviePoster);
+
+        moviePoster.style.transition =
+          "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+
+        moviePoster.addEventListener("mouseover", function () {
+          moviePoster.style.transform = "scale(1.1)";
+          moviePoster.style.boxShadow =
+            "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+          afficherPopUp(moviePoster, movie.title, movie.production_year);
+        });
+
+        moviePoster.addEventListener("mouseout", function () {
+          cacherPopUp();
+          moviePoster.style.transform = "scale(1)";
+          moviePoster.style.boxShadow =
+            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+        });
+
+        moviePoster.addEventListener("click", function () {
+          /*         createSimilarMoviesModal(
+            id,
+            backgroundModal,
+            linkYtbBtn,
+            videoFrame,
+            modalTitle,
+            seasonsSelect,
+            episodesSelect,
+            validateBtn,
+            synopsisModal,
+            background,
+            modal,
+            modalContent
+          ); */
+        });
       }
-      moviePoster.style.borderRadius = '5%';
-      moviePoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
-      movieLink.appendChild(moviePoster);
-
-      moviePoster.style.transition =
-        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-
-      moviePoster.addEventListener('mouseover', function () {
-        moviePoster.style.transform = 'scale(1.1)';
-        moviePoster.style.boxShadow =
-          'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
-        afficherPopUp(moviePoster, movie.title, movie.production_year);
-      });
-
-      moviePoster.addEventListener('mouseout', function () {
-        cacherPopUp();
-        moviePoster.style.transform = 'scale(1)';
-        moviePoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
-      });
-
-      moviePoster.addEventListener('click', function () {
-        /*         createSimilarMoviesModal(
-          id,
-          backgroundModal,
-          linkYtbBtn,
-          videoFrame,
-          modalTitle,
-          seasonsSelect,
-          episodesSelect,
-          validateBtn,
-          synopsisModal,
-          background,
-          modal,
-          modalContent
-        ); */
-      });
     }
   } catch (error) {
     console.error(error);
@@ -1551,94 +1926,102 @@ export async function getSimilarShows(id, title, modalContent) {
     const Response = await fetch(url);
     const data = await Response.json();
 
-    let allSimilarShows = document.querySelectorAll('.similar-shows-list');
-    allSimilarShows.forEach(show => {
+    let allSimilarShows = document.querySelectorAll(".similar-shows-list");
+    allSimilarShows.forEach((show) => {
       show.remove();
+    });
+    let allSimilarMovies = document.querySelectorAll(".similar-movies-list");
+    allSimilarMovies.forEach((movie) => {
+      movie.remove();
     });
 
     if (data.similars.length == 0) {
       return;
     }
 
-    const similarShowsList = document.createElement('div');
-    similarShowsList.style.marginTop = '1rem';
-    similarShowsList.style.display = 'flex';
-    similarShowsList.style.flexWrap = 'wrap';
-    similarShowsList.style.padding = '1rem';
-    similarShowsList.style.border = '1px solid white';
-    similarShowsList.style.borderRadius = '0.8rem';
-    similarShowsList.classList.add('similar-shows-list');
+    const similarShowsList = document.createElement("div");
+    similarShowsList.style.marginTop = "1rem";
+    similarShowsList.style.display = "flex";
+    similarShowsList.style.flexWrap = "wrap";
+    similarShowsList.style.padding = "1rem";
+    similarShowsList.style.border = "1px solid white";
+    similarShowsList.style.borderRadius = "0.8rem";
+    similarShowsList.classList.add("similar-shows-list");
     modalContent.appendChild(similarShowsList);
 
-    const SimilarShowsTitle = document.createElement('h5');
+    const SimilarShowsTitle = document.createElement("h5");
     SimilarShowsTitle.innerHTML = `Séries similaires à ${title}:`;
-    SimilarShowsTitle.style.color = 'white';
-    SimilarShowsTitle.style.width = '100%';
+    SimilarShowsTitle.style.color = "white";
+    SimilarShowsTitle.style.width = "100%";
     similarShowsList.appendChild(SimilarShowsTitle);
 
-    const similarShowsContainer = document.createElement('div');
-    similarShowsContainer.style.display = 'flex';
-    similarShowsContainer.style.flexWrap = 'wrap';
-    similarShowsContainer.style.width = '100%';
-    similarShowsContainer.style.marginTop = '1rem';
-    similarShowsContainer.style.justifyContent = 'space-between';
+    const similarShowsContainer = document.createElement("div");
+    similarShowsContainer.style.display = "flex";
+    similarShowsContainer.style.flexWrap = "wrap";
+    similarShowsContainer.style.width = "100%";
+    similarShowsContainer.style.marginTop = "1rem";
+    similarShowsContainer.style.justifyContent = "space-between";
     SimilarShowsTitle.appendChild(similarShowsContainer);
 
     for (let i = 0; i < data.similars.length; i++) {
       const show = data.similars[i].show;
 
-      const showLink = document.createElement('a');
-      showLink.href = '#';
-      showLink.style.display = 'inline-block';
-      showLink.style.marginRight = '0.5rem';
-      showLink.style.marginBottom = '0.8rem';
-      similarShowsContainer.appendChild(showLink);
+      if (show.images.poster != null) {
+        const showLink = document.createElement("a");
+        showLink.href = "#";
+        showLink.style.display = "inline-block";
+        showLink.style.marginRight = "0.5rem";
+        showLink.style.marginBottom = "0.8rem";
+        similarShowsContainer.appendChild(showLink);
 
-      const showPoster = document.createElement('img');
-      showPoster.src = show.poster;
-      showPoster.alt = `Affiche de ${show.title}`;
-      if (screen.width < 768) {
-        showPoster.width = 100;
-        showPoster.height = 150;
-      } else {
-        showPoster.width = 150;
-        showPoster.height = 225;
+        const showPoster = document.createElement("img");
+        showPoster.src = show.images.poster;
+        showPoster.alt = `Affiche de ${show.title}`;
+        if (screen.width < 768) {
+          showPoster.width = 100;
+          showPoster.height = 150;
+        } else {
+          showPoster.width = 150;
+          showPoster.height = 225;
+        }
+        showPoster.style.borderRadius = "5%";
+        showPoster.style.boxShadow = "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+        showLink.appendChild(showPoster);
+
+        showPoster.style.transition =
+          "transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+
+        showPoster.addEventListener("mouseover", function () {
+          showPoster.style.transform = "scale(1.1)";
+          showPoster.style.boxShadow =
+            "rgb(255, 255, 255) 0.0625rem 0 1.5625rem";
+          afficherPopUp(showPoster, show.title, show.creation);
+        });
+
+        showPoster.addEventListener("mouseout", function () {
+          cacherPopUp();
+          showPoster.style.transform = "scale(1)";
+          showPoster.style.boxShadow =
+            "rgb(255, 255, 255) 0.0625rem 0 0.625rem";
+        });
+
+        showPoster.addEventListener("click", function () {
+          /*         createSimilarMoviesModal(
+            id,
+            backgroundModal,
+            linkYtbBtn,
+            videoFrame,
+            modalTitle,
+            seasonsSelect,
+            episodesSelect,
+            validateBtn,
+            synopsisModal,
+            background,
+            modal,
+            modalContent
+          ); */
+        });
       }
-      showPoster.style.borderRadius = '5%';
-      showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
-      showLink.appendChild(showPoster);
-
-      showPoster.style.transition =
-        'transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out';
-
-      showPoster.addEventListener('mouseover', function () {
-        showPoster.style.transform = 'scale(1.1)';
-        showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 1.5625rem';
-        afficherPopUp(showPoster, show.title, show.production_year);
-      });
-
-      showPoster.addEventListener('mouseout', function () {
-        cacherPopUp();
-        showPoster.style.transform = 'scale(1)';
-        showPoster.style.boxShadow = 'rgb(255, 255, 255) 0.0625rem 0 0.625rem';
-      });
-
-      showPoster.addEventListener('click', function () {
-        /*         createSimilarMoviesModal(
-          id,
-          backgroundModal,
-          linkYtbBtn,
-          videoFrame,
-          modalTitle,
-          seasonsSelect,
-          episodesSelect,
-          validateBtn,
-          synopsisModal,
-          background,
-          modal,
-          modalContent
-        ); */
-      });
     }
   } catch (error) {
     console.error(error);
@@ -1659,33 +2042,33 @@ async function createSimilarMoviesModal(
   modal,
   modalContent
 ) {
-  const actorModal = document.createElement('div');
-  actorModal.classList.add('modal');
-  actorModal.style.display = 'block';
+  const actorModal = document.createElement("div");
+  actorModal.classList.add("modal");
+  actorModal.style.display = "block";
 
-  const actorModalContent = document.createElement('div');
-  actorModalContent.classList.add('modal-content');
-  actorModalContent.style.backgroundColor = '#212529';
-  actorModalContent.style.boxShadow = 'rgb(255, 255, 255) 1px 0 0.625rem';
-  actorModalContent.style.padding = '2rem';
+  const actorModalContent = document.createElement("div");
+  actorModalContent.classList.add("modal-content");
+  actorModalContent.style.backgroundColor = "#212529";
+  actorModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  actorModalContent.style.padding = "2rem";
   if (screen.width > 768) {
-    actorModalContent.style.width = '50%';
+    actorModalContent.style.width = "50%";
   } else {
-    actorModalContent.style.width = '80%';
+    actorModalContent.style.width = "80%";
   }
 
   //console.log(actor.person.movies[i].movie.tmdb_id);
   fetch(`https://api.betaseries.com/movies/movie?key=${api_key}&id=${id}`)
-    .then(response => response.json())
-    .then(filmInfo => filmInformations(filmInfo))
-    .catch(error => console.error(error));
+    .then((response) => response.json())
+    .then((filmInfo) => filmInformations(filmInfo))
+    .catch((error) => console.error(error));
 
   function filmInformations(filmInfo) {
-    console.log('INFO DU FILM', filmInfo);
+    console.log("INFO DU FILM", filmInfo);
     let info = filmInfo.movie;
     let note = info.notes;
     let id = info.id;
-    let type = 'movie';
+    let type = "movie";
     let title = info.title;
     let comment = info.comments;
     let platformLink = info.platform_links;
@@ -1734,11 +2117,11 @@ async function createSimilarMoviesModal(
       api_key,
       genreList
     );
-    modal.style.display = 'block';
+    modal.style.display = "block";
     const maxZIndex = Math.max(
-      ...Array.from(document.querySelectorAll('*'))
-        .map(el => parseFloat(getComputedStyle(el).zIndex))
-        .filter(z => !isNaN(z))
+      ...Array.from(document.querySelectorAll("*"))
+        .map((el) => parseFloat(getComputedStyle(el).zIndex))
+        .filter((z) => !isNaN(z))
     );
     modal.style.zIndex = maxZIndex + 1;
     createAdminEditButton(id, filmInfo, type);
@@ -1754,15 +2137,15 @@ function afficherPopUp(img, title, year) {
     return;
   }
   // Création de l'élément de pop-up
-  const popUp = document.createElement('div');
-  popUp.classList.add('pop-up');
+  const popUp = document.createElement("div");
+  popUp.classList.add("pop-up");
   popUp.textContent = `${title} - ${year}`;
-  popUp.id = 'monPopUp';
+  popUp.id = "monPopUp";
 
   const maxZIndex = Math.max(
-    ...Array.from(document.querySelectorAll('*'))
-      .map(el => parseFloat(getComputedStyle(el).zIndex))
-      .filter(z => !isNaN(z))
+    ...Array.from(document.querySelectorAll("*"))
+      .map((el) => parseFloat(getComputedStyle(el).zIndex))
+      .filter((z) => !isNaN(z))
   );
   //console.log(maxZIndex);
   popUp.style.zIndex = maxZIndex + 1;
@@ -1771,18 +2154,18 @@ function afficherPopUp(img, title, year) {
   document.body.appendChild(popUp);
 
   // Écouteur d'événement pour suivre les mouvements de la souris
-  img.addEventListener('mousemove', deplacerPopUp);
+  img.addEventListener("mousemove", deplacerPopUp);
 }
 
 // Fonction pour déplacer le pop-up avec la souris
 function deplacerPopUp(event) {
-  const popUp = document.querySelector('.pop-up');
+  const popUp = document.querySelector(".pop-up");
   if (popUp) {
     // Utilisation de setTimeout pour limiter la fréquence de mise à jour de la position du pop-up
     clearTimeout(popUp.timerId); // annule le délai d'attente précédent (s'il existe)
     popUp.timerId = setTimeout(() => {
-      popUp.style.top = event.clientY + 0 + 'px'; // décaler le pop-up vers le bas de 15 pixels pour qu'il ne soit pas exactement sur la souris
-      popUp.style.left = event.clientX + 30 + 'px'; // décaler le pop-up vers la droite de 30 pixels pour qu'il soit un peu plus éloigné de la souris
+      popUp.style.top = event.clientY + 0 + "px"; // décaler le pop-up vers le bas de 15 pixels pour qu'il ne soit pas exactement sur la souris
+      popUp.style.left = event.clientX + 30 + "px"; // décaler le pop-up vers la droite de 30 pixels pour qu'il soit un peu plus éloigné de la souris
     }, 10); // délai d'attente de 10 millisecondes
   }
 }
@@ -1790,7 +2173,7 @@ function deplacerPopUp(event) {
 // Fonction à exécuter lorsque la souris quitte l'élément
 function cacherPopUp() {
   // Suppression de l'élément de pop-up s'il existe
-  const popUp = document.getElementById('monPopUp');
+  const popUp = document.getElementById("monPopUp");
   if (popUp) {
     document.body.removeChild(popUp);
     //popUp.removeEventListener('mousemove', deplacerPopUp); // supprimer l'écouteur d'événement

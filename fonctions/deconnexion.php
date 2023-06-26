@@ -7,4 +7,4 @@ setcookie('pseudo', "", 1);
 setcookie('mail', "", 1);
 setcookie('role', "", 1);
 
-header("location: ../index.php");
+header("Location: " . URL . "connexion");

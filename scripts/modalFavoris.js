@@ -23,7 +23,7 @@ function favBtn(id_media) {
       let id_user = info_user.id;
       //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=delFav&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=delFav&id_user=${id_user}&id_media=${id_media}`
       )
         .then((response) => response.json())
         .catch((error) => {
@@ -31,37 +31,42 @@ function favBtn(id_media) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
-function seeBtn(id_media) {
-  let mySeeBtn = document.getElementById(`pSeeBtn${id_media}`);
+function seeBtn(id_media, id_user) {
   let myEyeBtn = document.getElementById(`pEyeBtn${id_media}`);
 
-  mySeeBtn.addEventListener("click", function () {
-    myEyeBtn.style.color === "greenyellow"
-      ? (myEyeBtn.style.color = "white")
-      : (myEyeBtn.style.color = "greenyellow");
-  });
+  if (myEyeBtn.style.color == "greenyellow") {
+    myEyeBtn.style.color = "white";
+    myEyeBtn.classList.remove("fa-eye");
+    myEyeBtn.classList.remove("fa-eye-slash");
+    myEyeBtn.classList.add("fa-eye-slash");
+  } else {
+    myEyeBtn.style.color = "greenyellow";
+    myEyeBtn.classList.remove("fa-eye");
+    myEyeBtn.classList.remove("fa-eye-slash");
+    myEyeBtn.classList.add("fa-eye");
+  }
 
-  //Envoie de la requete PHP pour supprimer le film des favoris de l'utilisateur
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      let info_user = JSON.parse(this.responseText);
-      let id_user = info_user.id;
-      //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=delFilmVu&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=addFilmVu&id_user=${id_user}&id_media=${id_media}&fav=1`
       )
-        .then((response) => response.json())
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          //console.log(data);
+        })
         .catch((error) => {
           console.error(`Une erreur s'est produite:`, error);
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 

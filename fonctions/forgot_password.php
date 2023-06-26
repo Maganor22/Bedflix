@@ -43,15 +43,15 @@ if (isset($email) && !empty($email)) {
             "id" => $id
         ]);
 
-        $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; margin-top: 0; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">BEDFLIX</h1></br>
+        $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; margin-top: 0; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">CINERAMA</h1></br>
         <p style="color:white">Récupération de mot de passe</p></br>
         <p style="color:white">Vous avez demandé à changer votre mot de passe, cliquez sur le bouton ci-dessous pour le changer.</p></br>
         <p style="color:white">Si vous n\'avez pas demandé à changer votre mot de passe, ignorez ce mail.</p></br>
         <div style="display:inline-block; background-color:#0077cc; color:white; padding:10px 20px; border-radius:4px;">
-        <a href="http://51.210.104.251/Bedflix/change_password_view.php?recuperation=' . $uniqId . '" style="color:white; text-decoration:none;">Changer mon mot de passe</a>
+        <a href="http://51.210.104.251/cinerama/change_password_view.php?recuperation=' . $uniqId . '" style="color:white; text-decoration:none;">Changer mon mot de passe</a>
         </div>';
 
-        if ($mail->sendMail($email, "Bedflix mot de passe oublié", $body, true)) {
+        if ($mail->sendMail($email, "Cinérama mot de passe oublié", $body, true)) {
             // Mettre à jour le timestamp du dernier temps de récupération
             setcookie('last_recovery_time', $currentTime, $currentTime + $recoveryDelay);
 

@@ -1,10 +1,20 @@
-import { addFromBdd, createModalUserParams, createAvatarModal } from './modal.js';
+import {
+  addFromBdd,
+  createModalUserParams,
+  createModalUserStats,
+  createAvatarModal,
+} from "./modal.js";
 import { createAdminButton, getFav, getFilmVu } from "./script.js";
-import { actorsInBdd } from "./createPlatforms.js";
+import {
+  actorsInBdd,
+  responseComment,
+  createCommentsModal,
+  getBanned,
+} from "./createPlatforms.js";
 
 export function selectFilm(id) {
   fetch(
-    `../Bedflix/fonctions/requetes.php?requete=selectFilm&id_du_media=${id}`
+    `../cinerama/fonctions/requetes.php?requete=selectFilm&id_du_media=${id}`
   )
     .then((response) => response.json())
     .then((data) => {
@@ -17,11 +27,13 @@ export function selectFilm(id) {
 }
 
 export function selectGenre(genre) {
-  fetch(`../Bedflix/fonctions/requetes.php?requete=selectGenre&genres=${genre}`)
+  fetch(
+    `../cinerama/fonctions/requetes.php?requete=selectGenre&genres=${genre}`
+  )
     .then((response) => response.json())
     .then((data) => {
       // Utilisez les données JSON ici
-      console.log(data);
+      //console.log(data);
     })
     .catch((error) => {
       console.error(`Une erreur s'est produite:`, error);
@@ -44,16 +56,18 @@ export function insererFilm(
   mediaNbNote,
   mediaGenre
 ) {
-  // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+  // Envoyer les données en utilisant la méthode POST de l'objet XHR (XMLHttpRequest)
+  // Cette ligne crée un nouvel objet XMLHttpRequest, qui est utilisé pour envoyer des requêtes HTTP asynchrones.
   let xhr = new XMLHttpRequest();
+  //Ici on appelle la fonction insertFilm dans requetes.php sous méthode POST
   xhr.open(
     "POST",
-    "../Bedflix/fonctions/requetes.php?requete=insertFilm",
+    "../cinerama/fonctions/requetes.php?requete=insertFilm",
     true
   );
+  //Les données sont encodées en utilisant le format application/x-www-form-urlencoded.
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  // Définir la fonction de rappel pour traiter la réponse
+  // On défini la fonction de rappel pour traiter la réponse
   xhr.onreadystatechange = function () {
     if (xhr.readyState === XMLHttpRequest.DONE) {
       if (!xhr.status === 200) {
@@ -62,8 +76,7 @@ export function insererFilm(
       }
     }
   };
-
-  // Envoyer les données au serveur
+  // Envoie des données au serveur
   xhr.send(
     "titre=" +
       mediaTitleOriginal +
@@ -113,7 +126,7 @@ export function insererSerie(
   let xhr = new XMLHttpRequest();
   xhr.open(
     "POST",
-    "../Bedflix/fonctions/requetes.php?requete=insertSerie",
+    "../cinerama/fonctions/requetes.php?requete=insertSerie",
     true
   );
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -158,7 +171,7 @@ export function insererSerie(
     console.log(mediaGenre, mediaSaisons)
     // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertSerie", true);
+    xhr.open("POST", "../cinerama/fonctions/requetes.php?requete=insertSerie", true);
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
     // Définir la fonction de rappel pour traiter la réponse
@@ -213,7 +226,7 @@ export function updateFilm() {
   let xhr = new XMLHttpRequest();
   xhr.open(
     "POST",
-    "../Bedflix/fonctions/requetes.php?requete=updateFilm",
+    "../cinerama/fonctions/requetes.php?requete=updateFilm",
     true
   );
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -260,7 +273,7 @@ export function updateAvatar(photo_profil) {
   let xhr = new XMLHttpRequest();
   xhr.open(
     "POST",
-    "../Bedflix/fonctions/requetes.php?requete=updateAvatar",
+    "../cinerama/fonctions/requetes.php?requete=updateAvatar",
     true
   );
   xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -283,11 +296,11 @@ export function getAvatarFromUser() {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      fetch(`../Bedflix/fonctions/requetes.php?requete=getAvatar`)
+      fetch(`../cinerama/fonctions/requetes.php?requete=getAvatar`)
         .then((response) => response.json())
         .then((data) => {
           // Utilisez les données JSON ici
-          alert(data);
+          //alert(data);
           //putAvatar(data);
         })
         .catch((error) => {
@@ -295,7 +308,7 @@ export function getAvatarFromUser() {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -305,7 +318,7 @@ export function selectUserById(id, myMedia, type) {
     if (this.readyState == 4 && this.status == 200) {
       let infoUser = JSON.parse(this.responseText);
       let pseudo = infoUser.pseudo;
-      fetch(`../Bedflix/fonctions/requetes.php?requete=selectUserById`)
+      fetch(`../cinerama/fonctions/requetes.php?requete=selectUserById`)
         .then((response) => response.json())
         .then((data) => {
           // Utilisez les données JSON ici
@@ -318,7 +331,7 @@ export function selectUserById(id, myMedia, type) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -326,7 +339,9 @@ export function selectUserParams() {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      fetch(`../Bedflix/fonctions/requetes.php?requete=selectUserById`)
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      fetch(`../cinerama/fonctions/requetes.php?requete=selectUserById`)
         .then((response) => response.json())
         .then((data) => {
           // Utilisez les données JSON ici
@@ -337,7 +352,7 @@ export function selectUserParams() {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -345,7 +360,7 @@ export function selectProfilPictures(userPicture) {
   let xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
-      fetch(`../Bedflix/fonctions/requetes.php?requete=selectProfilPictures`)
+      fetch(`../cinerama/fonctions/requetes.php?requete=selectProfilPictures`)
         .then((response) => response.json())
         .then((data) => {
           // Utilisez les données JSON ici
@@ -356,7 +371,7 @@ export function selectProfilPictures(userPicture) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -369,7 +384,7 @@ export function addFav(id_media) {
       //console.log(id_user);
       //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=addFav&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=addFav&id_user=${id_user}&id_media=${id_media}`
       )
         .then((response) => response.text())
         .then((data) => {
@@ -381,7 +396,7 @@ export function addFav(id_media) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -394,7 +409,7 @@ export function checkFav(id_media) {
       //console.log(id_user);
       //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=checkFav&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=checkFav&id_user=${id_user}&id_media=${id_media}`
       )
         .then((response) => response.text())
         .then((data) => {
@@ -406,10 +421,9 @@ export function checkFav(id_media) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
-
 
 /* FILMS VU */
 
@@ -422,19 +436,19 @@ export function addFilmVu(id_media) {
       //console.log(id_user);
       //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=addFilmVu&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=addFilmVu&id_user=${id_user}&id_media=${id_media}&fav=0`
       )
         .then((response) => response.text())
         .then((data) => {
           // Utilisez les données JSON ici
-          //console.log(data);
+          console.log(data);
         })
         .catch((error) => {
           console.error(`Une erreur s'est produite:`, error);
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
@@ -447,7 +461,7 @@ export function checkFilmVu(id_media) {
       //console.log(id_user);
       //console.log(id_media);
       fetch(
-        `../Bedflix/fonctions/requetes.php?requete=checkFilmVu&id_user=${id_user}&id_media=${id_media}`
+        `../cinerama/fonctions/requetes.php?requete=checkFilmVu&id_user=${id_user}&id_media=${id_media}`
       )
         .then((response) => response.text())
         .then((data) => {
@@ -459,115 +473,283 @@ export function checkFilmVu(id_media) {
         });
     }
   };
-  xhttp.open("GET", "../Bedflix/fonctions/endpoint.php", true);
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
   xhttp.send();
 }
 
 /* FIN FILMS VU */
 
+export function insertActorBase(
+  nom,
+  alias,
+  id_films,
+  age,
+  dNaissance,
+  poster,
+  biographie
+) {
+  // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+  let xhr = new XMLHttpRequest();
+  xhr.open(
+    "POST",
+    "../cinerama/fonctions/requetes.php?requete=insertActorBase",
+    true
+  );
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
+  // Définir la fonction de rappel pour traiter la réponse
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (!xhr.status === 200) {
+        // Si la requête a échoué, afficher le message d'erreur
+        alert("Erreur: " + xhr.status);
+      }
+    }
+  };
+  // Envoyer les données au serveur
 
-export function insertActorBase(nom, alias, id_films, age, dNaissance, poster, biographie) {
-    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=insertActorBase", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Définir la fonction de rappel pour traiter la réponse
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (!xhr.status === 200) {
-                // Si la requête a échoué, afficher le message d'erreur
-                alert("Erreur: " + xhr.status);
-            }
-        }
-    };
-    // Envoyer les données au serveur
-
-    xhr.send("nom=" + nom +
-        "&alias=" + alias +
-        "&id_films=" + id_films +
-        "&age=" + age +
-        "&dNaissance=" + dNaissance +
-        "&poster=" + poster +
-        "&biographie=" + biographie);
+  xhr.send(
+    "nom=" +
+      nom +
+      "&alias=" +
+      alias +
+      "&id_films=" +
+      id_films +
+      "&age=" +
+      age +
+      "&dNaissance=" +
+      dNaissance +
+      "&poster=" +
+      poster +
+      "&biographie=" +
+      biographie
+  );
 }
 
-export function selectActorsByIdFilm(id, type, title, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent) {
-    //console.log(id)
-    fetch(`../Bedflix/fonctions/requetes.php?requete=selectActorsByIdFilm&id_films=${id}`)
-        .then(response => response.json())
-        .then(data => {
-            // Utilisez les données JSON ici
-            actorsInBdd(data, id, type, title, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent);
-            //console.log(data);
-        })
-        .catch(error => {
-            actorsInBdd(error, id, type, title, backgroundModal, linkYtbBtn, videoFrame, modalTitle, seasonsSelect, episodesSelect, validateBtn, synopsisModal, background, modal, modalContent);
-            //console.error(`Une erreur s'est produite:`, error);
-        });
+export function selectActorsByIdFilm(
+  id,
+  type,
+  title,
+  backgroundModal,
+  linkYtbBtn,
+  videoFrame,
+  modalTitle,
+  seasonsSelect,
+  episodesSelect,
+  validateBtn,
+  synopsisModal,
+  background,
+  modal,
+  modalContent
+) {
+  //console.log(id)
+  fetch(
+    `../cinerama/fonctions/requetes.php?requete=selectActorsByIdFilm&id_films=${id}`
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      // Utilisez les données JSON ici
+      console.log(data);
+      actorsInBdd(
+        data,
+        id,
+        type,
+        title,
+        backgroundModal,
+        linkYtbBtn,
+        videoFrame,
+        modalTitle,
+        seasonsSelect,
+        episodesSelect,
+        validateBtn,
+        synopsisModal,
+        background,
+        modal,
+        modalContent
+      );
+      //console.log(data);
+    })
+    .catch((error) => {
+      console.log(error);
+      actorsInBdd(
+        error,
+        id,
+        type,
+        title,
+        backgroundModal,
+        linkYtbBtn,
+        videoFrame,
+        modalTitle,
+        seasonsSelect,
+        episodesSelect,
+        validateBtn,
+        synopsisModal,
+        background,
+        modal,
+        modalContent
+      );
+      //console.error(`Une erreur s'est produite:`, error);
+    });
 }
 
-
-/* export function setComments(commentaires, id_media) {
-    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=setComments", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    // Définir la fonction de rappel pour traiter la réponse
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (!xhr.status === 200) {
-                // Si la requête a échoué, afficher le message d'erreur
-                alert("Erreur: " + xhr.status);
-            }
-        }
-    };
-    // Envoyer les données au serveur
-
-    xhr.send("id_media=" + id_media +
-        "&commentaires=" + commentaires);
-} */
 export function setComments(user, picture, note, date, commentaire, id_films) {
-    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=setComments", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+  let xhr = new XMLHttpRequest();
+  xhr.open(
+    "POST",
+    "../cinerama/fonctions/requetes.php?requete=setComments",
+    true
+  );
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    // Définir la fonction de rappel pour traiter la réponse
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (!xhr.status === 200) {
-                // Si la requête a échoué, afficher le message d'erreur
-                alert("Erreur: " + xhr.status);
-            }
-        }
-    };
-    xhr.send("user=" + user +
-        "&picture=" + picture +
-        "&note=" + note +
-        "&date=" + date +
-        "&commentaire=" + commentaire +
-        "&id_films=" + id_films);
+  // Fonction de rappel pour traiter la réponse
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (!xhr.status === 200) {
+        // Si la requête a échoué, afficher le message d'erreur
+        alert("Erreur: " + xhr.status);
+      }
+    }
+  };
+  // Envoi des informations au fichier requetes.php
+  xhr.send(
+    "user=" +
+      user +
+      "&picture=" +
+      picture +
+      "&note=" +
+      note +
+      "&date=" +
+      date +
+      "&commentaire=" +
+      commentaire +
+      "&id_films=" +
+      id_films
+  );
 }
 
-export function getComments(id_media) {
-    // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
-    let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../Bedflix/fonctions/requetes.php?requete=getComments", true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+/* export function getComments(id_media, type, title) {
+  // Envoyer les données en utilisant la méthode POST de l'objet XMLHttpRequest
+  let xhr = new XMLHttpRequest();
+  xhr.open(
+    "POST",
+    "../cinerama/fonctions/requetes.php?requete=getComments",
+    true
+  );
+  xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    // Définir la fonction de rappel pour traiter la réponse
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (!xhr.status === 200) {
-                // Si la requête a échoué, afficher le message d'erreur
-                alert("Erreur: " + xhr.status);
-            }
-        }
-    };
-    // Envoyer les données au serveur
+  // Définir la fonction de rappel pour traiter la réponse
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === XMLHttpRequest.DONE) {
+      if (!xhr.status === 200) {
+        // Si la requête a échoué, afficher le message d'erreur
+        alert("Erreur: " + xhr.status);
+      }
+    }
+  };
+  // Envoyer les données au serveur
 
-    xhr.send("id_media=" + id_media);
+  xhr.send("id_media=" + id_media);
+}
+ */
+export function getComments(id_media, type, title) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      fetch(
+        `../cinerama/fonctions/requetes.php?requete=getComments&id_media=${id_media}`
+      )
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          //console.log(data);
+          getBanned(data, id_media, type, title);
+          /*  createCommentsModal(data, id_media, type, title) */
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
+  xhttp.send();
+}
+
+export function getDurationFilm() {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      fetch(
+        `../cinerama/fonctions/requetes.php?requete=getDurationFilm&id_user=${id_user}`
+      )
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          createModalUserStats(data);
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
+  xhttp.send();
+}
+
+export function addUserComment(id_films, note, commentaire) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+
+      let formData = new FormData();
+      formData.append("note", note);
+      formData.append("commentaire", commentaire);
+      formData.append("id_films", id_films);
+      formData.append("id_user", id_user);
+
+      fetch("../cinerama/fonctions/requetes.php?requete=addUserComment", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          // Utilisez les données JSON ici
+          responseComment(data);
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
+  xhttp.send();
+}
+
+export function checkBanComment(dataComment, id, type, title) {
+  let xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      let info_user = JSON.parse(this.responseText);
+      let id_user = info_user.id;
+      fetch(
+        `../cinerama/fonctions/requetes.php?requete=checkBanUser&id_user=${id_user}`
+      )
+        .then((response) => response.text())
+        .then((dataBan) => {
+          // Utilisez les données JSON ici
+          createCommentsModal(dataBan, dataComment, id, type, title);
+        })
+        .catch((error) => {
+          console.error(`Une erreur s'est produite:`, error);
+        });
+    }
+  };
+  xhttp.open("GET", "../cinerama/fonctions/endpoint.php", true);
+  xhttp.send();
 }

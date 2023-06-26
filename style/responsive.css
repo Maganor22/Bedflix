@@ -20,6 +20,43 @@
 
 @media only screen and (min-width: 320px) and (max-width: 480px) and (orientation: portrait) {
 
+
+  /* Administration */
+
+  .space {
+    margin-top: 25%!important;
+  }
+
+  .adminUserList,
+  .adminCommentaireUserList {
+    width: 90%!important;
+  }
+
+
+  /* Fin Administration */
+
+  /* Ajout d'un commentaire utilisateur */ 
+  .modal-content-comment-modal {
+    width: 90%!important;
+    margin: auto;
+  }
+
+  .modal-user-list {
+    width: 100%!important;
+  }
+
+/*    .modal-user-list {
+    width: 100%;
+   } */
+
+    /*Affiche le scroll du dropdown du menu genre sur l'index*/
+  .dropdown-menu-scroll {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
+  /*Favoris.php*/
+
   #favoriteModal {
     padding: 0;
     padding-bottom: 0.5rem;
@@ -27,13 +64,16 @@
 
   .modal-header-fav {
     padding: 0.5rem 0;
-    /* padding-bottom: 0!important; */
   }
 
   .modal-body-fav {
     padding-top: 1rem;
   }
+  
+  /* Fin favoris.php */
+
   /*connexion-view*/
+
   .logs {
     width: 80% !important;
   }
@@ -125,6 +165,10 @@
     display: none;
   }
 
+  .deleteUserModal {
+    width: 90%!important;
+  }
+
   /*fin index.php*/
 
   /*Navbar*/
@@ -140,7 +184,7 @@
 
   /*Fin navbar*/
 
-  /*inscription-view.php*/
+  /*inscription_view.php*/
   .divInsc {
     width: 100%;
   }
@@ -155,7 +199,7 @@
     box-shadow: rgb(255, 255, 255) 0.0625rem 0 0.625rem;
   }
 
-  /*fin inscription-view.php*/
+  /*fin inscription_view.php*/
 
   /* Carousel Index.php */
 

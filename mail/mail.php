@@ -19,7 +19,7 @@ class Mail {
         $mail->Username = 'bedflix21@gmail.com';
         $mail->Password = 'sbwavugttiomorrz';
         $mail->From = 'bedflix21@gmail.com';
-        $mail->FromName = 'Bedflix';
+        $mail->FromName = 'Cinérama';
         $mail->addAddress($mailTo);
         // Contenu
         $mail->isHTML($bEstHtml); // Permet l'interprétation de l'HTML dans le mail

@@ -5,6 +5,7 @@ import {
   selectUserParams,
   selectProfilPictures,
   updateAvatar,
+  getDurationFilm,
 } from "./requetes.js";
 
 let seasonsTotal = [];
@@ -489,6 +490,12 @@ paramsUsers.addEventListener("click", function () {
   selectUserParams();
 });
 
+let statsUser = document.getElementById("stats");
+statsUser.addEventListener("click", function () {
+  //Récuperation des infos de l'utilisateur depuis la BDD
+  getDurationFilm();
+});
+
 let activePopUp = false;
 function displayPopUp(style, text, time) {
   if (activePopUp == false) {
@@ -546,7 +553,6 @@ export function createModalUserParams(userInfo) {
 
   // Parcours de toutes les modales
   modals.forEach((modal) => {
-    // Ajoutez un gestionnaire d'événements de clic sur chaque modale
     modal.style.display = "none";
   });
 
@@ -590,9 +596,7 @@ export function createModalUserParams(userInfo) {
   userParamsModalContent.appendChild(modalTitle);
 
   const userParamsForm = document.createElement("form");
-  //userParamsForm.classList.add("userParamsForm");
-  //userParamsForm.setAttribute("action", "../Bedflix/fonctions/update_user.php");
-  //userParamsForm.setAttribute("method", "POST");
+  userParamsForm.classList.add("formIndex");
   userParamsModalContent.appendChild(userParamsForm);
 
   const pFirstname = document.createElement("h5");
@@ -716,7 +720,6 @@ export function createModalUserParams(userInfo) {
 
   const saveUserInfoBtn = document.createElement("button");
   saveUserInfoBtn.textContent = "Sauvegarder";
-  //saveUserInfoBtn.setAttribute("type", "submit");
   saveUserInfoBtn.classList.add(
     "btn",
     "btn-success",
@@ -724,12 +727,13 @@ export function createModalUserParams(userInfo) {
     "saveUserInfoBtn"
   );
   saveUserInfoBtn.style.marginBottom = "1rem";
+
+  //Au moment du clique sur le bouton de sauvegarde, réinitialise les messages d'erreurs
   saveUserInfoBtn.addEventListener("click", function (e) {
     const elements = document.querySelectorAll(".pUserSmall");
     elements.forEach((element) => {
       element.textContent = "";
     });
-    //console.log(avatarUserBtn.getAttribute("src"));
     changerDonnees(e);
   });
   userParamsForm.appendChild(saveUserInfoBtn);
@@ -737,12 +741,13 @@ export function createModalUserParams(userInfo) {
   async function changerDonnees(e) {
     e.preventDefault();
 
+    //Ici on récupere le lien de l'image et on extrait le nom de l'image en supprimant le préfixe
     const url = avatarUserBtn.getAttribute("src");
-    const prefix = "../Bedflix/imgs/avatars/";
+    const prefix = "../cinerama/imgs/avatars/";
     const imageName = url.substring(prefix.length);
-    //console.log(imageName);
 
-    var formData = new FormData();
+    //Récupération des données du formulaire
+    let formData = new FormData();
     formData.append("prenom", userFirstname.value);
     formData.append("nom", userName.value);
     formData.append("email", userEmail.value);
@@ -752,12 +757,14 @@ export function createModalUserParams(userInfo) {
     formData.append("passwordConfirm", userPasswordConfirm.value);
     formData.append("photo_profil", imageName);
 
-    await fetch("../Bedflix/fonctions/update_user.php", {
+    //Envoi des données du formulaire
+    await fetch("../cinerama/fonctions/update_user.php", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.text())
       .then((result) => {
+        //Si les données sont bien envoyées et qu'il y a une erreur, on affiche un message d'erreur sinon affiche le message de succès
         if (result == "Erreur 1") {
           console.log("Une erreur est survenue.");
         } else if (result == "Erreur 2") {
@@ -833,7 +840,7 @@ export function createModalUserParams(userInfo) {
   const avatarUserBtn = document.createElement("img");
   avatarUserBtn.setAttribute(
     "src",
-    "../Bedflix/imgs/avatars/" + userInfo.photo_profil
+    "../cinerama/imgs/avatars/" + userInfo.photo_profil
   );
   avatarUserBtn.classList.add("avatarUserBtn", "avatar", "me-3");
   avatarUserBtn.setAttribute("alt", userInfo.photo_profil);
@@ -923,7 +930,7 @@ export function createAvatarModal(userPicture, data) {
   avatarModalContent.appendChild(modalTitle);
 
   const myAvatar = document.createElement("img");
-  myAvatar.setAttribute("src", "../Bedflix/imgs/avatars/" + userPicture);
+  myAvatar.setAttribute("src", "../cinerama/imgs/avatars/" + userPicture);
   myAvatar.classList.add("userAvatar", "avatar", "me-3");
   myAvatar.setAttribute("alt", userPicture);
   myAvatar.style.width = "2.5rem";
@@ -989,7 +996,7 @@ export function createAvatarModal(userPicture, data) {
       categoryImgs.appendChild(divImg);
 
       const avatar1 = document.createElement("img");
-      avatar1.setAttribute("src", `../Bedflix/imgs/avatars/${images[i].url}`);
+      avatar1.setAttribute("src", `../cinerama/imgs/avatars/${images[i].url}`);
       avatar1.setAttribute("alt", images[i].url);
       avatar1.classList.add("avatar", "mb-3");
       avatar1.style.width = "10rem";
@@ -1010,17 +1017,17 @@ export function createAvatarModal(userPicture, data) {
       avatar1.addEventListener("click", function () {
         myAvatar.setAttribute(
           "src",
-          `../Bedflix/imgs/avatars/${images[i].url}`
+          `../cinerama/imgs/avatars/${images[i].url}`
         );
         document.body
           .querySelector(".avatarUserBtn")
-          .setAttribute("src", `../Bedflix/imgs/avatars/${images[i].url}`);
+          .setAttribute("src", `../cinerama/imgs/avatars/${images[i].url}`);
         document.body
           .querySelector("#avatar")
-          .setAttribute("src", `../Bedflix/imgs/avatars/${images[i].url}`);
+          .setAttribute("src", `../cinerama/imgs/avatars/${images[i].url}`);
         displayPopUp("success", "Avatar modifié avec succès !", "3000");
         const url = avatar1.getAttribute("src");
-        const prefix = "../Bedflix/imgs/avatars/";
+        const prefix = "../cinerama/imgs/avatars/";
         const imageName = url.substring(prefix.length);
         updateAvatar(imageName);
       });
@@ -1068,7 +1075,7 @@ export function createAvatarModal(userPicture, data) {
 
 function deleteUserModal() {
   const deleteUserModal = document.createElement("div");
-  deleteUserModal.classList.add("modal", "deleteUserModal");
+  deleteUserModal.classList.add("modal");
   deleteUserModal.style.display = "block";
   const maxZIndex = Math.max(
     ...Array.from(document.querySelectorAll("*"))
@@ -1079,7 +1086,7 @@ function deleteUserModal() {
   deleteUserModal.style.zIndex = maxZIndex + 1;
 
   const deleteUserModalContent = document.createElement("div");
-  deleteUserModalContent.classList.add("modal-content");
+  deleteUserModalContent.classList.add("modal-content", "deleteUserModal");
   deleteUserModalContent.style.width = "30%";
   deleteUserModalContent.style.backgroundColor = "#212529";
   deleteUserModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
@@ -1101,7 +1108,7 @@ function deleteUserModal() {
   deleteUserModalContent.appendChild(pPswd);
 
   const deleteForm = document.createElement("form");
-  deleteForm.setAttribute("action", "../Bedflix/fonctions/deleteuser.php");
+  deleteForm.setAttribute("action", "../cinerama/fonctions/deleteuser.php");
   deleteForm.setAttribute("method", "POST");
   deleteUserModalContent.appendChild(deleteForm);
 
@@ -1148,4 +1155,128 @@ function deleteUserModal() {
   });
   modalTitle.appendChild(closeBtn);
   document.body.appendChild(deleteUserModal);
+}
+
+export function createModalUserStats(userInfo) {
+  // Supprimer les crochets "[" et "]" de la chaîne userInfo
+  userInfo = userInfo.replace("[", "").replace("]", "");
+
+  var userInfoArray = userInfo.split(",");
+
+  function convertirTemps(totalSecondes) {
+    var jours = Math.floor(totalSecondes / (24 * 60 * 60));
+    totalSecondes %= 24 * 60 * 60;
+
+    var heures = Math.floor(totalSecondes / (60 * 60));
+    totalSecondes %= 60 * 60;
+
+    var minutes = Math.floor(totalSecondes / 60);
+    totalSecondes %= 60;
+
+    var secondes = totalSecondes;
+
+    return {
+      jours: jours,
+      heures: heures,
+      minutes: minutes,
+      secondes: secondes,
+    };
+  }
+
+  var totalSecondes = userInfoArray.reduce(function (acc, valeur) {
+    return acc + parseInt(valeur, 10);
+  }, 0);
+
+  var resultat = convertirTemps(totalSecondes);
+
+  // Afficher les propriétés de l'objet resultat dans une balise <p>
+  var resultConcact =
+    resultat.jours +
+    " jours, " +
+    resultat.heures +
+    " heures, " +
+    resultat.minutes +
+    " minutes, " +
+    resultat.secondes +
+    " secondes";
+
+  const modals = document.querySelectorAll(".modal");
+
+  // Parcours de toutes les modales
+  modals.forEach((modal) => {
+    modal.style.display = "none";
+  });
+
+  const userStatsModal = document.createElement("div");
+  userStatsModal.classList.add("modal", "userStatsModal");
+  userStatsModal.style.display = "block";
+  const maxZIndex = Math.max(
+    ...Array.from(document.querySelectorAll("*"))
+      .map((el) => parseFloat(getComputedStyle(el).zIndex))
+      .filter((z) => !isNaN(z))
+  );
+
+  userStatsModal.style.zIndex = maxZIndex + 1;
+
+  const userStatsModalContent = document.createElement("div");
+  userStatsModalContent.classList.add("modal-content");
+  if (screen.width < 768) {
+    userStatsModalContent.style.width = "90%";
+  } else {
+    userStatsModalContent.style.width = "30%";
+  }
+  userStatsModalContent.style.backgroundColor = "#212529";
+  userStatsModalContent.style.boxShadow = "rgb(255, 255, 255) 1px 0 0.625rem";
+  userStatsModalContent.style.padding = "2rem";
+
+  const divBtns = document.createElement("div");
+  divBtns.classList.add("divBtns");
+  divBtns.style.display = "flex";
+  divBtns.style.justifyContent = "space-between";
+  divBtns.style.marginBottom = "1rem";
+  divBtns.style.display = "none";
+  userStatsModalContent.appendChild(divBtns);
+
+  const modalTitle = document.createElement("h4");
+  modalTitle.textContent = `Statistiques de votre compte`;
+  modalTitle.style.color = "white";
+  modalTitle.style.textShadow = "1px 1px 1px red";
+  modalTitle.style.marginBottom = "1rem";
+  modalTitle.style.borderBottom = "1px solid white";
+  modalTitle.style.paddingBottom = "1rem";
+  userStatsModalContent.appendChild(modalTitle);
+
+  const userStatsForm = document.createElement("form");
+  userStatsForm.classList.add("formIndex");
+  userStatsModalContent.appendChild(userStatsForm);
+
+  const pDuration = document.createElement("h5");
+  pDuration.textContent = `Temps de visionnage de films :`;
+  pDuration.style.color = "orange";
+  userStatsForm.appendChild(pDuration);
+
+  const pDurationLenght = document.createElement("p");
+  pDurationLenght.innerHTML = resultConcact;
+  pDurationLenght.style.color = "white";
+  userStatsForm.appendChild(pDurationLenght);
+
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  closeBtn.classList.add("btn", "btn-danger");
+  closeBtn.style.width = "2.2rem";
+  closeBtn.style.float = "right";
+  closeBtn.addEventListener("click", function () {
+    userStatsModal.style.display = "none";
+  });
+  modalTitle.appendChild(closeBtn);
+
+  if (screen.width < 768) {
+    divBtns.style.display = "flex";
+    divBtns.appendChild(closeBtn);
+  } else {
+    modalTitle.appendChild(closeBtn);
+  }
+
+  userStatsModal.appendChild(userStatsModalContent);
+  document.body.appendChild(userStatsModal);
 }

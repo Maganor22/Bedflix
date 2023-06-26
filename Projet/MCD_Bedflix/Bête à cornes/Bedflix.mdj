@@ -471,7 +471,7 @@
 											"top": 490,
 											"width": 183,
 											"height": 13,
-											"text": "Bedflix"
+											"text": "cinerama"
 										},
 										{
 											"_type": "LabelView",
@@ -1546,7 +1546,7 @@
 					"_parent": {
 						"$ref": "AAAAAAGG10ZBK9S6ZE4="
 					},
-					"name": "Bedflix"
+					"name": "cinerama"
 				},
 				{
 					"_type": "UMLUseCase",

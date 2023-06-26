@@ -1,24 +1,32 @@
-<!-- Rectifications / bugs / a faire: 
-
-    
+<!-- Rectifications / ajout / bugs / a faire: 
 BUGS:
     - Mettre l'icone de favoris A JOUR quand on ouvre un film dans l'index
+    - La video sur l'index est dispo mais impossible de l'afficher dans la recherhce, video disponible que sur le lecteur youtube
+    - Impossible d'ouvrir les séries dans lesquelles une acteur a joué
+    - Au moment de la venu sur le site, il est possible que les videos ne fonctionnent pas, end-seconds ?
 
-    
 RECTIFICATIONS:
     - Supprimer l'email de vérification et mdp oublié au bout de 10min
     - Quand on clique sur l'index pour réafficher l'index, il faut juste que ça réaffiche les infos mais que le clique soit pas pris en compte si par exemple on clique sur une image
     - Ne pas relancer le film si le meme film est déja lancé
     - Ajouter bouton editer sur le modal favoris
-    - Changer d'avatar, mettre les images en space evenly
     
 AMELIORATIONS:
+    - Ajouter la petite étoile de favoris pour les retirer directement depuis l'onglet favoris
     - Option signaler un bug
     - Demande d'amélioration / changement
-    - Laisser un commentaire et une note ( ESPACE COMMENTAIRE ADMIN DE VALIDATION )
-    - Possibilité de mettre vu sur un film
+    - Possibilité de mettre vu sur un film et d'avoir un espace ou voir tous ses films vu
     - Trier les films par plateforme ( Netflix, Amazon Prime Video, Disney+ etc...)
     - Ajouter un ami et voir ses favoris, ses films vu, ses commentaires / notes...
+    - Ajouter un tri par films par genre : exemple dans le dropdown : Action, Aventure, Comédie, Drame, Horreur, Science-fiction, Thriller, Western
+    - Systeme de back-office avec gestion admin : 
+        - Bannir un utilisateur de commentaires 
+
+    - statistiques : 
+        - nombre de commentaires 
+        - nombre de films vu + bouton pour voir les films vu
+        - nombre de temps passé sur le site
+
 -->
 
 
@@ -30,17 +38,69 @@ require_once "./bdd/bddmanager.php";
 
 $data = selectUserById($_SESSION['id'], $db);
 
+
 if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
+
+    function displayAlert($alertClass, $alertMessage)
+    {
+        echo "<style>";
+        echo ".alert { position: absolute; top: 12%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }";
+        echo "@media (max-width: 767px) { .alert { width: 80%; text-align: center; } }";
+        echo "</style>";
+        echo "<div class='alert $alertClass' role='alert'>$alertMessage</div>";
+        echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 8000);</script>";
+    }
 
     if (isset($_GET["success"])) {
         $success = $_GET["success"];
         if ($success == 1) {
-            echo "<style>.alert { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); z-index: 999; width: fit-content; opacity: 1; transition: opacity 0.5s ease-in-out; }</style>";
-            echo "<div class='alert alert-success' role='alert'>Votre compte a bien été créé.</div>";
-            echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
+            displayAlert("alert-success", "Votre compte a bien été crée.");
         }
     }
 
+    if (isset($_GET["error"])) {
+        $error = $_GET["error"];
+        switch ($error) {
+            case 1:
+                displayAlert("alert-danger", "Une erreur est survenue.");
+                break;
+            case 2:
+                displayAlert("alert-danger", "Veuillez mettre votre mot de passe pour confirmer la suppression.");
+                break;
+            case 3:
+                displayAlert("alert-danger", "Mot de passe incorrect.");
+                break;
+            default:
+                break;
+        }
+    }
+    $allFavs = array(); // Initialisation de la variable $allFavs
+
+    $favoris = getFavorisIdFilmsByUserId($_SESSION['id'], $db);
+    foreach ($favoris as $favori) {
+        $id_film = $favori['id_du_media'];
+        array_push($allFavs, $id_film); // Ajouter l'ID du film à $allFavs
+    }
+
+    /*  $durations = getFilmVuDurationOfUser($_SESSION['id'], $db);
+
+    $seconds = 0; // Initialise la variable $seconds à zéro
+
+    foreach ($durations as $duration) {
+        $seconds += intval($duration); // Convertit la durée en nombre entier avant de l'ajouter
+    }
+
+    $days = floor($seconds / (60 * 60 * 24)); // Nombre de jours complets
+    $seconds -= $days * (60 * 60 * 24); // Soustrait les secondes correspondant aux jours
+
+    $hours = floor($seconds / (60 * 60)); // Nombre d'heures complètes
+    $seconds -= $hours * (60 * 60); // Soustrait les secondes correspondant aux heures
+
+    $minutes = floor($seconds / 60); // Nombre de minutes complètes
+    $seconds -= $minutes * 60; // Soustrait les secondes correspondant aux minutes
+
+    // Affichage des résultats
+    echo "Durée totale : $days jours, $hours heures, $minutes minutes, $seconds secondes"; */
 ?>
 
     <!DOCTYPE html>
@@ -49,7 +109,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bedflix: accueil</title>
+        <title>Cinérama: accueil</title>
         <meta name="description" content="Recherche d'un film/série à regarder ?" />
         <!-- <link href="reset.css" rel="stylesheet" type="text/css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -95,7 +155,6 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
                 <div class="firstCarousel content">
                     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <!-- <div id="myCarousel" class="carousel slide" data-bs-ride="carousel"> -->
                         <div class="d-flex d-gender">
                             <h4 class="text-white fs-2 filmGender content">Films par genre :</h4>
                             <div class="dropdown ms-3 z-3 content">
@@ -173,6 +232,13 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             <img src="./imgs/carrousels background.png" alt="gradient_background" class="w-100 position-absolute start-0 bgcar content">
             <p type="hidden" class="favLabel"></p>
             <p type="hidden" class="delFavLabel"></p>
+            <p type="hidden" class="allFavs">
+                <?php
+                foreach ($allFavs as $fav) {
+                    echo $fav . ", "; // Afficher chaque ID de film suivi d'une virgule
+                }
+                ?>
+            </p>
             <!-- <h5 class="position-absolute text-white fs-2 serieGender">Séries du moment</h5> -->
         </main>
 
@@ -188,19 +254,18 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             <a href="https://twitter.com/?lang=fr" target="_blank"><img src="./imgs/twitter.png" alt=""
                     class="position-relative z-3 w-10 m-2 bigger"></a>
         </div>
-        <p class="text-white z-3 fs-5 position-sticky">© 2022-2023 Bedflix, Inc.</p>
+        <p class="text-white z-3 fs-5 position-sticky">© 2022-2023 Cinérama, Inc.</p>
     </footer> -->
 
         <script type="module" src="./scripts/script.js"></script>
         <script src="https://www.youtube.com/iframe_api"></script>
         <script src="./scripts/createCarousel.js"></script>
-        <!-- <script src="./scripts/genre.js"></script> -->
         <script type="module" src="./scripts/popUp.js"></script>
     </body>
 
     </html>
 <?php
 } else {
-    header('Location: ./connexion-view.php');
+    require "connexion_view.php";
 }
 ?>

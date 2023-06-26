@@ -140,9 +140,9 @@ function hideElements() {
 
   timeoutContent = setTimeout(async () => {
     if (isPlaying == "play" && isOverElement == false) {
+      hideCursor();
       document.body.style.overflowY = "hidden";
       contentElements.forEach((element) => {
-        //console.log(element.tagName);
         element.classList.add("fadeout");
         element.style.transition = "opacity 2s"; // Définit une transition de 0.5 seconde pour la propriété opacity
         element.style.opacity = "0"; // Change l'opacité à 0
@@ -155,14 +155,45 @@ function hideElements() {
       indexFilmTitle.style.opacity = 0.7;
       indexFilmTitle.style.transition = "opacity 2s ease-in-out";
 
-      /*       indexFilmTitle.transition = "opacity 2s";
-      indexFilmTitle.style.opacity = 0.8; */
       if (isPlaying == "pause") {
         background.style.opacity = 1;
       }
     }
   }, 3000);
 }
+
+let cursorVisible = true;
+let timeout;
+
+// Fonction pour masquer le curseur
+function hideCursor() {
+  if (isOverElement == false) {
+    document.body.style.cursor = "none";
+    cursorVisible = false;
+  }
+}
+
+// Fonction pour afficher le curseur
+function showCursor() {
+  document.body.style.cursor = "auto";
+  cursorVisible = true;
+}
+
+function resetTimer() {
+  clearTimeout(timeout);
+  if (isPlaying == true && isOverElement == false && cursorVisible) {
+    timeout = setTimeout(hideCursor, 2000);
+  } else {
+    showCursor();
+    timeout = setTimeout(hideCursor, 2000); // Réinitialiser le délai d'attente après avoir affiché le curseur
+  }
+}
+
+// Événement de mouvement de la souris
+document.addEventListener("mousemove", resetTimer);
+
+// Événement de pression des touches du clavier
+document.addEventListener("click", resetTimer);
 
 let displayInterval;
 function checkLengthTrailer() {
@@ -199,7 +230,8 @@ function checkLengthTrailer() {
 }
 
 function createCarousel(movieData, api_key, movieData2) {
-  let moviesPerSlide = 5;
+  // Définition du nombre d'images par slides en fonction de la taille de l'écran
+  let moviesPerSlide;
   if (screen.width < 768) {
     moviesPerSlide = 3;
   } else {
@@ -208,11 +240,15 @@ function createCarousel(movieData, api_key, movieData2) {
   const fetchedMovieData = {}; // Tableau pour stocker les fetchs de chaque film
   let timeoutId;
 
+  // Cache le lecteur de trailer
   document.getElementById("player").style.display = "none";
-  let fullCarousel = document.querySelector(".carousel-inner");
+  let allFavs = document.querySelector(".allFavs");
 
+  //fonction de récupération de favoris
+
+  // Création de slide
   for (let i = 0; i < movieData.movies.length; i += moviesPerSlide) {
-    // Création de l'élément de diapositive du carousel dans le HTML
+    // A chaque itération de la boucle, "i" est incrémenté de la valeur de "moviesPerSlide" pour créer des groupes de films.
     const slide = document.createElement("div");
     slide.classList.add("carousel-item");
     if (i === 0) {
@@ -226,15 +262,15 @@ function createCarousel(movieData, api_key, movieData2) {
       j < i + moviesPerSlide && j < movieData.movies.length;
       j++
     ) {
-      //console.log(movieData)
       const movie = movieData.movies[j];
 
+      //Ici on selectionne uniquement les films avec un poster
       if (movie.poster != null || movie.poster != "") {
         const img = document.createElement("img");
-        img.classList.add("carouselImgs");
+        img.classList.add("carouselImgs", "btn");
+        img.style.padding = "0";
         img.src = movie.poster;
         img.alt = movie.title;
-        let myFilm;
         //Attibue à l'image l'ID du film si movieData2.movie.id existe et que c'est un INT
         if (
           movieData2.movie &&
@@ -266,6 +302,13 @@ function createCarousel(movieData, api_key, movieData2) {
           "btnFav",
           `btnFav${movie.id}`
         );
+
+        var ids = allFavs.textContent.trim().split(", ");
+
+        if (ids.includes(movie.id.toString())) {
+          btnFav.style.color = "gold";
+        }
+
         btnFav.style.background = "transparent";
         //btnFav.style.marginLeft = "-4.6%";
         btnFav.style.marginLeft = img.offsetLeft - "3" + "%";
@@ -747,7 +790,7 @@ function createSecCarousel(movieData, movieData2) {
 
   if (movie.poster != null || movie.poster != "") {
     const img = document.createElement("img");
-    img.classList.add("carouselImgs", "favImgs");
+    img.classList.add("carouselImgs", "favImgs", "btn");
     img.src = movie.poster;
     img.alt = movie.title;
 

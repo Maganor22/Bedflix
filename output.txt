@@ -1,4 +1,4 @@
-Reinitialized existing Git repository in C:/xampp/htdocs/Bedflix/.git/
+Reinitialized existing Git repository in C:/xampp/htdocs/cinerama/.git/
 [dev b6caa2a] 13/06/2023 18h08
  1 file changed, 1 insertion(+)
  create mode 100644 PHP/github.txt

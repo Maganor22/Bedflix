@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once "../bdd/dbconnect.php";
-require_once "../bdd/bddmanager.php";
+require_once '../bdd/dbconnect.php';
+require_once '../bdd/bddmanager.php';
 
 // Déterminer quelle requête a été appelée
 if (isset($_GET['requete'])) {
@@ -45,7 +45,8 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'insertSerie':
-            $dataInsertSerie = insertSerie($_POST['titre'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['genre'], $_POST['nombre_saisons'], $db); //$_POST['nombre_episodes_par_saison'], $db);
+            $dataInsertSerie = insertSerie($_POST['titre'], $_POST['annee'], $_POST['poster'], $_POST['affiche'], $_POST['id_du_media'], $_POST['imdb'], $_POST['ba'], $_POST['synopsis'], $_POST['genre'], $_POST['nombre_saisons'], $db);
+            //$_POST[ 'nombre_episodes_par_saison' ], $db );
             echo json_encode($dataInsertSerie);
             break;
 
@@ -65,18 +66,13 @@ if (isset($_GET['requete'])) {
             break;
 
         case 'addFilmVu':
-            $dataFilmVu = addFilmVu($_GET['id_user'], $_GET['id_media'], $db);
+            $dataFilmVu = addFilmVu($_GET['id_user'], $_GET['id_media'], $_GET['fav'], $db);
             echo json_encode($dataFilmVu);
             break;
 
         case 'checkFilmVu':
             $dataCheckFilmVu = checkFilmVu($_GET['id_user'], $_GET['id_media'], $db);
             echo json_encode($dataCheckFilmVu);
-            break;
-
-        case 'delFilmVu':
-            $dataDelFilmVu = delFilmVu($_GET['id_user'], $_GET['id_media'], $db);
-            echo json_encode($dataDelFilmVu);
             break;
 
         case 'getAvatar':
@@ -96,13 +92,32 @@ if (isset($_GET['requete'])) {
 
         case 'setComments':
             $dataSetComments = setComments($_POST['user'], $_POST['picture'], $_POST['note'], $_POST['date'], $_POST['commentaire'], $_POST['id_films'], $db);
-            //$dataSetComments = setComments($_POST['user'], $_POST['photo'], $_POST['note'], $_POST['commentaire'], $_POST['id_media'], $db);
             echo json_encode($dataSetComments);
             break;
 
         case 'getComments':
-            $dataGetComments = getComments($_POST['id_media'], $db);
+            $dataGetComments = getComments($_GET['id_media'], $db);
             echo json_encode($dataGetComments);
+            break;
+
+        case 'getRandomBackground':
+            $background = getRandomBackground($db);
+            echo json_encode($background);
+            break;
+
+        case 'addUserComment':
+            $dataAddUserComment = addUserComment($_POST['note'], $_POST['commentaire'], $_POST['id_films'], $_POST['id_user'], $db);
+            echo json_encode($dataAddUserComment);
+            break;
+
+        case 'getDurationFilm':
+            $duration = getFilmVuDurationOfUser($_GET['id_user'], $db);
+            echo json_encode($duration);
+            break;
+
+        case 'checkBanUser':
+            $checkBanUser = checkBanComment($_GET['id_user'], $db);
+            echo json_encode($checkBanUser);
             break;
 
         default:

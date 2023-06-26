@@ -30,12 +30,12 @@ if (!empty($_POST['password']) && !empty($_POST['passwordConfirm'])) {
         if ($user) {
             updatePassword($id, $password, $db);
             deleteKeyPassword($id, $db);
-            $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">BEDFLIX</h1></br>
+            $body = '<div style="padding:2rem; background-color:#212529;"><h1 style="font-size:2rem; color:red; text-shadow: rgb(255, 255, 255) 0.0625rem 0 0.15rem;">CINÉRAMA</h1></br>
                     <p style="color:white">Votre mot de passe a été modifié avec succès !</p></br>
                     <p style="color:white">Vous pouvez dès à présent vous connecter à votre compte .</p>';
 
-            if ($mail->sendMail($email, "Bedflix mot de passe modifié", $body, true)) {
-                header("Location: ../connexion-view.php?success=mdp_change");
+            if ($mail->sendMail($email, "Cinérama mot de passe modifié", $body, true)) {
+                header("Location: ../connexion_view.php?success=mdp_change");
             }
         } else {
             $_SESSION['error'] = "Une erreur est survenue, veuillez verifier votre lien de récupération de mot de passe";

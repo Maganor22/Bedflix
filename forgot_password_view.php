@@ -49,7 +49,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
         }
     }
 
-/*     // Vérifier le délai entre les demandes de récupération
+    /*     // Vérifier le délai entre les demandes de récupération
     $lastRecoveryTime = isset($_COOKIE['last_recovery_time']) ? $_COOKIE['last_recovery_time'] : 0;
     $currentTime = time();
 
@@ -72,7 +72,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bedflix: mot de passe</title>
+        <title>Cinérama: mot de passe</title>
         <meta name="description" content="Recherche d'un film/série à regarder ?" />
         <!-- <link href="reset.css" rel="stylesheet" type="text/css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -90,16 +90,17 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
 
     </head>
 
-    <body class="bg-dark">
+    <body class="bg-black" onload="changeDivURL()">
         <div class="center">
             <div class="background"></div>
             <div class="row justify-content-center">
                 <div class="mdpDiv">
                     <div class="logoConnexion d-flex justify-content-center">
-                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5">
+                        <!-- <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5"> -->
+                        <h1 class="cinerama">CINÉRAMA</h1>
                     </div>
                     <h3 class="text-white mb-3">Mot de passe oublié ?</h3>
-                    <form action="../Bedflix/fonctions/forgot_password.php" method="POST" class="d-flex flex-column flex-md-row" id="mdpForm">
+                    <form action="../cinerama/fonctions/forgot_password.php" method="POST" class="d-flex flex-column flex-md-row" id="mdpForm">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="email" class="text-white fw-bold">Votre adresse email :</label>
@@ -108,18 +109,18 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
                             <div class="button-group mt-4 mb-3">
                                 <button class="btn btn-warning w-100" type="submit">Envoyer</button>
                             </div>
-                            <a href="./connexion-view.php" class="btn btn-secondary w-100">Retour</a>
+                            <a href="./connexion" class="btn btn-secondary w-100">Retour</a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-
+        <script src="./scripts/randomBackground.js"></script>
     </body>
 
     </html>
 <?php
 } else {
-    header('Location: ./index.php');
+    header('Location: ./accueil');
 }
 ?>

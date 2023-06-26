@@ -18,9 +18,9 @@ if ($data["cle_unique"] == $code) {
     $query->execute([
         "cle_unique" => $code
     ]);
-    header("Location: ../connexion-view.php?success=1");
+    header("Location: ../connexion_view.php?success=1");
     exit();
 } else {
-    header("Location: ../connexion-view.php?error=1");
+    header("Location: ../connexion_view.php?failed=4");
     exit();
 }

@@ -5,7 +5,10 @@ require_once "./bdd/bddmanager.php";
 
 $data = selectUserById($_SESSION['id'], $db);
 
+
 $favoris = getFavorisByUserId($_SESSION['id'], $db);
+/* $films_vu = getFilmsVuByUserId($_SESSION['id'], $db);
+die(var_dump($films_vu)); */
 
 function convertToHHMM($seconds)
 {
@@ -22,8 +25,6 @@ function convertChars($thisChaine)
     return $nouvelleChaine;
 }
 
-
-
 if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
 
 ?>
@@ -34,7 +35,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bedflix: Favoris</title>
+        <title>Cinérama: Favoris</title>
         <meta name="description" content="Recherche d'un film/série à regarder ?" />
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
@@ -60,12 +61,13 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
             </div>
             <div class="favList">
                 <section class="section-film">
-                    <h1 class="text-center favListTitle">𝔽𝕒𝕧𝕠𝕣𝕚𝕤</h1>
+                    <h1 class="text-center favListTitle">Favoris</h1>
                     <div class="filmContainer">
                         <?php foreach ($favoris as $favori) {
                             $id_film = $favori['id_films'];
                             $movie = getMoviesById($id_film, $db);
                             $commentaires = getCommentairesByFilmId($id_film, $db);
+                            $film_vu = getFilmVuByUserIdAndFilmId($_SESSION['id'], $id_film, $db);
 
                             if ($movie['titre_fr'] != "") {
                                 $titre = $movie['titre_fr'];
@@ -91,8 +93,12 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                         <div class="modal-header modal-header-fav" id="modalHeader<?= $id_film ?>">
                                             <h2 class="modal-title text-white" id="favoriteModal"><?= $titre . ' - ' . $movie['annee'] ?></h2>
                                             <div class="float-right divBtnsCommentsFav" id="divBtnsCommentsFav<?= $id_film ?>">
-                                                <button type="button" id="pSeeBtn<?= $id_film ?>" class="btn btn-secondary seeBtn me-2" onclick="seeBtn(<?= $îd_films ?>)">
-                                                    <i class="fa fa-eye" id="pEyeBtn<?= $id_film ?>" style="color: white;"></i>
+                                                <button type="button" id="pSeeBtn<?= $id_film ?>" class="btn btn-secondary seeBtn me-2" onclick="seeBtn(<?= $id_film ?>, <?= $_SESSION['id'] ?>)">
+                                                    <?php if ($film_vu) { ?>
+                                                        <i class="fa fa-eye" id="pEyeBtn<?= $id_film ?>" style="color: greenyellow;"></i>
+                                                    <?php } else { ?>
+                                                        <i class="fa fa-eye-slash" id="pEyeBtn<?= $id_film ?>" style="color: white;"></i>
+                                                    <?php } ?>
                                                 </button>
                                                 <button type="button" id="pFavBtn" class="btn btn-secondary favBtn me-2" onclick="favBtn(<?= $id_film ?>)">
                                                     <i class="fas fa-star" style="color: gold;"></i>
@@ -143,7 +149,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
                                                             <li>
                                                                 <div class="commentaireBorder">
                                                                     <div class="headerCommentFav">
-                                                                        <?php if ($commentaire['picture'] == "null") : ?>
+                                                                        <?php if ($commentaire['picture'] == null) : ?>
                                                                             <img class="logoUserCommentaire text-white" src="./imgs/b logo.png" alt="avatar de <?= $commentaire['user'] ?>">
                                                                         <?php else : ?>
                                                                             <?php
@@ -202,7 +208,7 @@ if (isset($_COOKIE['id']) || isset($_SESSION['id'])) {
     </html>
 <?php
 } else {
-    header('Location: ./connexion-view.php');
+    header('Location: ./connexion');
     exit;
 }
 ?>

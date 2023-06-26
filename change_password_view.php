@@ -55,7 +55,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bedflix: connexion</title>
+        <title>Cinérama: connexion</title>
         <meta name="description" content="Recherche d'un film/série à regarder ?" />
         <!-- <link href="reset.css" rel="stylesheet" type="text/css"> -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
@@ -73,7 +73,7 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
 
     </head>
 
-    <body class="bg-dark">
+    <body class="bg-black" onload="changeDivURL()">
         <div class="center">
             <div class="background"></div>
             <div class="row justify-content-center">
@@ -84,10 +84,11 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
                         echo "<script>setTimeout(function(){ var alert = document.querySelector('.alert'); alert.style.opacity = '0'; setTimeout(function(){ alert.style.display = 'none'; }, 500); }, 5000);</script>";
                     } ?>
                     <div class="logoConnexion d-flex justify-content-center">
-                        <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5">
+                        <!-- <img src="./imgs/logo bedflix.png" alt="logo" class="w-75 mb-5"> -->
+                        <h1 class="cinerama">CINÉRAMA</h1>
                     </div>
                     <h2 class="text-white" id="h2ChangePassword">Nouveau mot de passe :</h2>
-                    <form action="../Bedflix/fonctions/change_password.php" method="POST" class="d-flex flex-column flex-md-row" id="changeMdpForm">
+                    <form action="../cinerama/fonctions/change_password.php" method="POST" class="d-flex flex-column flex-md-row" id="changeMdpForm">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="password" class="text-white fw-bold">Mot de passe :</label>
@@ -109,12 +110,12 @@ if (!isset($_COOKIE['id']) || !isset($_SESSION['id'])) {
                 </div>
             </div>
         </div>
-
+        <script src="./scripts/randomBackground.js"></script>
     </body>
 
     </html>
 <?php
 } else {
-    header('Location: ./index.php');
+    header("Location: " . URL . "connexion");
 }
 ?>

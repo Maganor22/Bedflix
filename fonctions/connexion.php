@@ -11,7 +11,7 @@ if (!empty($_POST["identifier"]) && !empty($_POST["password"])) {
         // Vérification du mot de passe
         if (password_verify($_POST["password"], $user->mdp)) {
             if ($user->actif == 0) {
-                header("Location: ../connexion-view.php?failed=3");
+                header("Location: ../connexion_view.php?failed=3");
                 exit();
             }
             $_SESSION['id'] = $user->id;
@@ -24,14 +24,15 @@ if (!empty($_POST["identifier"]) && !empty($_POST["password"])) {
                 setcookie('email', $user->email, time() + 31556926, null, null, true, true);
                 setcookie('role', $user->role, time() + 31556926, null, null, true, true);
             }
-            header("Location: ../index.php");
+            header("Location: ../accueil");
+            
         } else {
-            header("Location: ../connexion-view.php?failed=1");
+            header("Location: ../connexion_view.php?failed=1");
         }
     } else {
-        header("Location: ../connexion-view.php?failed=1");
+        header("Location: ../connexion_view.php?failed=1");
     }
 } else {
     $_SESSION["error"] = "Veuillez remplir tous les champs";
-    header("Location: ../connexion-view.php?failed=2");
+    header("Location: ../connexion_view.php?failed=2");
 }

@@ -1,4 +1,18 @@
 <?php
+/* ECRIRE DANS LA CONSOLE DANS UN TRY */
+/* echo "<script>console.log('Variable value:', " . json_encode($id_user) . ");</script>";
+die(); */
+
+function getRandomBackground($db)
+{
+    $sql = "SELECT affiche FROM films WHERE affiche IS NOT NULL AND affiche != '' ORDER BY RAND() LIMIT 1";
+    $req = $db->prepare($sql);
+    $req->execute();
+    $background = $req->fetch(PDO::FETCH_ASSOC);
+    return $background;
+}
+
+
 
 /* USERS */
 
@@ -22,13 +36,17 @@ function selectUser($identifier, $db)
 
 function selectUserById($id, $db)
 {
-    $sql = "SELECT * from utilisateurs WHERE id = :id";
-    $req =  $db->prepare($sql);
-    $result = $req->execute([
-        ":id" => $id
-    ]);
-    $data = $req->fetch(PDO::FETCH_OBJ);
-    return $data;
+    try {
+        $sql = "SELECT * from utilisateurs WHERE id = :id";
+        $req =  $db->prepare($sql);
+        $result = $req->execute([
+            ":id" => $id
+        ]);
+        $data = $req->fetch(PDO::FETCH_OBJ);
+        return $data;
+    } catch (PDOException $e) {
+        echo "Erreur SQL (id: $id) : " . $e->getMessage();
+    }
 }
 
 function selectProfilPictures($db)
@@ -115,6 +133,20 @@ function updateAvatar($photo_profil, $id, $db)
         'photo_profil' => $photo_profil,
         'id' => $id
     ));
+
+    $sql = "SELECT pseudo FROM utilisateurs WHERE id = :id";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array('id' => $id));
+    $pseudonyme = $req->fetch(PDO::FETCH_ASSOC);
+
+    $pseudo = $pseudonyme['pseudo'];
+
+    $sql = "UPDATE commentaires SET picture = CONCAT('./imgs/avatars/', :photo_profil) WHERE user = :pseudo";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'photo_profil' => $photo_profil,
+        'pseudo' => $pseudo
+    ));
     return $result;
 }
 
@@ -129,6 +161,17 @@ function selectFilm($id_du_media, $db)
     $req = $db->prepare($sql);
     $result = $req->execute([
         ":id_du_media" => $id_du_media
+    ]);
+    $data = $req->fetch(PDO::FETCH_OBJ);
+    return $data;
+}
+
+function selectFilmById($id, $db)
+{
+    $sql = "SELECT * FROM films WHERE id = :id";
+    $req = $db->prepare($sql);
+    $result = $req->execute([
+        ":id" => $id
     ]);
     $data = $req->fetch(PDO::FETCH_OBJ);
     return $data;
@@ -175,7 +218,8 @@ function insertFilm($titre, $titre_fr, $type, $annee, $poster, $affiche, $id_du_
 
 function updateFilm($titre, $titre_fr, $annee, $poster, $affiche, $ba, $synopsis, $duree, $genre, $id_du_media, $db)
 {
-    $sql = "UPDATE films SET titre = :titre, titre_fr = :titre_fr, annee = :annee, poster = :poster, affiche = :affiche, ba = :ba, synopsis = :synopsis, duree = :duree, genre = :genre WHERE id_du_media = :id_du_media";
+    $sql = "UPDATE films SET titre = :titre, titre_fr = :titre_fr, annee = :annee, poster = :poster, affiche = :affiche, 
+    ba = :ba, synopsis = :synopsis, duree = :duree, genre = :genre WHERE id_du_media = :id_du_media";
     $req = $db->prepare($sql);
     $result = $req->execute(array(
         'titre' => $titre,
@@ -201,33 +245,9 @@ function getMoviesById($id_media, $db)
     return $movie;
 }
 
-/* function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
-{
-
-    $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array('id_films' => $id_films));
-    $id_films = $req->fetch(PDO::FETCH_ASSOC);
-
-
-    $sql = "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
-            VALUES (:user, :picture, :note, :date, :commentaire, :id_films)";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array(
-        'user' => $user,
-        'picture' => $picture,
-        'note' => $note,
-        'date' => $date,
-        'commentaire' => $commentaire,
-        'id_films' => $id_films['id']
-    ));
-    return $result;
-}
- */
-
 function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db)
 {
-    // Vérification du commentaire existant
+    // Vérification l'existance du commentaire
     $sql = "SELECT id FROM commentaires WHERE commentaire = :commentaire AND user = :user";
     $req = $db->prepare($sql);
     $req->execute(array(
@@ -237,20 +257,21 @@ function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db
     $existingComment = $req->fetch(PDO::FETCH_ASSOC);
 
     if ($existingComment) {
-        // Le commentaire existe déjà, vous pouvez décider de gérer cette situation en conséquence
+        // Le commentaire existe, on arrete ici
         return false;
     }
 
+    //Sinon on sélectionne l'id unique (primary key) du film par rapport à l'id du film
     $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
     $req = $db->prepare($sql);
     $req->execute(array('id_films' => $id_films));
     $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
 
+    //On stock l'ID unique dans la variable $id_films
     $id_films = $id_media_row['id'];
 
     // Le commentaire n'existe pas, on l'insert
-    $sql =
-    "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
+    $sql = "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
              VALUES (:user, :picture, :note, :date, :commentaire, :id_films)";
     $req = $db->prepare($sql);
     $result = $req->execute(array(
@@ -262,43 +283,30 @@ function setComments($user, $picture, $note, $date, $commentaire, $id_films, $db
         'id_films' => $id_films
     ));
 
+    //On retourne le résultat
     return $result;
 }
- 
 
-function getComments($id_media, $db)
+
+function getComments($id_films, $db)
 {
-    $sql = "SELECT commentaires FROM films WHERE `id_du_media` = :id_media";
+    // Sinon on sélectionne l'id unique (primary key) du film par rapport à l'id du film
+    $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
     $req = $db->prepare($sql);
-    $result = $req->execute(array('id_media' => $id_media));
-    $commentaires_json = $req->fetch(PDO::FETCH_COLUMN);
-    $commentaires = json_decode($commentaires_json, true);
-    if (!is_array($commentaires)) {
-        $commentaires = array();
-    }
+    $req->execute(array('id_films' => $id_films));
+    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
+
+    // On stocke l'ID unique dans la variable $id_films
+    $id_films = $id_media_row['id'];
+    $sql = "SELECT * FROM commentaires WHERE `id_films` = :id_films";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_films' => $id_films));
+    $commentaires = $req->fetchAll(PDO::FETCH_ASSOC);
+
     return $commentaires;
 }
 
 
-/* function setComments($id_media, $commentaires, $db)
-{
-    $sql = "UPDATE `films` SET `commentaires` = :commentaires WHERE `id_du_media` = :id_media";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array(
-        'commentaires' => json_encode($commentaires),
-        'id_media' => $id_media
-    ));
-    return $result;
-}
-
-function getComments($id_media, $db)
-{
-    $sql = "SELECT commentaires FROM films WHERE `id_du_media` = :id_media";
-    $req = $db->prepare($sql);  
-    $result = $req->execute(array('id_media' => $id_media));
-    $commentaires = $req->fetch(PDO::FETCH_ASSOC);
-    return $commentaires;
-} */
 
 /* FIN FILMS */
 
@@ -408,40 +416,6 @@ function insertSerie($titre, $annee, $poster, $affiche, $id_du_media, $imdb, $ba
 
 /* FAVORIS */
 
-/* function addFav($id_user, $id_media, $db)
-{
-    //Selectionne l'ID unique du film par rapport à l'ID du film
-    $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array('id_media' => $id_media));
-    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
-
-    $id_media = $id_media_row['id'];
-
-    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array('id_media' => $id_media));
-    $id_media_row2 = $req->fetch(PDO::FETCH_ASSOC);
-
-    if (!$id_media_row2) {
-        $sql = "INSERT INTO favoris_film (id, id_films) VALUES (:id_user, :id_media)";
-        $req = $db->prepare($sql);
-        $result = $req->execute(array(
-            'id_user' => $id_user,
-            'id_media' => $id_media
-        ));
-    } else {
-        $sql = "DELETE FROM favoris_film WHERE id = :id_user AND id_films = :id_media";
-        $req = $db->prepare($sql);
-        $result = $req->execute(array(
-            'id_user' => $id_user,
-            'id_media' => $id_media
-        ));
-    }
-
-    return $result;
-} */
-
 function addFav($id_user, $id_media, $db)
 {
     // Sélectionne l'ID unique du film par rapport à l'ID du média
@@ -512,15 +486,57 @@ function getFavorisByUserId($id_user, $db)
     return $favoris;
 }
 
+function getFavorisIdFilmsByUserId($id_user, $db)
+{
+    $sql = "SELECT * FROM favoris_film WHERE id = :id_user";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_user' => $id_user));
+    $favoris = $req->fetchAll(PDO::FETCH_ASSOC);
+
+    // Récupérer id_du_media pour chaque favori en utilisant id_films
+    foreach ($favoris as &$favori) {
+        $id_films = $favori['id_films'];
+        $sql = "SELECT id_du_media FROM films WHERE id = :id_films";
+        $req = $db->prepare($sql);
+        $req->execute(array('id_films' => $id_films));
+        $result = $req->fetch(PDO::FETCH_ASSOC);
+        $favori['id_du_media'] = $result['id_du_media'];
+    }
+
+    return $favoris;
+}
+
+
 
 function getCommentairesByFilmId($id_film, $db)
 {
-    
+
     $sql = "SELECT * FROM commentaires WHERE id_films = :id_film";
     $req = $db->prepare($sql);
     $result = $req->execute(array('id_film' => $id_film));
     $commentaires = $req->fetchAll(PDO::FETCH_ASSOC);
     return $commentaires;
+}
+
+function getFilmVuByUserIdAndFilmId($id_user, $id_film, $db)
+{
+    $sql = "SELECT * FROM films_vu WHERE id = :id_user AND id_films = :id_film";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array(
+        'id_user' => $id_user,
+        'id_film' => $id_film
+    ));
+    $film_vu = $req->fetch(PDO::FETCH_ASSOC);
+    return $film_vu;
+}
+
+function getFilmsVuByUserId($id_user, $db)
+{
+    $sql = "SELECT * FROM films_vu WHERE id = :id_user";
+    $req = $db->prepare($sql);
+    $result = $req->execute(array('id_user' => $id_user));
+    $films_vu = $req->fetchAll(PDO::FETCH_ASSOC);
+    return $films_vu;
 }
 
 function checkFav($id_user, $id_media, $db)
@@ -553,15 +569,17 @@ function checkFav($id_user, $id_media, $db)
 
 /* FILMS VU */
 
-function addFilmVu($id_user, $id_media, $db)
+function addFilmVu($id_user, $id_media, $fav, $db)
 {
-    // Sélectionne l'ID unique du film par rapport à l'ID du média
-    $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
-    $req = $db->prepare($sql);
-    $req->execute(array('id_media' => $id_media));
-    $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
+    if ($fav == 0) {
+        // Sélectionne l'ID unique du film par rapport à l'ID du média
+        $sql = "SELECT id FROM films WHERE id_du_media = :id_media";
+        $req = $db->prepare($sql);
+        $req->execute(array('id_media' => $id_media));
+        $id_media_row = $req->fetch(PDO::FETCH_ASSOC);
 
-    $id_media = $id_media_row['id'];
+        $id_media = $id_media_row['id'];
+    }
 
     // Vérifie si l'entrée existe déjà dans la table des favoris
     $sql = "SELECT id_films FROM films_vu WHERE id_films = :id_media AND id = :id_user";
@@ -573,7 +591,7 @@ function addFilmVu($id_user, $id_media, $db)
     $id_media_row2 = $req->fetch(PDO::FETCH_ASSOC);
 
     if (!$id_media_row2) {
-        // Ajoute le film aux favoris de l'utilisateur
+        // Ajoute le film aux vus de l'utilisateur
         $sql = "INSERT INTO films_vu (id, id_films) VALUES (:id_user, :id_media)";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
@@ -581,7 +599,7 @@ function addFilmVu($id_user, $id_media, $db)
             'id_media' => $id_media
         ));
     } else {
-        // Supprime le film des favoris de l'utilisateur
+        // Supprime le film des vus de l'utilisateur
         $sql = "DELETE FROM films_vu WHERE id = :id_user AND id_films = :id_media";
         $req = $db->prepare($sql);
         $result = $req->execute(array(
@@ -593,26 +611,6 @@ function addFilmVu($id_user, $id_media, $db)
     return $result;
 }
 
-
-
-function delFilmVu($id_user, $id_media, $db)
-{
-    $sql = "SELECT id_films FROM favoris_film WHERE id_films = :id_media";
-    $req = $db->prepare($sql);
-    $result = $req->execute(array('id_media' => $id_media));
-    $id_media_row2 = $req->fetch(PDO::FETCH_ASSOC);
-
-    if ($id_media_row2) {
-        $sql = "DELETE FROM favoris_film WHERE id = :id_user AND id_films = :id_media";
-        $req = $db->prepare($sql);
-        $result = $req->execute(array(
-            'id_user' => $id_user,
-            'id_media' => $id_media
-        ));
-    }
-
-    return $result;
-}
 
 function getFilmVuByUserId($id_user, $db)
 {
@@ -659,6 +657,35 @@ function checkFilmVu($id_user, $id_media, $db)
         return false; // L'entrée n'existe pas dans la table
     }
 }
+
+function getFilmVuDurationOfUser($id_user, $db)
+{
+    // Vérifie si l'entrée existe déjà dans la table
+    $sql = "SELECT id_films FROM films_vu WHERE id = :id_user";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_user' => $id_user));
+    $id_media_rows = $req->fetchAll(PDO::FETCH_ASSOC);
+
+    $durations = array();
+
+    foreach ($id_media_rows as $id_media_row) {
+        $id_media = $id_media_row['id_films'];
+
+        $sql = "SELECT duree FROM films WHERE id = :id_media";
+        $req = $db->prepare($sql);
+        $req->execute(array('id_media' => $id_media));
+        $duration_row = $req->fetch(PDO::FETCH_ASSOC);
+
+        if ($duration_row) {
+            $duration = $duration_row['duree'];
+            $durations[] = $duration;
+        }
+    }
+
+    return $durations;
+}
+
+
 
 /* FILMS VU */
 
@@ -733,3 +760,220 @@ function selectActorsByIdFilm($id_films, $db)
 }
 
 /* FIN ACTEURS */
+
+function selectAllUsers($db)
+{
+    $sql = "SELECT * FROM utilisateurs";
+    $req = $db->prepare($sql);
+    $result = $req->execute();
+    $users = $req->fetchAll(PDO::FETCH_ASSOC);
+    return $users;
+}
+
+
+/*Commentaires utilisateurs*/
+
+function addUserComment($note, $commentaire, $id_films, $id_user, $db)
+{
+    try {
+        $sql = "SELECT banComment FROM utilisateurs WHERE id = :id_user";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user
+        ));
+
+        $banComment = $req->fetch(PDO::FETCH_ASSOC)['banComment'];
+
+        if ($banComment == 1) {
+            throw new Exception("Erreur : L'utilisateur est interdit de commenter.");
+        }
+
+
+        $sql = "SELECT id FROM films WHERE id_du_media = :id_films";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_films' => $id_films
+        ));
+        $id_films = $req->fetch(PDO::FETCH_ASSOC)['id'];
+
+        $sql = "INSERT INTO commentaires_users (note, commentaire, id_films, id_utilisateurs) VALUES (:note, :commentaire, :id_films, :id_user)";
+        $req = $db->prepare($sql);
+        $result = $req->execute([
+            'note' => $note,
+            'commentaire' => $commentaire,
+            'id_films' => $id_films,
+            'id_user' => $id_user
+        ]);
+
+        return $result;
+    } catch (PDOException $e) {
+        echo "Erreur SQL (id_films: $id_films) (id_utilisateurs: $id_user) (note: $note) (commentaire: $commentaire) : " . $e->getMessage();
+    }
+}
+
+function getUserComments($pseudo, $db)
+{
+    try {
+        $sql = "SELECT * FROM commentaires WHERE user = :pseudo";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'pseudo' => $pseudo
+        ));
+        $comments = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        return $comments;
+    } catch (PDOException $e) {
+        echo "Erreur SQL (id_utilisateurs: $pseudo) : " . $e->getMessage();
+    }
+}
+
+function getAllCommentsToValidate($db)
+{
+    try {
+        $sql = "SELECT * FROM commentaires_users WHERE valide = 0";
+        $req = $db->prepare($sql);
+        $result = $req->execute();
+        $comments = $req->fetchAll(PDO::FETCH_ASSOC);
+
+        return $comments;
+    } catch (PDOException $e) {
+        echo "Erreur SQL : " . $e->getMessage();
+    }
+}
+
+
+function validateComment($id_comment, $db)
+{
+    try {
+
+        $sql = "SELECT id_utilisateurs FROM commentaires_users WHERE id = :id_comment";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_comment' => $id_comment
+        ));
+        $monId = $req->fetch(PDO::FETCH_ASSOC);
+
+        $id_user = $monId['id_utilisateurs'];
+
+        $sql = "SELECT photo_profil FROM utilisateurs where id = :id_user";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user
+        ));
+        $maPicture = $req->fetch(PDO::FETCH_ASSOC);
+
+        $picture = "./imgs/avatars/" . $maPicture['photo_profil'];
+
+        //$picture = "https://img.betaseries.com/Tq2NaT5AI7Ax1CS1xoU8g_p5pp4=/250x250/smart/https://pictures.betaseries.com/avatars/80/80139f4232b7f90f86c3dea8778330c5.jpg";
+        $sql = "SELECT c.*, u.pseudo FROM commentaires_users c INNER JOIN utilisateurs u ON c.id_utilisateurs = u.id WHERE c.id = :id_comment";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_comment' => $id_comment
+        ));
+        $comment = $req->fetch(PDO::FETCH_ASSOC);
+
+        $pseudo = $comment['pseudo'];
+        $note = $comment['note'];
+        $commentaire = $comment['commentaire'];
+        $id_films = $comment['id_films'];
+
+        $date = date('Y-m-d H:i:s'); // Obtient la date et l'heure actuelles au format YYYY-MM-DD HH:MM:SS
+
+        $sql = "INSERT INTO `commentaires` (`user`, `picture`, `note`, `date`, `commentaire`, `id_films`) 
+             VALUES (:user, :picture, :note, :date, :commentaire, :id_films)";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'user' => $pseudo,
+            'picture' => $picture,
+            'note' => $note,
+            'date' => $date,
+            'commentaire' => $commentaire,
+            'id_films' => $id_films
+        ));
+
+        $sql = "DELETE FROM commentaires_users WHERE id = :id_comment";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_comment' => $id_comment
+        ));
+
+        header('Location: ../admin');
+    } catch (PDOException $e) {
+        echo "Erreur SQL : " . $e->getMessage();
+    }
+}
+
+
+function deleteComment($id_comment, $db)
+{
+    try {
+        $sql = "DELETE FROM commentaires_users WHERE id = :id_comment";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_comment' => $id_comment
+        ));
+
+        header('Location: ../admin');
+    } catch (PDOException $e) {
+        echo "Erreur SQL : " . $e->getMessage();
+    }
+}
+
+function banUserComment($id_user, $db)
+{
+    try {
+        $sql = "SELECT banComment FROM utilisateurs WHERE id = :id_user";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user
+        ));
+
+        $ban = $req->fetch(PDO::FETCH_ASSOC);
+
+        if ($ban['banComment'] == 1) {
+            $sql = "UPDATE utilisateurs SET banComment = 0 WHERE id = :id_user";
+        } else {
+            $sql = "UPDATE utilisateurs SET banComment = 1 WHERE id = :id_user";
+        }
+
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_user' => $id_user
+        ));
+
+        header('Location: ../admin');
+
+        return $ban;
+    } catch (PDOException $e) {
+        echo "Erreur SQL : " . $e->getMessage();
+    }
+}
+
+function checkBanComment($id_user, $db)
+{
+    // Effectuer une requête pour récupérer la valeur actuelle de banComment pour l'utilisateur
+    $sql = "SELECT banComment FROM utilisateurs WHERE id = :id_user";
+    $req = $db->prepare($sql);
+    $req->execute(array('id_user' => $id_user));
+    $userStatus = $req->fetch(PDO::FETCH_ASSOC);
+
+    $banComment = $userStatus['banComment'];
+
+    return $banComment;
+}
+
+function getNameOfFilmByFilmId($id_films, $db)
+{
+    try {
+        $sql = "SELECT titre FROM films WHERE id = :id_films";
+        $req = $db->prepare($sql);
+        $result = $req->execute(array(
+            'id_films' => $id_films
+        ));
+        $film = $req->fetch(PDO::FETCH_ASSOC);
+
+        return $film['titre'];
+    } catch (PDOException $e) {
+        echo "Erreur SQL : " . $e->getMessage();
+    }
+}
